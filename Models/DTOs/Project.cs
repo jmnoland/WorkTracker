@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WorkTracker.Models.ViewModels
+namespace WorkTracker.Models.DTOs
 {
-    public class Organisation
+    public class Project
     {
+        public int ProjectId { get; set; }
         public string Name { get; set; }
     }
 }

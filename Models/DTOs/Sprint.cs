@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WorkTracker.Models.ViewModels
+namespace WorkTracker.Models.DTOs
 {
     public class Sprint
     {
