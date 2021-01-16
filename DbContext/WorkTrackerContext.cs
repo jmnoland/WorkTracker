@@ -42,9 +42,9 @@ namespace WorkTracker.Models.DataModels
             modelBuilder.Entity<Ticket>();
             modelBuilder.Entity<Task>();
             modelBuilder.Entity<Attachment>();
-            modelBuilder.Entity<TeamProject>();
-            modelBuilder.Entity<UserTeam>();
-            modelBuilder.Entity<UserTicket>();
+            modelBuilder.Entity<TeamProject>().HasKey(e => new { e.TeamId, e.ProjectId });
+            modelBuilder.Entity<UserTeam>().HasKey(e => new { e.TeamId, e.UserId });
+            modelBuilder.Entity<UserTicket>().HasKey(e => new { e.TicketId, e.UserId });
         }
     }
 }
