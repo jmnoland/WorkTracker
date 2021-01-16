@@ -7,6 +7,10 @@ namespace WorkTracker.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        List<User> GetUsers(int teamId);
+        List<Models.ServiceModels.User> GetUsers(int teamId);
+        User GetUser(int userId);
+        void CreateUser(User user);
+        void UpdateUser(User user);
+        void DeleteUser(int userId);
     }
 }

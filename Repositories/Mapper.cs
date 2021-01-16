@@ -1,16 +1,14 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WorkTracker.Repositories
 {
     public class Mapper
     {
         #region UserMapping
-        public static Models.DataModels.User MapUser(SqlDataReader rdr)
+        public static Models.ServiceModels.User MapUser(SqlDataReader rdr)
         {
-            var user = new Models.DataModels.User();
+            var user = new Models.ServiceModels.User();
             user.UserId = rdr.GetInt32(0);
             user.RoleId = rdr.GetInt32(1);
             user.Name = rdr.GetString(2);
@@ -19,9 +17,9 @@ namespace WorkTracker.Repositories
             return user;
         }
 
-        public static Models.ServiceModels.User Map(Models.DataModels.User user)
+        public static Models.DataModels.User Map(Models.ServiceModels.User user)
         {
-            return new Models.ServiceModels.User
+            return new Models.DataModels.User
             {
                 Email = user.Email,
                 Name = user.Name,
@@ -30,29 +28,10 @@ namespace WorkTracker.Repositories
                 Password = user.Password
             };
         }
-        public static List<Models.ServiceModels.User> Map(List<Models.DataModels.User> userList)
+        public static List<Models.DataModels.User> Map(List<Models.ServiceModels.User> userList)
         {
-            var temp = new List<Models.ServiceModels.User>();
+            var temp = new List<Models.DataModels.User>();
             foreach(var user in userList)
-            {
-                temp.Add(Map(user));
-            }
-            return temp;
-        }
-        public static Models.ViewModels.User Map(Models.ServiceModels.User user)
-        {
-            return new Models.ViewModels.User
-            {
-                Email = user.Email,
-                Name = user.Name,
-                RoleId = user.RoleId,
-                UserId = user.UserId
-            };
-        }
-        public static List<Models.ViewModels.User> Map(List<Models.ServiceModels.User> userList)
-        {
-            var temp = new List<Models.ViewModels.User>();
-            foreach (var user in userList)
             {
                 temp.Add(Map(user));
             }
@@ -60,5 +39,16 @@ namespace WorkTracker.Repositories
         }
         #endregion
 
+        #region RoleMapping
+        public static Models.ServiceModels.Role Map(Models.DataModels.Role role)
+        {
+            return new Models.ServiceModels.Role
+            {
+                Name = role.Name,
+                Permissions = role.Permissions,
+                RoleId = role.RoleId
+            };
+        }
+        #endregion
     }
 }

@@ -10,6 +10,10 @@ using System.Configuration;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 using WorkTracker.Repositories;
+using WorkTracker.Models;
+using System.IO;
+using WorkTracker.Services.Interfaces;
+using WorkTracker.Services;
 
 namespace WorkTracker
 {
@@ -25,10 +29,20 @@ namespace WorkTracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings appSettings = new AppSettings();
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var configuration = builder.Build();
+            ConfigurationBinder.Bind(configuration.GetSection("AppSettings"), appSettings);
 
             services.AddDbContextPool<WorkTrackerContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")))
-                .AddScoped<IUserRepository, UserRepository>();
+                options => options.UseSqlServer(appSettings.DefaultConnection));
+
+            services.AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IRoleRepository, RoleRepository>()
+                .AddScoped<IUserService, UserService>();
 
             services.AddControllersWithViews();
 
