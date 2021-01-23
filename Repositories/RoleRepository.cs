@@ -25,5 +25,14 @@ namespace WorkTracker.Repositories
             }
             return null;
         }
+        public Models.ServiceModels.Role GetUserRole(int userId)
+        {
+            var userRole = (from user in _dbContext.Users
+                        join role in _dbContext.Roles 
+                            on user.RoleId equals role.RoleId
+                        where user.UserId == userId
+                        select Mapper.Map(role)).FirstOrDefault();
+            return userRole;
+        }
     }
 }
