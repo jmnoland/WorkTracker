@@ -20,9 +20,9 @@ namespace WorkTracker.Services
             _roleRepository = roleRepository;
         }
 
-        public List<Models.DTOs.User> GetUsers(int teamId)
+        public List<Models.DTOs.User> GetUsersByTeamId(int teamId)
         {
-            return Mapper.Map(_userRepository.GetUsers(teamId));
+            return Mapper.Map(_userRepository.GetUsersByTeamId(teamId));
         }
 
         public void CreateUser(CreateUserRequest request)

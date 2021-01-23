@@ -7,7 +7,7 @@ namespace WorkTracker.Services.Interfaces
 {
     public interface IUserService
     {
-        List<Models.DTOs.User> GetUsers(int teamId);
+        List<Models.DTOs.User> GetUsersByTeamId(int teamId);
         void CreateUser(CreateUserRequest request);
         void UpdateUser(UpdateUserRequest request);
         void DeleteUser(int userId);

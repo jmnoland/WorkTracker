@@ -7,16 +7,16 @@ using WorkTracker.Repositories.Interfaces;
 
 namespace WorkTracker.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
         private readonly WorkTrackerContext _dbContext;
 
-        public UserRepository(WorkTrackerContext dbContext)
+        public UserRepository(WorkTrackerContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public List<Models.ServiceModels.User> GetUsers(int teamId)
+        public List<Models.ServiceModels.User> GetUsersByTeamId(int teamId)
         {
             string query = @"
                 SELECT

@@ -20,7 +20,7 @@ namespace WorkTracker.Controllers
         [HttpGet("{teamId}")]
         public ActionResult<List<User>> GetUsers([FromRoute] int teamId)
         {
-            return _userService.GetUsers(teamId);
+            return _userService.GetUsersByTeamId(teamId);
         }
         [HttpPost]
         public ActionResult CreateUser([FromBody] CreateUserRequest request)

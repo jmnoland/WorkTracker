@@ -7,11 +7,11 @@ using WorkTracker.Repositories.Interfaces;
 
 namespace WorkTracker.Repositories
 {
-    public class RoleRepository : IRoleRepository
+    public class RoleRepository : GenericRepository<Role>, IRoleRepository
     {
         private readonly WorkTrackerContext _dbContext;
 
-        public RoleRepository(WorkTrackerContext dbContext)
+        public RoleRepository(WorkTrackerContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
