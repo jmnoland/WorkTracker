@@ -1,9 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using WorkTracker.Models;
 using WorkTracker.Repositories.Interfaces;
 
 namespace WorkTracker.Services
@@ -12,14 +14,17 @@ namespace WorkTracker.Services
     {
 		public static readonly string ClaimsRole = "UserRole";
 		private readonly IRoleRepository _roleRepository;
-		public AuthService(IRoleRepository roleRepository)
+		private readonly IOptions<AppSettings> _appSettings;
+		public AuthService(IRoleRepository roleRepository,
+						   IOptions<AppSettings> appSettings)
         {
 			_roleRepository = roleRepository;
+			_appSettings = appSettings;
         }
 
 		public string GenerateToken(int userId)
         {
-			var secret = "asdv234234^&%&^%&^hjsdfb2%%%";
+			var secret = _appSettings.Value.JwtSecret;
 			var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
 
 			var role = _roleRepository.GetUserRole(userId);
@@ -44,5 +49,28 @@ namespace WorkTracker.Services
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
 		}
-    }
+
+		public bool ValidateCurrentToken(string token)
+		{
+			var secret = _appSettings.Value.JwtSecret;
+			var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
+
+			var tokenHandler = new JwtSecurityTokenHandler();
+			try
+			{
+				tokenHandler.ValidateToken(token, new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					IssuerSigningKey = securityKey
+				}, out SecurityToken validatedToken);
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
+		}
+	}
 }

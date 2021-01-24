@@ -44,6 +44,8 @@ namespace WorkTracker
                 .AddScoped<IRoleRepository, RoleRepository>()
                 .AddScoped<IUserService, UserService>();
 
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
