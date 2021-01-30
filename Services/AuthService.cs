@@ -3,10 +3,13 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using WorkTracker.Models;
+using WorkTracker.Models.Requests;
 using WorkTracker.Repositories.Interfaces;
+using WorkTracker.Services.Interfaces;
 
 namespace WorkTracker.Services
 {
@@ -14,11 +17,14 @@ namespace WorkTracker.Services
     {
 		public static readonly string ClaimsRole = "UserRole";
 		private readonly IRoleRepository _roleRepository;
+		private readonly IUserRepository _userRepository;
 		private readonly IOptions<AppSettings> _appSettings;
 		public AuthService(IRoleRepository roleRepository,
+						   IUserRepository userRepository,
 						   IOptions<AppSettings> appSettings)
         {
 			_roleRepository = roleRepository;
+			_userRepository = userRepository;
 			_appSettings = appSettings;
         }
 
@@ -50,6 +56,16 @@ namespace WorkTracker.Services
 			return tokenHandler.WriteToken(token);
 		}
 
+		public string RefreshToken(string token)
+        {
+			var handler = new JwtSecurityTokenHandler();
+			var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
+			var userId = decodedToken.Claims
+				.Where(w => w.Type == ClaimTypes.NameIdentifier)
+				.Select(s => s.Value).FirstOrDefault();
+			return GenerateToken(int.Parse(userId));
+		}
+
 		public bool ValidateCurrentToken(string token)
 		{
 			var secret = _appSettings.Value.JwtSecret;
@@ -72,5 +88,23 @@ namespace WorkTracker.Services
 			}
 			return true;
 		}
+
+		public bool PermissionAllowed(string token, string permission)
+        {
+			var handler = new JwtSecurityTokenHandler();
+			var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
+			return decodedToken.Claims.Any(w => w.Type == ClaimsRole && w.Value == permission);
+		}
+
+		public string Login(UserLoginRequest request)
+        {
+			var user = _userRepository.Find(w => w.Email == request.Email).FirstOrDefault();
+			
+			if (user != null && user.Password == request.Password)
+            {
+				return GenerateToken(user.UserId);
+            }
+			return null;
+        }
 	}
 }
