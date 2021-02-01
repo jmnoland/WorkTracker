@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using WorkTracker.Controllers.Attributes;
@@ -22,15 +23,29 @@ namespace WorkTracker.Controllers
         public ActionResult<string> Login([FromBody] UserLoginRequest request)
         {
             var token = _authService.Login(request);
-            if (token != null) return token;
+            if (token != null)
+            {
+                AddRefreshToken(token);
+                return token;
+            }
             return BadRequest("User validation failed");
         }
 
         [ValidateToken]
         public ActionResult<string> RefreshToken()
         {
-            var token = HttpContext.Request.Headers["X-User-Token"].ToString();
-            return _authService.RefreshToken(token);
+            var token = Request.Cookies["X-User-Token"];
+            var newToken = _authService.RefreshToken(token);
+            AddRefreshToken(newToken);
+            return newToken;
+        }
+
+
+        private void AddRefreshToken(string token)
+        {
+            var options = new CookieOptions();
+            options.SameSite = SameSiteMode.Strict;
+            Response.Cookies.Append("X-User-Token", token, options);
         }
     }
 }

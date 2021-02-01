@@ -41,7 +41,8 @@ namespace WorkTracker.Controllers.Attributes
         {
             var requestUrl = RequestRawUrl(request);
             var parameters = ToDictionary(request.Form);
-            var token = request.Headers["X-User-Token"];
+            var token = request.Cookies["X-User-Token"];
+            if (token == null) return false;
             var isValid = true;
             if (_permission != null) isValid = PermissionAllowed(token, _permission);
             return (isValid && ValidateCurrentToken(token));
