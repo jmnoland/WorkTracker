@@ -46,7 +46,7 @@ export default class NavMenu extends Component {
               <ul className="navbar-nav flex-grow">
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/">
-                    Home
+                    Dashboard
                   </NavLink>
                 </NavItem>
               </ul>

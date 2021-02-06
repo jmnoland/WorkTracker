@@ -15,3 +15,12 @@ export function decodeJwtToken(token) {
   }
   return null;
 }
+
+export function getToken() {
+  const cookies = document.cookie.split("=");
+  const index = cookies.reduce((total, val, i) => {
+    if (val === "X-User-Token") total = i + 1;
+    return total;
+  }, 0);
+  return cookies[index];
+}
