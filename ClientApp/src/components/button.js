@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Loading from "./loading";
 
 const Container = styled.div`
   width: max-content;
@@ -41,7 +42,7 @@ export default function BaseButton({
   return (
     <Container center={center}>
       <Button value={value} primary={primary} onClick={onClick}>
-        {children}
+        {loading ? <Loading small primary={primary} /> : children}
       </Button>
     </Container>
   );

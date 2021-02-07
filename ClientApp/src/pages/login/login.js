@@ -25,8 +25,8 @@ const TitleEnd = styled.span`
 const Content = styled.div``;
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const emailChange = (e) => {
@@ -52,6 +52,7 @@ export default function Login() {
           label="Email"
           position="above"
           center
+          isValid={() => email === null || email}
           value={email}
           onChange={emailChange}
         />
@@ -59,6 +60,7 @@ export default function Login() {
           label="Password"
           position="above"
           center
+          isValid={() => password === null || password}
           type={"password"}
           value={password}
           onChange={passwordChange}

@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const Container = styled.div`
   width: max-content;
+  position: relative;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
   padding: ${(props) => props.theme.padding.default};
@@ -10,7 +11,8 @@ const Container = styled.div`
 
 const Input = styled.input`
   background: ${(props) => props.theme.colors.white};
-  border: 5px solid ${(props) => props.theme.colors.white};
+  border: 5px solid
+    ${(props) => (props.valid ? props.theme.colors.white : "red")};
   border-radius: ${(props) => props.theme.border.radius.button};
 
   &:focus-visible {
@@ -23,9 +25,18 @@ const Label = styled.span``;
 
 const LabelAbove = styled.div``;
 
+const ValidationLabel = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+`;
+
 export default function BaseInput({
   value,
   onChange,
+  isValid,
   label,
   position,
   center,
@@ -38,10 +49,13 @@ export default function BaseInput({
       <Label>{label}</Label>
     );
 
+  const valid = isValid(value);
+
   return (
     <Container center={center}>
       {inputLabel}
-      <Input value={value} type={type} onChange={onChange} />
+      {!valid ? <ValidationLabel>{valid}</ValidationLabel> : null}
+      <Input value={value} valid={valid} type={type} onChange={onChange} />
     </Container>
   );
 }
