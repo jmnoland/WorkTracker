@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Input, Button } from "../../components";
 import { UserLogin } from "../../services/auth";
@@ -24,10 +25,13 @@ const TitleEnd = styled.span`
 
 const Content = styled.div``;
 
-export default function Login() {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+export default function Login(props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fieldValid, setFieldValid] = useState({ email: true, password: true });
+  const history = useHistory();
+  const { isLoggedIn, setLoggedIn } = props;
 
   const emailChange = (e) => {
     setEmail(e.target.value);
@@ -36,10 +40,32 @@ export default function Login() {
     setPassword(e.target.value);
   };
   const handleLogin = async () => {
-    setLoading(true);
-    await UserLogin(email, password);
-    setLoading(false);
+    const isValid = { ...fieldValid };
+    // if (email === "" && !email) {
+    //   setFieldValid({ ...fieldValid, email: false });
+    //   isValid.email = false;
+    // }
+    // if (password === "" && !password) {
+    //   setFieldValid({ ...fieldValid, password: false });
+    //   isValid.password = false;
+    // }
+    if (isValid.email && isValid.password) {
+      setLoading(true);
+      try {
+        await UserLogin(email, password);
+        setLoggedIn(true);
+        history.push("/");
+      } catch (error) {
+        if (error.response.status === 400) console.log("try again");
+        setLoading(false);
+      }
+      setLoading(false);
+    }
   };
+
+  if (isLoggedIn) {
+    return null;
+  }
 
   return (
     <LoginContainer>
@@ -52,7 +78,7 @@ export default function Login() {
           label="Email"
           position="above"
           center
-          isValid={() => email === null || email}
+          isValid={fieldValid.email}
           value={email}
           onChange={emailChange}
         />
@@ -60,7 +86,7 @@ export default function Login() {
           label="Password"
           position="above"
           center
-          isValid={() => password === null || password}
+          isValid={fieldValid.password}
           type={"password"}
           value={password}
           onChange={passwordChange}

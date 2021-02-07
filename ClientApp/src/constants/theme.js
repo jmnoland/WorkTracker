@@ -6,6 +6,7 @@ export const theme = {
     dark: "#101417",
     orange: "#fb8122",
     white: "#e1e2e2",
+    danger: "#ff0000",
   },
   border: {
     shadow: "0px 0px 20px 5px #101417",

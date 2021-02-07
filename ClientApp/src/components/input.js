@@ -11,8 +11,9 @@ const Container = styled.div`
 
 const Input = styled.input`
   background: ${(props) => props.theme.colors.white};
-  border: 5px solid
-    ${(props) => (props.valid ? props.theme.colors.white : "red")};
+  border: 2px solid
+    ${(props) =>
+      props.valid ? props.theme.colors.white : props.theme.colors.danger};
   border-radius: ${(props) => props.theme.border.radius.button};
 
   &:focus-visible {
@@ -48,8 +49,7 @@ export default function BaseInput({
     ) : (
       <Label>{label}</Label>
     );
-
-  const valid = isValid(value);
+  const valid = typeof isValid === "boolean" ? isValid : isValid(value);
 
   return (
     <Container center={center}>

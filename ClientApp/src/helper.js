@@ -1,7 +1,10 @@
+import { useState } from "react";
 import jwt_decode from "jwt-decode";
 
 export function verifyTokenExpiry(decodedToken) {
-  const expiryDate = new Date(decodedToken.exp);
+  // Adding miliseconds to timestamp
+  const unix = Number(decodedToken.exp + "000");
+  const expiryDate = new Date(unix);
   if (expiryDate > Date.now()) {
     return true;
   }
@@ -23,4 +26,20 @@ export function getToken() {
     return total;
   }, 0);
   return cookies[index];
+}
+
+export function useField(initial, initialVal) {
+  const initialField = { ...initial, value: initialVal };
+  const [field, _setField] = useState(initialField);
+
+  const setField = (value, props) => {
+    const temp = field;
+    temp.value = value;
+    if (temp.onChange && typeof temp.onChange === "function") {
+      temp.onChange(value, props);
+    }
+    _setField(temp);
+  };
+
+  return { ...field, setField };
 }

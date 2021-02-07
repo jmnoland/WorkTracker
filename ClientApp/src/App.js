@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route } from "react-router";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { theme } from "./constants/theme";
@@ -28,20 +28,19 @@ const AppContainer = styled.div`
 
 export default function App() {
   const token = getToken();
-  const isLoggedIn = token ? decodeJwtToken(token) : false;
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    token ? decodeJwtToken(token) : false
+  );
 
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <AppContainer>
-        {isLoggedIn ? (
-          <NavMenu>
-            <Route exact path="/" component={Dashboard} />
-            <Route exact path="/login" component={Login} />
-          </NavMenu>
-        ) : (
-          <Login />
-        )}
+        <NavMenu isLoggedIn={isLoggedIn}>
+          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/login" component={Login} />
+        </NavMenu>
+        <Login isLoggedIn={isLoggedIn} setLoggedIn={setIsLoggedIn} />
       </AppContainer>
     </ThemeProvider>
   );
