@@ -31,6 +31,28 @@ const Button = styled.button`
   }
 `;
 
+const LoginButton = styled.button`
+  background: ${(props) =>
+    props.primary ? props.theme.colors.orange : props.theme.colors.white};
+  color: ${(props) => (props.primary ? props.theme.colors.white : "inherit")};
+  border: 5px solid
+    ${(props) =>
+      props.primary ? props.theme.colors.orange : props.theme.colors.white};
+  border-radius: ${(props) => props.theme.border.radius.button};
+  font-size: ${(props) => props.theme.font.size.default}
+  font-weight: 600;
+  width: 180px;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
 export default function BaseButton({
   value,
   onClick,
@@ -38,7 +60,17 @@ export default function BaseButton({
   loading,
   primary,
   children,
+  isLoginButton,
 }) {
+  if (isLoginButton) {
+    return (
+      <Container center={center}>
+        <LoginButton value={value} primary={primary} onClick={onClick}>
+          {loading ? <Loading small primary={primary} /> : children}
+        </LoginButton>
+      </Container>
+    );
+  }
   return (
     <Container center={center}>
       <Button value={value} primary={primary} onClick={onClick}>

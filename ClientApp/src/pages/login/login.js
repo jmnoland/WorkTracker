@@ -5,16 +5,24 @@ import { Input, Button } from "../../components";
 import { UserLogin } from "../../services/auth";
 
 const LoginContainer = styled.div`
-  margin-left: 30%;
-  margin-right: 30%;
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 10%;
+  padding: ${(props) => props.theme.padding.large};
   box-shadow: ${(props) => props.theme.border.shadow};
   border-radius: ${(props) => props.theme.border.radius.default};
+`;
+
+const ButtonContainer = styled.div`
+  margin-top: ${(props) => props.theme.margin.medium};
+  margin-bottom: ${(props) => props.theme.margin.medium};
 `;
 
 const Title = styled.div`
   font-size: 50px;
   text-align: center;
+  margin-bottom: ${(props) => props.theme.margin.large};
 `;
 const TitleStart = styled.span`
   color: ${(props) => props.theme.colors.orange};
@@ -91,9 +99,17 @@ export default function Login(props) {
           value={password}
           onChange={passwordChange}
         />
-        <Button primary loading={loading} onClick={handleLogin}>
-          Login
-        </Button>
+        <ButtonContainer>
+          <Button
+            center
+            isLoginButton
+            primary
+            loading={loading}
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
+        </ButtonContainer>
       </Content>
     </LoginContainer>
   );

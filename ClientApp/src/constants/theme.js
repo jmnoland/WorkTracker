@@ -19,6 +19,11 @@ export const theme = {
     default: "5px",
     large: "20px",
   },
+  margin: {
+    default: "10px",
+    medium: "20px",
+    large: "40px",
+  },
   font: {
     size: {
       small: "11px",
