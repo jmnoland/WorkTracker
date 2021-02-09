@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
 export function verifyTokenExpiry(decodedToken) {
@@ -42,4 +42,83 @@ export function useField(initial, initialVal) {
   };
 
   return { ...field, setField };
+}
+
+export function useObject(initialFields, initialValues) {
+  function getInitialValues() {
+    return Object.keys(initialFields).reduce((total, field) => {
+      total[field] = { ...initialFields[field], value: initialValues[field] };
+      return total;
+    }, {});
+  }
+  const allInitialValuesRef = useRef(getInitialValues());
+
+  useEffect(() => {
+    allInitialValuesRef.current = getInitialValues();
+  }, [initialValues]);
+
+  const allInitialValues = allInitialValuesRef.current;
+
+  const [values, setValues] = useState(allInitialValues);
+
+  const [fields, setFields] = useState(initialFields);
+
+  const object = {
+    data: Object.keys(fields).reduce((total, field) => {
+      const currentField = fields[field];
+      if (currentField.validation) {
+        currentField.validation.errors = [];
+      } else currentField.validation = { errors: [] };
+      total[field] = {
+        ...currentField,
+        onChange: (value) => {
+          console.log(object);
+          if (currentField.onChange) {
+            currentField.onChange(value, object.data);
+          }
+          return setValues((oldValues) => {
+            return {
+              ...oldValues,
+              [field]: { ...oldValues[field], value: value },
+            };
+          });
+        },
+      };
+      return total;
+    }, {}),
+    validate() {
+      let isValid = true;
+      Object.keys(fields).forEach((fieldKey) => {
+        const currentField = fields[fieldKey];
+        if (
+          currentField &&
+          currentField.validation &&
+          currentField.validation.rules
+        ) {
+          const errors = fields[fieldKey].validation.rules.reduce(
+            (total, rule) => {
+              const result = rule.validate(fields);
+              if (!result) {
+                isValid = false;
+                total.push({ message: rule.message });
+                currentField.validation.errors.push({ message: rule.message });
+              }
+              return total;
+            },
+            []
+          );
+          if (errors.length === 0) return null;
+          return errors;
+        }
+        return null;
+      });
+      if (isValid) setValues({ ...fields });
+      return isValid;
+    },
+    reset() {
+      setValues(() => getInitialValues());
+      setFields(initialFields);
+    },
+  };
+  return object;
 }
