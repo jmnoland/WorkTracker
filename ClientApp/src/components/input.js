@@ -37,7 +37,7 @@ const ValidationLabel = styled.span`
 export default function BaseInput({
   value,
   onChange,
-  isValid,
+  validation,
   label,
   position,
   center,
@@ -49,13 +49,21 @@ export default function BaseInput({
     ) : (
       <Label>{label}</Label>
     );
-  const valid = typeof isValid === "boolean" ? isValid : isValid(value);
 
+  const valid = validation.errors.length === 0;
+
+  const errors = validation.errors.map((err) => {
+    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+  });
+
+  const valueChange = (e) => {
+    onChange(e.target.value);
+  };
   return (
     <Container center={center}>
       {inputLabel}
-      {!valid ? <ValidationLabel>{valid}</ValidationLabel> : null}
-      <Input value={value} valid={valid} type={type} onChange={onChange} />
+      {!valid ? errors : null}
+      <Input value={value} valid={valid} type={type} onChange={valueChange} />
     </Container>
   );
 }
