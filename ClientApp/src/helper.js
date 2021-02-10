@@ -45,12 +45,31 @@ export function useField(initial, initialVal) {
 }
 
 export function useObject(initialFields, initialValues) {
+  // if error fields are missing add them
   function getInitialValues() {
     return Object.keys(initialFields).reduce((total, field) => {
-      total[field] = { ...initialFields[field], value: initialValues[field] };
+      const currentField = {
+        ...initialFields[field],
+        value: initialValues[field],
+      };
+      if (currentField.validation) {
+        currentField.validation.errors = [];
+      } else currentField.validation = { errors: [] };
+      total[field] = currentField;
       return total;
     }, {});
   }
+  function getInitialFields() {
+    return Object.keys(initialFields).reduce((total, field) => {
+      const currentField = { ...initialFields[field] };
+      if (currentField.validation) {
+        currentField.validation.errors = [];
+      } else currentField.validation = { errors: [] };
+      total[field] = currentField;
+      return total;
+    }, {});
+  }
+
   const allInitialValuesRef = useRef(getInitialValues());
 
   useEffect(() => {
@@ -61,25 +80,25 @@ export function useObject(initialFields, initialValues) {
 
   const [values, setValues] = useState(allInitialValues);
 
-  const [fields, setFields] = useState(initialFields);
+  const [fields, setFields] = useState(getInitialFields());
 
   const object = {
     data: Object.keys(fields).reduce((total, field) => {
       const currentField = fields[field];
-      if (currentField.validation) {
-        currentField.validation.errors = [];
-      } else currentField.validation = { errors: [] };
+      currentField.value = values[field].value;
       total[field] = {
         ...currentField,
         onChange: (value) => {
-          console.log(object);
           if (currentField.onChange) {
             currentField.onChange(value, object.data);
           }
           return setValues((oldValues) => {
             return {
               ...oldValues,
-              [field]: { ...oldValues[field], value: value },
+              [field]: {
+                ...oldValues[field],
+                value: value,
+              },
             };
           });
         },
@@ -95,24 +114,28 @@ export function useObject(initialFields, initialValues) {
           currentField.validation &&
           currentField.validation.rules
         ) {
+          currentField.validation.errors = [];
           const errors = fields[fieldKey].validation.rules.reduce(
             (total, rule) => {
-              const result = rule.validate(fields);
+              const result = rule.validate(fields[fieldKey].value, fields);
               if (!result) {
                 isValid = false;
-                total.push({ message: rule.message });
-                currentField.validation.errors.push({ message: rule.message });
+                total.push({ message: rule.message, id: rule.id });
+                currentField.validation.errors.push({
+                  message: rule.message,
+                  id: rule.id,
+                });
               }
               return total;
             },
             []
           );
           if (errors.length === 0) return null;
-          return errors;
+          return { [fieldKey]: { errors } };
         }
-        return null;
+        return { [fieldKey]: { errors: null } };
       });
-      if (isValid) setValues({ ...fields });
+      if (!isValid) setValues(fields);
       return isValid;
     },
     reset() {
