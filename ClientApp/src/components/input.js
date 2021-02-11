@@ -6,6 +6,7 @@ const Container = styled.div`
   position: relative;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
+  margin-bottom: 12px;
   padding: ${(props) => props.theme.padding.default};
 `;
 
@@ -27,11 +28,14 @@ const Label = styled.span``;
 const LabelAbove = styled.div``;
 
 const ValidationLabel = styled.span`
+  font-size: 11px;
+  margin-top: 7px;
+  margin-left: 2px;
+  color: ${(props) => props.theme.colors.danger};
   display: flex;
   justify-content: flex-end;
   position: absolute;
-  right: 10px;
-  top: 5px;
+  bottom: -12px;
 `;
 
 export default function BaseInput({
