@@ -92,6 +92,7 @@ export function useObject(initialFields, initialValues) {
           if (currentField.onChange) {
             currentField.onChange(value, object.data);
           }
+          currentField.validation.errors = [];
           return setValues((oldValues) => {
             return {
               ...oldValues,
@@ -109,31 +110,18 @@ export function useObject(initialFields, initialValues) {
       let isValid = true;
       Object.keys(fields).forEach((fieldKey) => {
         const currentField = fields[fieldKey];
-        if (
-          currentField &&
-          currentField.validation &&
-          currentField.validation.rules
-        ) {
-          currentField.validation.errors = [];
-          const errors = fields[fieldKey].validation.rules.reduce(
-            (total, rule) => {
-              const result = rule.validate(fields[fieldKey].value, fields);
-              if (!result) {
+        if (currentField.validation && currentField.validation.rules) {
+          currentField.validation.errors = currentField.validation.rules.reduce(
+            (errors, rule) => {
+              if (!rule.validate(currentField.value, fields)) {
                 isValid = false;
-                total.push({ message: rule.message, id: rule.id });
-                currentField.validation.errors.push({
-                  message: rule.message,
-                  id: rule.id,
-                });
+                errors.push({ id: rule.id, message: rule.message });
               }
-              return total;
+              return errors;
             },
             []
           );
-          if (errors.length === 0) return null;
-          return { [fieldKey]: { errors } };
         }
-        return { [fieldKey]: { errors: null } };
       });
       if (!isValid) setValues(fields);
       return isValid;
