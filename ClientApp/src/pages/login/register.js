@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { Input, Button, Title } from "../../components";
 import { useObject } from "../../helper";
-import { Input, Button, Title, Link } from "../../components";
-import { UserLogin } from "../../services/auth";
-import Register from "./register";
+import { RegisterUser } from "../../services/auth";
 
 const LoginContainer = styled.div`
   width: 400px;
@@ -23,11 +21,9 @@ const ButtonContainer = styled.div`
 
 const Content = styled.div``;
 
-export default function Login(props) {
+export default function Register({ setRegister }) {
   const [loading, setLoading] = useState(false);
-  const [register, setRegister] = useState(false);
-
-  const initialValues = { email: "", password: "" };
+  const initialValues = { email: "", password: "", confirmPassword: "" };
   const fields = useObject(
     {
       email: {
@@ -58,30 +54,40 @@ export default function Login(props) {
           ],
         },
       },
+      confirmPassword: {
+        name: "confirmPassword",
+        value: "",
+        validation: {
+          rules: [
+            {
+              validate: (value) => {
+                return value !== "" && value;
+              },
+              message: "Please retype your password",
+            },
+            {
+              validate: (value, data) => {
+                return value !== data.password.value;
+              },
+              message: "Passwords must match",
+            },
+          ],
+        },
+      },
     },
     initialValues
   );
 
-  const { email, password } = fields.data;
-  const { isLoggedIn, setLoggedIn } = props;
+  const { email, password, confirmPassword } = fields.data;
 
-  const handleSubmit = async () => {
-    const isValid = fields.validate();
-    if (isValid) {
+  const handleRegister = async () => {
+    if (fields.validate()) {
       setLoading(true);
-      await UserLogin(email.value, password.value);
-      setLoggedIn(true);
+      await RegisterUser(email.value, password.value, confirmPassword.value);
       setLoading(false);
+      setRegister(false);
     }
   };
-
-  if (isLoggedIn) {
-    return null;
-  }
-
-  if (register) {
-    return <Register setRegister={setRegister} />;
-  }
 
   return (
     <LoginContainer>
@@ -95,22 +101,24 @@ export default function Login(props) {
           type={"password"}
           {...password}
         />
+        <Input
+          label="Confirm password"
+          position="above"
+          center
+          type={"password"}
+          {...confirmPassword}
+        />
         <ButtonContainer>
           <Button
             center
             isLoginButton
             primary
             loading={loading}
-            onClick={handleSubmit}
+            onClick={handleRegister}
           >
-            Login
+            Sign up
           </Button>
         </ButtonContainer>
-        <div>
-          Need an account?{" "}
-          <Link onClick={() => setRegister(true)}>Sign up here.</Link>
-          Forgot your <Link>password? </Link>
-        </div>
       </Content>
     </LoginContainer>
   );

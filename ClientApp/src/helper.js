@@ -112,10 +112,13 @@ export function useObject(initialFields, initialValues) {
         const currentField = fields[fieldKey];
         if (currentField.validation && currentField.validation.rules) {
           currentField.validation.errors = currentField.validation.rules.reduce(
-            (errors, rule) => {
+            (errors, rule, index) => {
               if (!rule.validate(currentField.value, fields)) {
                 isValid = false;
-                errors.push({ id: rule.id, message: rule.message });
+                errors.push({
+                  id: `${fieldKey}-validation-fail-${index}`,
+                  message: rule.message,
+                });
               }
               return errors;
             },
