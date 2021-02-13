@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
@@ -30,6 +31,14 @@ namespace WorkTracker.Repositories
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
+        }
+
+        public List<Team> GetByUserId(int userId)
+        {
+            var userTeams = _dbContext.UserTeams
+                .Where(w => w.UserId == userId)
+                .Select(s => s.TeamId).ToList();
+            return _dbContext.Teams.Where(w => userTeams.Contains(w.TeamId)).ToList();
         }
     }
 }

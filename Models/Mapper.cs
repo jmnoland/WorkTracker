@@ -70,5 +70,54 @@ namespace WorkTracker.Models.Mapper
         }
         #endregion
 
+        #region TeamMapping
+        public static DTOs.Team Map(DataModels.Team team)
+        {
+            return new DTOs.Team
+            {
+                TeamId = team.TeamId,
+                Name = team.Name
+            };
+        }
+        public static List<DTOs.Team> Map(List<DataModels.Team> teamList)
+        {
+            var temp = new List<DTOs.Team>();
+            foreach(var team in teamList)
+            {
+                temp.Add(new DTOs.Team
+                {
+                    Name = team.Name,
+                    TeamId = team.TeamId
+                });
+            }
+            return temp;
+        }
+        #endregion
+
+        #region StateMapping
+        public static List<DTOs.State> Map(List<DataModels.State> stateList)
+        {
+            var temp = new List<DTOs.State>();
+            foreach(var state in stateList)
+            {
+                temp.Add(new DTOs.State
+                {
+                    Name = state.Name,
+                    StateId = state.StateId,
+                    TeamId = state.TeamId
+                });
+            }
+            return temp;
+        }
+        public static DTOs.State Map(DataModels.State state)
+        {
+            return new DTOs.State
+            {
+                Name = state.Name,
+                StateId = state.StateId,
+                TeamId = state.TeamId
+            };
+        }
+        #endregion
     }
 }

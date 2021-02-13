@@ -22,6 +22,13 @@ namespace WorkTracker.Controllers
         {
             return _userService.GetUsersByTeamId(teamId);
         }
+
+        [HttpGet("details")]
+        public ActionResult<UserDetail> GetUserDetails([FromRoute] int userId)
+        {
+            return _userService.GetUserDetail(userId);
+        }
+
         [HttpPost]
         public ActionResult CreateUser([FromBody] CreateUserRequest request)
         {

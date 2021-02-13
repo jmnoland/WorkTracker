@@ -5,9 +5,9 @@ using WorkTracker.Models.DataModels;
 
 namespace WorkTracker.Repositories.Interfaces
 {
-    public interface ITeamRepository : IGenericRepository<Team>
+    public interface IStateRepository
     {
-        void AssignUser(int userId, int teamId);
-        List<Team> GetByUserId(int userId);
+        void CreateDefaultStates(int teamId);
+        List<State> GetByTeamId(int teamId);
     }
 }
