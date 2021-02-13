@@ -35,6 +35,14 @@ namespace WorkTracker.Controllers
                 return BadRequest("Role does not exist.");
             }
         }
+
+        [HttpPost("register")]
+        public ActionResult RegisterUser([FromBody] CreateUserRequest request)
+        {
+            _userService.RegisterUser(request);
+            return Ok();
+        }
+
         [HttpPatch]
         public ActionResult UpdateUser([FromBody] UpdateUserRequest request)
         {

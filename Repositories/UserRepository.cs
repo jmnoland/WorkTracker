@@ -1,7 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 
@@ -55,10 +57,11 @@ namespace WorkTracker.Repositories
             return _dbContext.Users.Where(w => w.UserId == userId).FirstOrDefault();
         }
 
-        public async void CreateUser(User user)
+        public int CreateUser(User user)
         {
             _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
+            return user.UserId;
         }
 
         public async void UpdateUser(User user)

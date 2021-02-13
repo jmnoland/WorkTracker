@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 
 namespace WorkTracker.Repositories.Interfaces
@@ -9,7 +10,7 @@ namespace WorkTracker.Repositories.Interfaces
     {
         List<Models.ServiceModels.User> GetUsersByTeamId(int teamId);
         User GetUser(int userId);
-        void CreateUser(User user);
+        int CreateUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int userId);
     }

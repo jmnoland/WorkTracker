@@ -43,6 +43,7 @@ namespace WorkTracker
             services.AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IRoleRepository, RoleRepository>()
                 .AddScoped<IUserService, UserService>()
+                .AddScoped<ITeamRepository, TeamRepository>()
                 .AddScoped<IAuthService, AuthService>();
 
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));

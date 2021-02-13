@@ -13,11 +13,14 @@ namespace WorkTracker.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly ITeamRepository _teamRepository;
         public UserService(IUserRepository userRepository,
-                           IRoleRepository roleRepository)
+                           IRoleRepository roleRepository,
+                           ITeamRepository teamRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _teamRepository = teamRepository;
         }
 
         public List<Models.DTOs.User> GetUsersByTeamId(int teamId)
@@ -28,7 +31,23 @@ namespace WorkTracker.Services
         public void CreateUser(CreateUserRequest request)
         {
             var user = Mapper.Map(request);
+            if (user.RoleId == 0) user.RoleId = 1;
             _userRepository.CreateUser(user);
+        }
+
+        public void RegisterUser(CreateUserRequest request)
+        {
+            var user = Mapper.Map(request);
+            if (user.RoleId == 0) user.RoleId = 1;
+            var userId = _userRepository.CreateUser(user);
+            var newTeam = new Models.DataModels.Team()
+            {
+                OrganisationId = null,
+                TeamId = 0,
+                Name = Guid.NewGuid().ToString()
+            };
+            var team = _teamRepository.Add(newTeam);
+            _teamRepository.AssignUser(userId, team.TeamId);
         }
 
         public void UpdateUser(UpdateUserRequest request)

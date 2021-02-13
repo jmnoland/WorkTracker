@@ -39,8 +39,6 @@ namespace WorkTracker.Controllers.Attributes
 
         private bool IsValidRequest(HttpRequest request)
         {
-            var requestUrl = RequestRawUrl(request);
-            var parameters = ToDictionary(request.Form);
             var token = request.Cookies["X-User-Token"];
             if (token == null) return false;
             var isValid = true;
