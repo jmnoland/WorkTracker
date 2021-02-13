@@ -1,14 +1,34 @@
 import React from "react";
-import {
-  Collapse,
-  Container,
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  NavItem,
-  NavLink,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { MainTitle, NavLink } from "../";
+
+const Navbar = styled.div`
+  box-shadow: ${(props) => props.theme.border.shadow};
+  border-radius: ${(props) => props.theme.border.radius.default};
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const NavbarBrand = styled.div``;
+
+const LinkContainer = styled.div`
+  display: flex;
+`;
+
+const NavItem = styled.div`
+  margin-top: auto;
+  margin-bottom: auto;
+`;
+
+const NavLinkContainer = styled.div`
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  margin-right: 20px;
+`;
 
 export default function NavMenu(props) {
   const { isLoggedIn } = props;
@@ -19,24 +39,24 @@ export default function NavMenu(props) {
 
   return (
     <header>
-      <Navbar
-        className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
-        light
-      >
+      <Navbar>
         <Container>
-          <NavbarBrand tag={Link} to="/">
-            WorkTracker
+          <NavbarBrand>
+            <MainTitle />
           </NavbarBrand>
-          <NavbarToggler className="mr-2" />
-          <Collapse className="d-sm-inline-flex flex-sm-row-reverse" navbar>
-            <ul className="navbar-nav flex-grow">
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">
-                  Dashboard
-                </NavLink>
-              </NavItem>
-            </ul>
-          </Collapse>
+          <LinkContainer>
+            <NavItem>
+              <NavLinkContainer>
+                <NavLink to="/">Board</NavLink>
+              </NavLinkContainer>
+            </NavItem>
+            <NavItem>
+              <NavLinkContainer>
+                <NavLink to="/report">Reports</NavLink>
+              </NavLinkContainer>
+            </NavItem>
+          </LinkContainer>
+          <div>Profile</div>
         </Container>
       </Navbar>
     </header>

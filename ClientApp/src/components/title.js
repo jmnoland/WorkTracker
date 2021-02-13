@@ -1,11 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-const Title = styled.div`
+const LoginTitleContainer = styled.div`
   font-size: 50px;
   text-align: center;
   margin-bottom: ${(props) => props.theme.margin.large};
 `;
+
+const MainTitleContainer = styled.div`
+  font-size: 30px;
+  padding: 10px 10px 10px 30px;
+`;
+
 const TitleStart = styled.span`
   color: ${(props) => props.theme.colors.orange};
 `;
@@ -13,11 +19,20 @@ const TitleEnd = styled.span`
   color: ${(props) => props.theme.colors.white};
 `;
 
-export default function BaseTitle() {
+export function LoginTitle() {
   return (
-    <Title>
+    <LoginTitleContainer>
       <TitleStart>Work</TitleStart>
       <TitleEnd>Tracker</TitleEnd>
-    </Title>
+    </LoginTitleContainer>
+  );
+}
+
+export function MainTitle() {
+  return (
+    <MainTitleContainer>
+      <TitleStart>Work</TitleStart>
+      <TitleEnd>Tracker</TitleEnd>
+    </MainTitleContainer>
   );
 }

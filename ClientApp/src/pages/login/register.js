@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Input, Button, Title } from "../../components";
+import { Input, Button, LoginTitle } from "../../components";
 import { useObject } from "../../helper";
-import { RegisterUser } from "../../services/auth";
+import { CreateUser } from "../../services/user";
 
 const LoginContainer = styled.div`
   width: 400px;
@@ -67,7 +67,7 @@ export default function Register({ setRegister }) {
             },
             {
               validate: (value, data) => {
-                return value !== data.password.value;
+                return value === data.password.value;
               },
               message: "Passwords must match",
             },
@@ -83,7 +83,7 @@ export default function Register({ setRegister }) {
   const handleRegister = async () => {
     if (fields.validate()) {
       setLoading(true);
-      await RegisterUser(email.value, password.value, confirmPassword.value);
+      await CreateUser(email.value, password.value);
       setLoading(false);
       setRegister(false);
     }
@@ -91,7 +91,7 @@ export default function Register({ setRegister }) {
 
   return (
     <LoginContainer>
-      <Title />
+      <LoginTitle />
       <Content>
         <Input label="Email" position="above" center {...email} />
         <Input

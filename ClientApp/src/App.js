@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Route } from "react-router";
+import { Route, Switch } from "react-router";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { theme } from "./constants/theme";
 import Login from "./pages/login/login";
-import Dashboard from "./pages/dashboard/dashboard";
+import Report from "./pages/report/report";
+import Board from "./pages/board/board";
 import NavMenu from "./components/layout/navMenu";
 import { decodeJwtToken, getToken } from "./helper";
 
@@ -26,6 +27,13 @@ const AppContainer = styled.div`
   color: ${(props) => props.theme.colors.white};
 `;
 
+function Content({ isLoggedIn, children }) {
+  if (isLoggedIn) {
+    return <div>{children}</div>;
+  }
+  return null;
+}
+
 export default function App() {
   const token = getToken();
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -36,10 +44,13 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <AppContainer>
-        <NavMenu isLoggedIn={isLoggedIn}>
-          <Route exact path="/" component={Dashboard} />
-          <Route exact path="/login" component={Login} />
-        </NavMenu>
+        <NavMenu isLoggedIn={isLoggedIn} />
+        <Content isLoggedIn={isLoggedIn}>
+          <Switch>
+            <Route exact path="/" component={Board} />
+            <Route exact path="/report" component={Report} />
+          </Switch>
+        </Content>
         <Login isLoggedIn={isLoggedIn} setLoggedIn={setIsLoggedIn} />
       </AppContainer>
     </ThemeProvider>

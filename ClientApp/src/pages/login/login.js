@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useObject } from "../../helper";
-import { Input, Button, Title, Link } from "../../components";
+import { Input, Button, LoginTitle, Link } from "../../components";
 import { UserLogin } from "../../services/auth";
 import Register from "./register";
 
@@ -85,7 +85,7 @@ export default function Login(props) {
 
   return (
     <LoginContainer>
-      <Title />
+      <LoginTitle />
       <Content>
         <Input label="Email" position="above" center {...email} />
         <Input

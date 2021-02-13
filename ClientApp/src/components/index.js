@@ -1,6 +1,6 @@
 import { default as Input } from "./input";
 import { default as Button } from "./button";
-import { default as Title } from "./title";
-import { default as Link } from "./link";
+import { LoginTitle, MainTitle } from "./title";
+import { NavLink, BaseLink } from "./link";
 
-export { Input, Button, Title, Link };
+export { Input, Button, LoginTitle, MainTitle, NavLink, BaseLink as Link };
