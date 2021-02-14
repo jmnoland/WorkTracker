@@ -10,3 +10,8 @@ export async function CreateUser(email, password) {
     name,
   });
 }
+
+export async function GetDetails(userId) {
+  const { data } = await api.get(`${controller}/details/${userId}`);
+  return data;
+}

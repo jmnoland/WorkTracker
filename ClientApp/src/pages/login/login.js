@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { useObject } from "../../helper";
 import { Input, Button, LoginTitle, Link } from "../../components";
 import { UserLogin } from "../../services/auth";
+import { UserDetailContext } from "../../context/userDetails";
 import Register from "./register";
 
 const LoginContainer = styled.div`
@@ -23,9 +23,12 @@ const ButtonContainer = styled.div`
 
 const Content = styled.div``;
 
-export default function Login(props) {
+export default function Login() {
   const [loading, setLoading] = useState(false);
   const [register, setRegister] = useState(false);
+  const { isLoggedIn, setIsLoggedIn, setTokenDetails } = useContext(
+    UserDetailContext
+  );
 
   const initialValues = { email: "", password: "" };
   const fields = useObject(
@@ -63,14 +66,13 @@ export default function Login(props) {
   );
 
   const { email, password } = fields.data;
-  const { isLoggedIn, setLoggedIn } = props;
 
   const handleSubmit = async () => {
     const isValid = fields.validate();
     if (isValid) {
       setLoading(true);
-      await UserLogin(email.value, password.value);
-      setLoggedIn(true);
+      setTokenDetails(await UserLogin(email.value, password.value));
+      setIsLoggedIn(true);
       setLoading(false);
     }
   };

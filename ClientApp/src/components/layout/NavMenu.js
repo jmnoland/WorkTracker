@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { UserDetailContext } from "../../context/userDetails";
 import { MainTitle, NavLink } from "../";
 
 const Navbar = styled.div`
@@ -30,8 +31,8 @@ const NavLinkContainer = styled.div`
   margin-right: 20px;
 `;
 
-export default function NavMenu(props) {
-  const { isLoggedIn } = props;
+export default function NavMenu() {
+  const { isLoggedIn } = useContext(UserDetailContext);
 
   if (!isLoggedIn) {
     return null;
