@@ -33,13 +33,15 @@ namespace WorkTracker.Services
 
         public Models.DTOs.UserDetail GetUserDetail(int userId)
         {
-            var details = new Models.DTOs.UserDetail();
+            var details = new Models.DTOs.UserDetail()
+            {
+                States = new List<Models.DTOs.State>(),
+                Teams = new List<Models.DTOs.Team>()
+            };
             var teams = _teamRepository.GetByUserId(userId);
             foreach (var team in teams)
             {
-                details.States.AddRange(
-                    Mapper.Map(_stateRepository.GetByTeamId(team.TeamId))
-                );
+                details.States.AddRange(Mapper.Map(_stateRepository.GetByTeamId(team.TeamId)));
                 details.Teams.Add(Mapper.Map(team));
             }
             return details;

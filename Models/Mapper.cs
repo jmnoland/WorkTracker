@@ -103,6 +103,7 @@ namespace WorkTracker.Models.Mapper
                 temp.Add(new DTOs.State
                 {
                     Name = state.Name,
+                    Type = state.Type,
                     StateId = state.StateId,
                     TeamId = state.TeamId
                 });
@@ -114,6 +115,7 @@ namespace WorkTracker.Models.Mapper
             return new DTOs.State
             {
                 Name = state.Name,
+                Type = state.Type,
                 StateId = state.StateId,
                 TeamId = state.TeamId
             };

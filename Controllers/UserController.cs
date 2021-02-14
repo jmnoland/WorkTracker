@@ -23,7 +23,7 @@ namespace WorkTracker.Controllers
             return _userService.GetUsersByTeamId(teamId);
         }
 
-        [HttpGet("details")]
+        [HttpGet("details/{userId}")]
         public ActionResult<UserDetail> GetUserDetails([FromRoute] int userId)
         {
             return _userService.GetUserDetail(userId);
