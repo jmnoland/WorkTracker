@@ -12,6 +12,7 @@ export function verifyTokenExpiry(decodedToken) {
 }
 
 export function decodeJwtToken(token) {
+  if (!token) return;
   const decodedToken = jwt_decode(token);
   if (verifyTokenExpiry(decodedToken)) {
     return decodedToken;
