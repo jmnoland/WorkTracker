@@ -19,7 +19,7 @@ const Button = styled.button`
   border-radius: ${(props) => props.theme.border.radius.button};
   font-size: ${(props) => props.theme.font.size.default}
   font-weight: 600;
-  width: 150px;
+  width: 100px;
 
   &:focus {
     outline: none;
