@@ -11,11 +11,11 @@ namespace WorkTracker.Models.DataModels
         public DbSet<Role> Roles { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<State> States { get; set; }
-        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Story> Story { get; set; }
         public DbSet<Task> Task { get; set; }
 
         public DbSet<UserTeam> UserTeams { get; set; }
-        public DbSet<UserTicket> UserTickets { get; set; }
+        public DbSet<UserStory> UserStory { get; set; }
         public DbSet<TeamProject> TeamProjects { get; set; }
 
         private static bool _created = false;
@@ -39,12 +39,12 @@ namespace WorkTracker.Models.DataModels
             modelBuilder.Entity<Role>();
             modelBuilder.Entity<Sprint>();
             modelBuilder.Entity<State>();
-            modelBuilder.Entity<Ticket>();
+            modelBuilder.Entity<Story>();
             modelBuilder.Entity<Task>();
             modelBuilder.Entity<Attachment>();
             modelBuilder.Entity<TeamProject>().HasKey(e => new { e.TeamId, e.ProjectId });
             modelBuilder.Entity<UserTeam>().HasKey(e => new { e.TeamId, e.UserId });
-            modelBuilder.Entity<UserTicket>().HasKey(e => new { e.TicketId, e.UserId });
+            modelBuilder.Entity<UserStory>().HasKey(e => new { e.StoryId, e.UserId });
         }
     }
 }

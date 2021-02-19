@@ -72,7 +72,7 @@ namespace WorkTracker.Repositories
 
         public void DeleteUser(int userId)
         {
-            string query = @"DELETE FROM UserTickets WHERE UserId = @userId
+            string query = @"DELETE FROM UserStory WHERE UserId = @userId
                              DELETE FROM UserTeams WHERE UserId = @userId
                              DELETE FROM Users WHERE UserId = @userId";
 
