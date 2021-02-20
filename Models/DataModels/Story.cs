@@ -10,6 +10,7 @@ namespace WorkTracker.Models.DataModels
         public int StateId { get; set; }
         public int? ProjectId { get; set; }
         public int? SprintId { get; set; }
+        public int ListOrder { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
     }

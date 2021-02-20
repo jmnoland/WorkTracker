@@ -24,5 +24,25 @@ namespace WorkTracker.Repositories
                                select story).ToList();
             return Mapper.Map(userStories);
         }
+        
+        public int CreateStory(int userId, Models.ServiceModels.Story story)
+        {
+            _dbContext.Story.Add(Mapper.Map(story));
+            _dbContext.SaveChanges();
+            var userStory = new UserStory
+            {
+                StoryId = story.StoryId,
+                UserId = userId
+            };
+            _dbContext.UserStory.Add(userStory);
+            _dbContext.SaveChanges();
+            return story.StoryId;
+        }
+        public void AddTasks(List<Models.ServiceModels.Task> taskList)
+        {
+            var addList = Mapper.Map(taskList);
+            _dbContext.AddRange(addList);
+            _dbContext.SaveChanges();
+        }
     }
 }

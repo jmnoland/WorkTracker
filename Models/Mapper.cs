@@ -74,6 +74,28 @@ namespace WorkTracker.Models.Mapper
         }
         #endregion
 
+        #region TaskMapping
+        public ServiceModels.Task Map(DTOs.Task task)
+        {
+            return new ServiceModels.Task
+            {
+                Description = task.Description,
+                Status = task.Status,
+                StoryId = task.StoryId,
+                TaskId = task.TaskId
+            };
+        }
+        public List<ServiceModels.Task> Map(List<DTOs.Task> taskList)
+        {
+            var tempList = new List<ServiceModels.Task>();
+            foreach (var task in taskList)
+            {
+                tempList.Add(Map(task));
+            }
+            return tempList;
+        }
+        #endregion
+
         #region StateMapping
         public static DTOs.State Map(ServiceModels.State state)
         {
@@ -93,6 +115,61 @@ namespace WorkTracker.Models.Mapper
                 temp.Add(Map(state));
             }
             return temp;
+        }
+        #endregion
+        #region StoryMapper
+        public static DTOs.Story Map(ServiceModels.Story story)
+        {
+            return new DTOs.Story
+            {
+                Description = story.Description,
+                ProjectId = story.ProjectId,
+                SprintId = story.SprintId,
+                StateId = story.StateId,
+                StoryId = story.StoryId,
+                ListOrder = story.ListOrder,
+                Title = story.Title
+            };
+        }
+        public static List<DTOs.Story> Map(List<ServiceModels.Story> storyList)
+        {
+            var tempList = new List<DTOs.Story>();
+            foreach(var story in storyList)
+            {
+                tempList.Add(Map(story));
+            }
+            return tempList;
+        }
+
+        // Story create request mapping
+        public static ServiceModels.Story Map(CreateStoryRequest request)
+        {
+            var story = new ServiceModels.Story
+            {
+                Description = request.Description,
+                Title = request.Title,
+                ListOrder = request.ListOrder,
+                ProjectId = request.ProjectId,
+                SprintId = request.SprintId,
+                StateId = request.StateId,
+                StoryId = 0
+            };
+            return story;
+        }
+        public static List<ServiceModels.Task> Map(CreateStoryRequest request, int storyId)
+        {
+            var taskList = new List<ServiceModels.Task>();
+            foreach (var task in request.Tasks)
+            {
+                taskList.Add(new ServiceModels.Task
+                {
+                    Description = task.Description,
+                    Status = task.Status,
+                    StoryId = storyId,
+                    TaskId = 0
+                });
+            }
+            return taskList;
         }
         #endregion
     }

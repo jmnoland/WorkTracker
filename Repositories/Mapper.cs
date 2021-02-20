@@ -113,6 +113,7 @@ namespace WorkTracker.Repositories
                 SprintId = story.SprintId,
                 StateId = story.StateId,
                 Title = story.Title,
+                ListOrder = story.ListOrder,
                 Description = story.Description,
             };
         }
@@ -122,6 +123,50 @@ namespace WorkTracker.Repositories
             foreach(var story in storyList)
             {
                 tempList.Add(Map(story));
+            }
+            return tempList;
+        }
+        public static Models.DataModels.Story Map(Models.ServiceModels.Story story)
+        {
+            return new Models.DataModels.Story
+            {
+                StoryId = story.StoryId,
+                ProjectId = story.ProjectId,
+                SprintId = story.SprintId,
+                StateId = story.StateId,
+                Title = story.Title,
+                ListOrder = story.ListOrder,
+                Description = story.Description,
+            };
+        }
+        public static List<Models.DataModels.Story> Map(List<Models.ServiceModels.Story> storyList)
+        {
+            var tempList = new List<Models.DataModels.Story>();
+            foreach (var story in storyList)
+            {
+                tempList.Add(Map(story));
+            }
+            return tempList;
+        }
+        #endregion
+
+        #region TaskMapping
+        public static Models.DataModels.Task Map(Models.ServiceModels.Task task)
+        {
+            return new Models.DataModels.Task
+            {
+                Description = task.Description,
+                Status = task.Status,
+                StoryId = task.StoryId,
+                TaskId = task.TaskId
+            };
+        }
+        public static List<Models.DataModels.Task> Map(List<Models.ServiceModels.Task> taskList)
+        {
+            var tempList = new List<Models.DataModels.Task>();
+            foreach(var task in taskList)
+            {
+                tempList.Add(Map(task));
             }
             return tempList;
         }
