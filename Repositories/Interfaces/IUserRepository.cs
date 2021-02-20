@@ -9,9 +9,9 @@ namespace WorkTracker.Repositories.Interfaces
     public interface IUserRepository : IGenericRepository<User>
     {
         List<Models.ServiceModels.User> GetUsersByTeamId(int teamId);
-        User GetUser(int userId);
-        int CreateUser(User user);
-        void UpdateUser(User user);
+        Models.ServiceModels.User GetUser(int userId);
+        int CreateUser(Models.ServiceModels.User user);
+        void UpdateUser(Models.ServiceModels.User user);
         void DeleteUser(int userId);
     }
 }

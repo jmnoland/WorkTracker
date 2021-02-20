@@ -5,9 +5,8 @@ using WorkTracker.Models.DataModels;
 
 namespace WorkTracker.Repositories.Interfaces
 {
-    public interface IStateRepository
+    public interface IStoryRepository
     {
-        void CreateDefaultStates(int teamId);
-        List<Models.ServiceModels.State> GetByTeamId(int teamId);
+        List<Models.ServiceModels.Story> GetStoriesByStateId(int userId, int stateId);
     }
 }

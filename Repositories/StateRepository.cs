@@ -28,9 +28,9 @@ namespace WorkTracker.Repositories
             _dbContext.SaveChanges();
         }
 
-        public List<State> GetByTeamId(int teamId)
+        public List<Models.ServiceModels.State> GetByTeamId(int teamId)
         {
-            return _dbContext.States.Where(w => w.TeamId == teamId).ToList();
+            return Mapper.Map(_dbContext.States.Where(w => w.TeamId == teamId).ToList());
         }
 
     }

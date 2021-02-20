@@ -8,6 +8,6 @@ namespace WorkTracker.Repositories.Interfaces
     public interface ITeamRepository : IGenericRepository<Team>
     {
         void AssignUser(int userId, int teamId);
-        List<Team> GetByUserId(int userId);
+        List<Models.ServiceModels.Team> GetByUserId(int userId);
     }
 }

@@ -33,12 +33,12 @@ namespace WorkTracker.Repositories
             }
         }
 
-        public List<Team> GetByUserId(int userId)
+        public List<Models.ServiceModels.Team> GetByUserId(int userId)
         {
             var userTeams = _dbContext.UserTeams
                 .Where(w => w.UserId == userId)
                 .Select(s => s.TeamId).ToList();
-            return _dbContext.Teams.Where(w => userTeams.Contains(w.TeamId)).ToList();
+            return Mapper.Map(_dbContext.Teams.Where(w => userTeams.Contains(w.TeamId)).ToList());
         }
     }
 }

@@ -52,21 +52,26 @@ namespace WorkTracker.Repositories
             }
         }
 
-        public User GetUser(int userId)
+        public Models.ServiceModels.User GetUser(int userId)
         {
-            return _dbContext.Users.Where(w => w.UserId == userId).FirstOrDefault();
+            var user = _dbContext.Users.Where(w => w.UserId == userId).FirstOrDefault();
+            if (user != null)
+            {
+                return Mapper.Map(user);
+            }
+            return null;
         }
 
-        public int CreateUser(User user)
+        public int CreateUser(Models.ServiceModels.User user)
         {
-            _dbContext.Users.Add(user);
+            _dbContext.Users.Add(Mapper.Map(user));
             _dbContext.SaveChanges();
             return user.UserId;
         }
 
-        public async void UpdateUser(User user)
+        public async void UpdateUser(Models.ServiceModels.User user)
         {
-            _dbContext.Users.Update(user);
+            _dbContext.Users.Update(Mapper.Map(user));
             await _dbContext.SaveChangesAsync();
         }
 

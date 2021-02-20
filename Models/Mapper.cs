@@ -9,26 +9,6 @@ namespace WorkTracker.Models.Mapper
     public class Mapper
     {
         #region UserMapping
-        public static ServiceModels.User Map(DataModels.User user)
-        {
-            return new ServiceModels.User
-            {
-                Email = user.Email,
-                Name = user.Name,
-                RoleId = user.RoleId,
-                UserId = user.UserId,
-                Password = user.Password
-            };
-        }
-        public static List<ServiceModels.User> Map(List<DataModels.User> userList)
-        {
-            var temp = new List<ServiceModels.User>();
-            foreach(var user in userList)
-            {
-                temp.Add(Map(user));
-            }
-            return temp;
-        }
         public static DTOs.User Map(ServiceModels.User user)
         {
             return new DTOs.User
@@ -42,7 +22,7 @@ namespace WorkTracker.Models.Mapper
         public static List<DTOs.User> Map(List<ServiceModels.User> userList)
         {
             var temp = new List<DTOs.User>();
-            foreach (var user in userList)
+            foreach(var user in userList)
             {
                 temp.Add(Map(user));
             }
@@ -50,9 +30,9 @@ namespace WorkTracker.Models.Mapper
         }
 
         //  User request mapping
-        public static DataModels.User Map(CreateUserRequest request)
+        public static ServiceModels.User Map(CreateUserRequest request)
         {
-            return new DataModels.User
+            return new ServiceModels.User
             {
                 Email = request.Email,
                 Name = request.Name,
@@ -61,7 +41,7 @@ namespace WorkTracker.Models.Mapper
                 UserId = 0
             };
         }
-        public static DataModels.User Map(UpdateUserRequest request, DataModels.User user)
+        public static ServiceModels.User Map(UpdateUserRequest request, ServiceModels.User user)
         {
             user.Email = request.Email == user.Email ? user.Email : request.Email;
             user.Name = request.Name == user.Name ? user.Name : request.Name;
@@ -71,7 +51,7 @@ namespace WorkTracker.Models.Mapper
         #endregion
 
         #region TeamMapping
-        public static DTOs.Team Map(DataModels.Team team)
+        public static DTOs.Team Map(ServiceModels.Team team)
         {
             return new DTOs.Team
             {
@@ -79,7 +59,7 @@ namespace WorkTracker.Models.Mapper
                 Name = team.Name
             };
         }
-        public static List<DTOs.Team> Map(List<DataModels.Team> teamList)
+        public static List<DTOs.Team> Map(List<ServiceModels.Team> teamList)
         {
             var temp = new List<DTOs.Team>();
             foreach(var team in teamList)
@@ -95,22 +75,7 @@ namespace WorkTracker.Models.Mapper
         #endregion
 
         #region StateMapping
-        public static List<DTOs.State> Map(List<DataModels.State> stateList)
-        {
-            var temp = new List<DTOs.State>();
-            foreach(var state in stateList)
-            {
-                temp.Add(new DTOs.State
-                {
-                    Name = state.Name,
-                    Type = state.Type,
-                    StateId = state.StateId,
-                    TeamId = state.TeamId
-                });
-            }
-            return temp;
-        }
-        public static DTOs.State Map(DataModels.State state)
+        public static DTOs.State Map(ServiceModels.State state)
         {
             return new DTOs.State
             {
@@ -119,6 +84,15 @@ namespace WorkTracker.Models.Mapper
                 StateId = state.StateId,
                 TeamId = state.TeamId
             };
+        }
+        public static List<DTOs.State> Map(List<ServiceModels.State> stateList)
+        {
+            var temp = new List<DTOs.State>();
+            foreach(var state in stateList)
+            {
+                temp.Add(Map(state));
+            }
+            return temp;
         }
         #endregion
     }
