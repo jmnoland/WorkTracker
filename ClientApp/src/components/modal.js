@@ -15,7 +15,8 @@ const ModalWindow = styled.div`
   margin-right: auto;
   margin-top: 10%;
   width: 600px;
-  height: 600px;
+  min-height: 600px;
+  height: fit-content;
   background: ${(props) => props.theme.colors.background};
   padding: ${(props) => props.theme.padding.large};
   box-shadow: ${(props) => props.theme.border.shadow};

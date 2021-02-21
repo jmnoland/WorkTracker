@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: max-content;
   position: relative;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
@@ -11,11 +10,30 @@ const Container = styled.div`
 `;
 
 const Input = styled.input`
+  width: 100%;
   background: ${(props) => props.theme.colors.white};
   border: 2px solid
     ${(props) =>
       props.valid ? props.theme.colors.white : props.theme.colors.danger};
   border-radius: ${(props) => props.theme.border.radius.button};
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
+const TextAreaInput = styled.input`
+  width: 100%;
+  height: ${(props) => (props.height ? props.height : "auto")};
+  text-overflow: ellipsis;
+  background: ${(props) => props.theme.colors.dark};
+  border: 2px dashed
+    ${(props) =>
+      props.valid ? props.theme.colors.white : props.theme.colors.danger};
+  border-radius: ${(props) => props.theme.border.radius.button};
+  color: ${(props) => props.theme.colors.white};
+  padding: ${(props) => props.theme.padding.medium};
 
   &:focus-visible {
     outline: none;
@@ -68,6 +86,39 @@ export default function BaseInput({
       {inputLabel}
       {!valid ? errors : null}
       <Input value={value} valid={valid} type={type} onChange={valueChange} />
+    </Container>
+  );
+}
+
+export function TextFieldInput({
+  value,
+  height,
+  onChange,
+  validation,
+  placeholder,
+  center,
+}) {
+  const valid = validation && validation.errors.length === 0;
+
+  const errors =
+    validation &&
+    validation.errors.map((err) => {
+      return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+    });
+
+  const valueChange = (e) => {
+    onChange(e.target.value);
+  };
+  return (
+    <Container center={center}>
+      {!valid ? errors : null}
+      <TextAreaInput
+        height={height}
+        placeholder={placeholder}
+        value={value}
+        valid={valid}
+        onChange={valueChange}
+      />
     </Container>
   );
 }

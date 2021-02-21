@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useObject } from "../../../helper";
-import { Modal, Button, Input, TextArea } from "../../../components";
+import { Modal, Button, TextFieldInput, TextArea } from "../../../components";
 
 const Content = styled.div``;
 
@@ -15,11 +15,16 @@ const Footer = styled.div`
 
 export function CreateStoryModal({
   defaultState,
+  storyPosition,
   userStates,
   openModal,
   onCancel,
   onSave,
 }) {
+  const [tasks, setTasks] = useState([
+    { taskId: 1, storyId: 0, description: "", complete: 0 },
+  ]);
+  const [loading, setLoading] = useState(false);
   const initialValues = { title: "", description: "" };
   const fields = useObject(
     {
@@ -47,12 +52,35 @@ export function CreateStoryModal({
     },
     initialValues
   );
-
   const { title, description } = fields.data;
+
+  const addTask = () => {
+    setTasks([
+      ...tasks,
+      { taskId: tasks.length + 1, storyId: 0, description: "", complete: 0 },
+    ]);
+  };
+  const removeTask = (taskId) => {
+    setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
+  };
+  const handleChange = (taskId, value) => {
+    const temp = tasks.filter((task) => task.taskId === taskId);
+    setTasks([
+      ...tasks.filter((task) => task.taskId !== taskId),
+      { ...temp, description: value },
+    ]);
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    await onSave(title.value, description.value, defaultState, tasks);
+    setLoading(false);
+  };
+
   const footerContent = (
     <Footer>
       <Button secondary>Cancel</Button>
-      <Button primary onClick={onSave}>
+      <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>
     </Footer>
@@ -67,9 +95,28 @@ export function CreateStoryModal({
     >
       <Content>
         <Description>Fill in details below to create a new story.</Description>
-        <Input label="Title" {...title} />
-        <TextArea placeholder="Description" {...description} />
-        <TaskContainer></TaskContainer>
+        <TextFieldInput placeholder="Enter a title" {...title} />
+        <TextArea
+          placeholder="Add a description"
+          {...description}
+          height={"150px"}
+        />
+        <TaskContainer>
+          <Description>Add some tasks to the story.</Description>
+          {tasks.map((task) => (
+            <div key={task.taskId}>
+              <TextFieldInput
+                height={"30px"}
+                onChange={(e) => handleChange(task.taskId, e)}
+                value={task.description}
+              />
+              <div onClick={() => removeTask(task.taskId)}>Remove</div>
+            </div>
+          ))}
+          <Button primary onClick={addTask}>
+            Add
+          </Button>
+        </TaskContainer>
       </Content>
     </Modal>
   );

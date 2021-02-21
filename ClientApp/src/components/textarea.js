@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: max-content;
   position: relative;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
@@ -11,11 +10,16 @@ const Container = styled.div`
 `;
 
 const TextAreaInput = styled.textarea`
-  background: ${(props) => props.theme.colors.white};
-  border: 2px solid
+  width: 100%;
+  height: ${(props) => (props.height ? props.height : "auto")};
+  background: ${(props) => props.theme.colors.dark};
+  border: 2px dashed
     ${(props) =>
       props.valid ? props.theme.colors.white : props.theme.colors.danger};
   border-radius: ${(props) => props.theme.border.radius.button};
+  color: ${(props) => props.theme.colors.white};
+  resize: none;
+  padding: ${(props) => props.theme.padding.medium};
 
   &:focus-visible {
     outline: none;
@@ -40,6 +44,7 @@ export function TextArea({
   validation,
   placeholder,
   center,
+  height,
   type,
 }) {
   const valid = validation.errors.length === 0;
@@ -55,6 +60,7 @@ export function TextArea({
     <Container center={center}>
       {!valid ? errors : null}
       <TextAreaInput
+        height={height}
         placeholder={placeholder}
         value={value}
         valid={valid}
