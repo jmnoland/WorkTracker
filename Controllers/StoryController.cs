@@ -31,7 +31,6 @@ namespace WorkTracker.Controllers
         public ActionResult<List<Story>> CreateStory([FromBody] CreateStoryRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-
             _storyService.CreateStory(userId, request);
             return Ok();
         }

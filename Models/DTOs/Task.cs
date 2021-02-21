@@ -9,6 +9,6 @@ namespace WorkTracker.Models.DTOs
         public int TaskId { get; set; }
         public int StoryId { get; set; }
         public string Description { get; set; }
-        public string Status { get; set; }
+        public bool Complete { get; set; }
     }
 }

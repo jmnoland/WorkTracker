@@ -16,9 +16,10 @@ namespace WorkTracker.Controllers
             var handler = new JwtSecurityTokenHandler();
             var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
             var temp = decodedToken.Claims
-                .Where(w => w.Type == ClaimTypes.NameIdentifier)
+                .Where(w => w.Type == "nameid")
                 .Select(s => s.Value)
-                .FirstOrDefault();
+                .SingleOrDefault();
+            if (temp != null) return int.Parse(temp);
             return 0;
         }
     }

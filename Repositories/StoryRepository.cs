@@ -27,16 +27,17 @@ namespace WorkTracker.Repositories
         
         public int CreateStory(int userId, Models.ServiceModels.Story story)
         {
-            _dbContext.Story.Add(Mapper.Map(story));
+            var storyToAdd = Mapper.Map(story);
+            _dbContext.Story.Add(storyToAdd);
             _dbContext.SaveChanges();
             var userStory = new UserStory
             {
-                StoryId = story.StoryId,
+                StoryId = storyToAdd.StoryId,
                 UserId = userId
             };
             _dbContext.UserStory.Add(userStory);
             _dbContext.SaveChanges();
-            return story.StoryId;
+            return storyToAdd.StoryId;
         }
         public void AddTasks(List<Models.ServiceModels.Task> taskList)
         {

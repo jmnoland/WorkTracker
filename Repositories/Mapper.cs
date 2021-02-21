@@ -156,7 +156,7 @@ namespace WorkTracker.Repositories
             return new Models.DataModels.Task
             {
                 Description = task.Description,
-                Status = task.Status,
+                Complete = task.Complete,
                 StoryId = task.StoryId,
                 TaskId = task.TaskId
             };

@@ -80,7 +80,7 @@ namespace WorkTracker.Models.Mapper
             return new ServiceModels.Task
             {
                 Description = task.Description,
-                Status = task.Status,
+                Complete = task.Complete,
                 StoryId = task.StoryId,
                 TaskId = task.TaskId
             };
@@ -164,7 +164,7 @@ namespace WorkTracker.Models.Mapper
                 taskList.Add(new ServiceModels.Task
                 {
                     Description = task.Description,
-                    Status = task.Status,
+                    Complete = task.Complete,
                     StoryId = storyId,
                     TaskId = 0
                 });
