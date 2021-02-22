@@ -23,7 +23,7 @@ namespace WorkTracker.Controllers
         {
             var userId = Helper.GetRequestUserId(HttpContext);
 
-            return _storyService.GetStoriesByStateId(userId, stateId);
+            return Ok(_storyService.GetStoriesByStateId(userId, stateId));
         }
 
         [ValidateToken("create_story")]
