@@ -5,16 +5,40 @@ import { CreateStoryModal } from "./components/createStoryModal";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { CreateStory, GetStories } from "../../services/story";
 
-const BoardContainer = styled.div``;
+const BoardContainer = styled.div`
+  height: inherit;
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-around;
+  overflow-x: auto;
+`;
 
 const StateContainer = styled.div`
-  display: flex;
+  box-shadow: 0px 0px 5px 2px ${(props) => props.theme.colors.dark};
+  border-top: 2px solid ${(props) => props.theme.colors.dark};
+  padding: 10px;
+  width: 100%;
+  padding: ${(props) => props.theme.padding.medium};
+  width: 100%;
 `;
-const StateHeader = styled.div``;
+
+const StateHeader = styled.div`
+  margin-bottom: ${(props) => props.theme.padding.large};
+`;
 
 const StateContent = styled.div``;
 
 const StateButton = styled.button``;
+
+const StoryContainer = styled.div`
+  cursor: pointer;
+  width: 100%;
+  height: 70px;
+  padding: 10px 10px 10px 0px;
+  box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors.dark};
+  border-top: 2px solid ${(props) => props.theme.colors.dark};
+  margin-top: 10px;
+`;
 
 export default function Board() {
   const { userDetail } = useContext(UserDetailContext);
@@ -25,9 +49,11 @@ export default function Board() {
   useEffect(() => {
     async function fetchData() {
       const temp = {};
-      userDetail.states.forEach(async (state, i) => {
+      let count = 0;
+      userDetail.states.forEach(async (state) => {
         temp[state.stateId] = await GetStories(state.stateId);
-        if (i === userDetail.states.length - 1) {
+        count += 1;
+        if (count === userDetail.states.length) {
           setStories(temp);
         }
       });
@@ -63,16 +89,36 @@ export default function Board() {
                 Add
               </StateButton>
             </StateHeader>
-            <StateContent>
-              {stories &&
-                stories[state.stateId] &&
-                stories[state.stateId].map((story) => (
-                  <div key={story.storyId}>
-                    <div>{story.title}</div>
-                    <div>{story.description}</div>
+            <DragDropContext>
+              <Droppable droppableId="droppable">
+                {(provided) => (
+                  <div {...provided.droppableProps} ref={provided.innerRef}>
+                    {stories &&
+                      stories[state.stateId] &&
+                      stories[state.stateId].map((story, index) => (
+                        <Draggable
+                          key={`story-${story.storyId}`}
+                          draggableId={`story-${story.storyId}`}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <StoryContainer>
+                                <div>{story.title}</div>
+                                <div>{story.description}</div>
+                              </StoryContainer>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
                   </div>
-                ))}
-            </StateContent>
+                )}
+              </Droppable>
+            </DragDropContext>
           </StateContainer>
         ))}
       </BoardContainer>

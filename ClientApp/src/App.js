@@ -27,10 +27,16 @@ const AppContainer = styled.div`
   color: ${(props) => props.theme.colors.white};
 `;
 
+const ContentContainer = styled.div`
+  position: absolute;
+  height: -webkit-fill-available;
+  width: 100%;
+`;
+
 function Content({ children }) {
   const { isLoggedIn } = useContext(UserDetailContext);
   if (isLoggedIn) {
-    return <div>{children}</div>;
+    return <ContentContainer>{children}</ContentContainer>;
   }
   return null;
 }
