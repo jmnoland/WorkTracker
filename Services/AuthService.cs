@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models;
 using WorkTracker.Models.Requests;
 using WorkTracker.Repositories.Interfaces;
@@ -28,12 +30,12 @@ namespace WorkTracker.Services
 			_appSettings = appSettings;
         }
 
-		public string GenerateToken(int userId)
+		public async Task<string> GenerateToken(int userId)
         {
 			var secret = _appSettings.Value.JwtSecret;
 			var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
 
-			var role = _roleRepository.GetUserRole(userId);
+			var role = await _roleRepository.GetUserRole(userId);
 			var permissions = role.Permissions.Split(',');
 			var claims = new List<Claim>()
 			{
@@ -56,14 +58,14 @@ namespace WorkTracker.Services
 			return tokenHandler.WriteToken(token);
 		}
 
-		public string RefreshToken(string token)
+		public async Task<string> RefreshToken(string token)
         {
 			var handler = new JwtSecurityTokenHandler();
 			var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
 			var userId = decodedToken.Claims
 				.Where(w => w.Type == ClaimTypes.NameIdentifier)
 				.Select(s => s.Value).FirstOrDefault();
-			return GenerateToken(int.Parse(userId));
+			return await GenerateToken(int.Parse(userId));
 		}
 
 		public bool ValidateCurrentToken(string token)
@@ -96,13 +98,13 @@ namespace WorkTracker.Services
 			return decodedToken.Claims.Any(w => w.Type == ClaimsRole && w.Value == permission);
 		}
 
-		public string Login(UserLoginRequest request)
+		public async Task<string> Login(UserLoginRequest request)
         {
 			var user = _userRepository.Find(w => w.Email == request.Email).FirstOrDefault();
 			
 			if (user != null && user.Password == request.Password)
             {
-				return GenerateToken(user.UserId);
+				return await GenerateToken(user.UserId);
             }
 			return null;
         }

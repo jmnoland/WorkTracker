@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 
@@ -16,34 +18,34 @@ namespace WorkTracker.Repositories
             _dbContext = dbContext;
         }
 
-        public List<Models.ServiceModels.Story> GetStoriesByStateId(int userId, int stateId)
+        public async Task<List<Models.ServiceModels.Story>> GetStoriesByStateId(int userId, int stateId)
         {
-            var userStories = (from us in _dbContext.UserStory
+            var userStories = await (from us in _dbContext.UserStory
                                join story in _dbContext.Story on us.StoryId equals story.StoryId
                                where us.UserId == userId && story.StateId == stateId
-                               select story).ToList();
+                               select story).ToListAsync();
             return Mapper.Map(userStories);
         }
         
-        public int CreateStory(int userId, Models.ServiceModels.Story story)
+        public async Task<int> CreateStory(int userId, Models.ServiceModels.Story story)
         {
             var storyToAdd = Mapper.Map(story);
             _dbContext.Story.Add(storyToAdd);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             var userStory = new UserStory
             {
                 StoryId = storyToAdd.StoryId,
                 UserId = userId
             };
             _dbContext.UserStory.Add(userStory);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return storyToAdd.StoryId;
         }
-        public void AddTasks(List<Models.ServiceModels.Task> taskList)
+        public async System.Threading.Tasks.Task AddTasks(List<Models.ServiceModels.Task> taskList)
         {
             var addList = Mapper.Map(taskList);
             _dbContext.AddRange(addList);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

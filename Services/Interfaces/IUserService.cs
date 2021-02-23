@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.Requests;
 
 namespace WorkTracker.Services.Interfaces
 {
     public interface IUserService
     {
-        List<Models.DTOs.User> GetUsersByTeamId(int teamId);
-        Models.DTOs.UserDetail GetUserDetail(int userId);
-        void CreateUser(CreateUserRequest request);
-        void RegisterUser(CreateUserRequest request);
-        void UpdateUser(UpdateUserRequest request);
-        void DeleteUser(int userId);
+        Task<List<Models.DTOs.User>> GetUsersByTeamId(int teamId);
+        Task<Models.DTOs.UserDetail> GetUserDetail(int userId);
+        Task CreateUser(CreateUserRequest request);
+        Task RegisterUser(CreateUserRequest request);
+        Task UpdateUser(UpdateUserRequest request);
+        Task DeleteUser(int userId);
     }
 }

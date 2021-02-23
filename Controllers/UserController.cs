@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
@@ -18,23 +19,23 @@ namespace WorkTracker.Controllers
         }
 
         [HttpGet("{teamId}")]
-        public ActionResult<List<User>> GetUsers([FromRoute] int teamId)
+        public async Task<ActionResult<List<User>>> GetUsers([FromRoute] int teamId)
         {
-            return _userService.GetUsersByTeamId(teamId);
+            return await _userService.GetUsersByTeamId(teamId);
         }
 
         [HttpGet("details/{userId}")]
-        public ActionResult<UserDetail> GetUserDetails([FromRoute] int userId)
+        public async Task<ActionResult<UserDetail>> GetUserDetails([FromRoute] int userId)
         {
-            return _userService.GetUserDetail(userId);
+            return await _userService.GetUserDetail(userId);
         }
 
         [HttpPost]
-        public ActionResult CreateUser([FromBody] CreateUserRequest request)
+        public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
             try
             {
-                _userService.CreateUser(request);
+                await _userService.CreateUser(request);
                 return Ok();
             }
             catch (ArgumentNullException)
@@ -44,18 +45,18 @@ namespace WorkTracker.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult RegisterUser([FromBody] CreateUserRequest request)
+        public async Task<ActionResult> RegisterUser([FromBody] CreateUserRequest request)
         {
-            _userService.RegisterUser(request);
+            await _userService.RegisterUser(request);
             return Ok();
         }
 
         [HttpPatch]
-        public ActionResult UpdateUser([FromBody] UpdateUserRequest request)
+        public async Task<ActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
             try
             {
-                _userService.UpdateUser(request);
+                await _userService.UpdateUser(request);
                 return Ok();
             }
             catch
@@ -64,11 +65,11 @@ namespace WorkTracker.Controllers
             }
         }
         [HttpDelete("{userId}")]
-        public ActionResult RemoveUser([FromRoute] int userId)
+        public async Task<ActionResult> RemoveUser([FromRoute] int userId)
         {
             try
             {
-                _userService.DeleteUser(userId);
+                await _userService.DeleteUser(userId);
                 return Ok();
             }
             catch

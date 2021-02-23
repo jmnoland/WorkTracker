@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WorkTracker.Repositories.Interfaces
 {
     public interface IRoleRepository
     {
-        Models.ServiceModels.Role GetRoleByName(string roleName);
-        Models.ServiceModels.Role GetUserRole(int userId);
+        Task<Models.ServiceModels.Role> GetRoleByName(string roleName);
+        Task<Models.ServiceModels.Role> GetUserRole(int userId);
     }
 }

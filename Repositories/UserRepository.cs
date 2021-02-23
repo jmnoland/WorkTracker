@@ -18,7 +18,7 @@ namespace WorkTracker.Repositories
             _dbContext = dbContext;
         }
 
-        public List<Models.ServiceModels.User> GetUsersByTeamId(int teamId)
+        public async Task<List<Models.ServiceModels.User>> GetUsersByTeamId(int teamId)
         {
             string query = @"
                 SELECT
@@ -52,9 +52,9 @@ namespace WorkTracker.Repositories
             }
         }
 
-        public Models.ServiceModels.User GetUser(int userId)
+        public async Task<Models.ServiceModels.User> GetUser(int userId)
         {
-            var user = _dbContext.Users.Where(w => w.UserId == userId).FirstOrDefault();
+            var user = await _dbContext.Users.Where(w => w.UserId == userId).FirstOrDefaultAsync();
             if (user != null)
             {
                 return Mapper.Map(user);
@@ -62,20 +62,20 @@ namespace WorkTracker.Repositories
             return null;
         }
 
-        public int CreateUser(Models.ServiceModels.User user)
+        public async Task<int> CreateUser(Models.ServiceModels.User user)
         {
             _dbContext.Users.Add(Mapper.Map(user));
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return user.UserId;
         }
 
-        public async void UpdateUser(Models.ServiceModels.User user)
+        public async System.Threading.Tasks.Task UpdateUser(Models.ServiceModels.User user)
         {
             _dbContext.Users.Update(Mapper.Map(user));
             await _dbContext.SaveChangesAsync();
         }
 
-        public void DeleteUser(int userId)
+        public async System.Threading.Tasks.Task DeleteUser(int userId)
         {
             string query = @"DELETE FROM UserStory WHERE UserId = @userId
                              DELETE FROM UserTeams WHERE UserId = @userId

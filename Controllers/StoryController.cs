@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WorkTracker.Controllers.Attributes;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
@@ -19,19 +20,18 @@ namespace WorkTracker.Controllers
 
         [ValidateToken("view_story")]
         [HttpGet("{stateId}")]
-        public ActionResult<List<Story>> GetStoriesByStateId([FromRoute] int stateId)
+        public async Task<ActionResult<List<Story>>> GetStoriesByStateId([FromRoute] int stateId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-
-            return Ok(_storyService.GetStoriesByStateId(userId, stateId));
+            return Ok(await _storyService.GetStoriesByStateId(userId, stateId));
         }
 
         [ValidateToken("create_story")]
         [HttpPost]
-        public ActionResult<List<Story>> CreateStory([FromBody] CreateStoryRequest request)
+        public async Task<ActionResult<List<Story>>> CreateStory([FromBody] CreateStoryRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            _storyService.CreateStory(userId, request);
+            await _storyService.CreateStory(userId, request);
             return Ok();
         }
     }

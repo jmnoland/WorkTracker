@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 
@@ -16,22 +18,22 @@ namespace WorkTracker.Repositories
             _dbContext = dbContext;
         }
 
-        public Models.ServiceModels.Role GetRoleByName(string roleName)
+        public async Task<Models.ServiceModels.Role> GetRoleByName(string roleName)
         {
-            var role = _dbContext.Roles.Where(w => w.Name == roleName).FirstOrDefault();
+            var role = await _dbContext.Roles.Where(w => w.Name == roleName).FirstOrDefaultAsync();
             if (role != null && role != default)
             {
                 return Mapper.Map(role);
             }
             return null;
         }
-        public Models.ServiceModels.Role GetUserRole(int userId)
+        public async Task<Models.ServiceModels.Role> GetUserRole(int userId)
         {
-            var userRole = (from user in _dbContext.Users
+            var userRole = await (from user in _dbContext.Users
                         join role in _dbContext.Roles 
                             on user.RoleId equals role.RoleId
                         where user.UserId == userId
-                        select Mapper.Map(role)).FirstOrDefault();
+                        select Mapper.Map(role)).FirstOrDefaultAsync();
             return userRole;
         }
     }

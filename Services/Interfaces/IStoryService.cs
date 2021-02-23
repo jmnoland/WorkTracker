@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.Requests;
 using WorkTracker.Models.ServiceModels;
 
@@ -8,7 +9,7 @@ namespace WorkTracker.Services.Interfaces
 {
     public interface IStoryService
     {
-        List<Models.DTOs.Story> GetStoriesByStateId(int userId, int stateId);
-        void CreateStory(int userId, CreateStoryRequest request);
+        Task<List<Models.DTOs.Story>> GetStoriesByStateId(int userId, int stateId);
+        System.Threading.Tasks.Task CreateStory(int userId, CreateStoryRequest request);
     }
 }

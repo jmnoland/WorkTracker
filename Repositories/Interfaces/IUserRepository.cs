@@ -8,10 +8,10 @@ namespace WorkTracker.Repositories.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        List<Models.ServiceModels.User> GetUsersByTeamId(int teamId);
-        Models.ServiceModels.User GetUser(int userId);
-        int CreateUser(Models.ServiceModels.User user);
-        void UpdateUser(Models.ServiceModels.User user);
-        void DeleteUser(int userId);
+        Task<List<Models.ServiceModels.User>> GetUsersByTeamId(int teamId);
+        Task<Models.ServiceModels.User> GetUser(int userId);
+        Task<int> CreateUser(Models.ServiceModels.User user);
+        System.Threading.Tasks.Task UpdateUser(Models.ServiceModels.User user);
+        System.Threading.Tasks.Task DeleteUser(int userId);
     }
 }

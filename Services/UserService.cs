@@ -6,6 +6,7 @@ using WorkTracker.Models.Mapper;
 using WorkTracker.Models.ServiceModels;
 using WorkTracker.Services.Interfaces;
 using WorkTracker.Models.Requests;
+using System.Threading.Tasks;
 
 namespace WorkTracker.Services
 {
@@ -26,12 +27,12 @@ namespace WorkTracker.Services
             _stateRepository = stateRepository;
         }
 
-        public List<Models.DTOs.User> GetUsersByTeamId(int teamId)
+        public async Task<List<Models.DTOs.User>> GetUsersByTeamId(int teamId)
         {
-            return Mapper.Map(_userRepository.GetUsersByTeamId(teamId));
+            return Mapper.Map(await _userRepository.GetUsersByTeamId(teamId));
         }
 
-        public Models.DTOs.UserDetail GetUserDetail(int userId)
+        public async Task<Models.DTOs.UserDetail> GetUserDetail(int userId)
         {
             var details = new Models.DTOs.UserDetail()
             {
@@ -47,18 +48,18 @@ namespace WorkTracker.Services
             return details;
         }
 
-        public void CreateUser(CreateUserRequest request)
+        public async System.Threading.Tasks.Task CreateUser(CreateUserRequest request)
         {
             var user = Mapper.Map(request);
             if (user.RoleId == 0) user.RoleId = 1;
-            _userRepository.CreateUser(user);
+            await _userRepository.CreateUser(user);
         }
 
-        public void RegisterUser(CreateUserRequest request)
+        public async System.Threading.Tasks.Task RegisterUser(CreateUserRequest request)
         {
             var user = Mapper.Map(request);
             if (user.RoleId == 0) user.RoleId = 1;
-            var userId = _userRepository.CreateUser(user);
+            var userId = await _userRepository.CreateUser(user);
             var newTeam = new Models.DataModels.Team()
             {
                 OrganisationId = null,
@@ -70,15 +71,15 @@ namespace WorkTracker.Services
             _stateRepository.CreateDefaultStates(team.TeamId);
         }
 
-        public void UpdateUser(UpdateUserRequest request)
+        public async System.Threading.Tasks.Task UpdateUser(UpdateUserRequest request)
         {
-            var user = _userRepository.GetUser(request.UserId);
-            _userRepository.UpdateUser(Mapper.Map(request, user));
+            var user = await _userRepository.GetUser(request.UserId);
+            await _userRepository.UpdateUser(Mapper.Map(request, user));
         }
 
-        public void DeleteUser(int userId)
+        public async System.Threading.Tasks.Task DeleteUser(int userId)
         {
-            _userRepository.DeleteUser(userId);
+            await _userRepository.DeleteUser(userId);
         }
     }
 }

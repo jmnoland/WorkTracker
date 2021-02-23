@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WorkTracker.Controllers.Attributes;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
@@ -20,9 +21,9 @@ namespace WorkTracker.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<string> Login([FromBody] UserLoginRequest request)
+        public async Task<ActionResult<string>> Login([FromBody] UserLoginRequest request)
         {
-            var token = _authService.Login(request);
+            var token = await _authService.Login(request);
             if (token != null)
             {
                 AddRefreshToken(token);
@@ -32,10 +33,10 @@ namespace WorkTracker.Controllers
         }
 
         [ValidateToken]
-        public ActionResult<string> RefreshToken()
+        public async Task<ActionResult<string>> RefreshToken()
         {
             var token = Request.Cookies["X-User-Token"];
-            var newToken = _authService.RefreshToken(token);
+            var newToken = await _authService.RefreshToken(token);
             AddRefreshToken(newToken);
             return newToken;
         }
