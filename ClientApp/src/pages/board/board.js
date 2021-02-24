@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserDetailContext } from "../../context/userDetails";
 import { CreateStoryModal } from "./components/createStoryModal";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { CreateStory, GetStories } from "../../services/story";
+import { StateColumn } from "./components/StateColumn";
 
 const BoardContainer = styled.div`
   height: inherit;
@@ -11,33 +11,6 @@ const BoardContainer = styled.div`
   display: flex;
   justify-content: space-around;
   overflow-x: auto;
-`;
-
-const StateContainer = styled.div`
-  box-shadow: 0px 0px 5px 2px ${(props) => props.theme.colors.dark};
-  border-top: 2px solid ${(props) => props.theme.colors.dark};
-  padding: 10px;
-  width: 100%;
-  padding: ${(props) => props.theme.padding.medium};
-  width: 100%;
-`;
-
-const StateHeader = styled.div`
-  margin-bottom: ${(props) => props.theme.padding.large};
-`;
-
-const StateContent = styled.div``;
-
-const StateButton = styled.button``;
-
-const StoryContainer = styled.div`
-  cursor: pointer;
-  width: 100%;
-  height: 70px;
-  padding: 10px 10px 10px 0px;
-  box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors.dark};
-  border-top: 2px solid ${(props) => props.theme.colors.dark};
-  margin-top: 10px;
 `;
 
 export default function Board() {
@@ -67,6 +40,25 @@ export default function Board() {
     return null;
   }
 
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  const onDragEnd = (result, stateId) => {
+    if (!result.destination) {
+      return;
+    }
+    const items = reorder(
+      stories[stateId],
+      result.source.index,
+      result.destination.index
+    );
+    setStories({ ...stories, [stateId]: items });
+  };
+
   const onSave = async (title, description, state, tasks) => {
     await CreateStory(title, description, state, tasks);
     setOpenModal(false);
@@ -82,44 +74,13 @@ export default function Board() {
     <>
       <BoardContainer>
         {userDetail.states.map((state) => (
-          <StateContainer key={state.stateId}>
-            <StateHeader>
-              <span>{state.name}</span>
-              <StateButton onClick={() => createNew(state.stateId)}>
-                Add
-              </StateButton>
-            </StateHeader>
-            <DragDropContext>
-              <Droppable droppableId="droppable">
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {stories &&
-                      stories[state.stateId] &&
-                      stories[state.stateId].map((story, index) => (
-                        <Draggable
-                          key={`story-${story.storyId}`}
-                          draggableId={`story-${story.storyId}`}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <StoryContainer>
-                                <div>{story.title}</div>
-                                <div>{story.description}</div>
-                              </StoryContainer>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          </StateContainer>
+          <StateColumn
+            key={state.stateId}
+            state={state}
+            stories={stories && stories[state.stateId]}
+            createNew={createNew}
+            onDragEnd={onDragEnd}
+          />
         ))}
       </BoardContainer>
       <CreateStoryModal
