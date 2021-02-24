@@ -64,11 +64,13 @@ export function CreateStoryModal({
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
   const handleChange = (taskId, value) => {
-    const temp = tasks.filter((task) => task.taskId === taskId);
-    setTasks([
-      ...tasks.filter((task) => task.taskId !== taskId),
-      { ...temp, description: value },
-    ]);
+    const temp = tasks.find((task) => task.taskId === taskId);
+    const items = tasks.reduce((total, task) => {
+      if (task.taskId !== taskId) total.push(task);
+      else total.push({ ...temp, description: value });
+      return total;
+    }, []);
+    setTasks(items);
   };
 
   const handleSubmit = async () => {
