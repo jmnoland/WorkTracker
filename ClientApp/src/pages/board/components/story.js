@@ -5,10 +5,10 @@ const StoryContainer = styled.div`
   cursor: pointer;
   width: 100%;
   height: 70px;
-  padding: 10px 10px 10px 0px;
+  padding: 10px 10px 10px 10px;
   box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors.dark};
   border-top: 2px solid ${(props) => props.theme.colors.dark};
-  margin-top: 10px;
+  background: ${(props) => props.theme.colors.background};
 `;
 
 export function Story({ title, description }) {

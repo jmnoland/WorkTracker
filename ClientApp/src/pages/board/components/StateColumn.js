@@ -43,6 +43,7 @@ export function StateColumn({ state, stories, createNew, onDragEnd }) {
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
+                        style={{ marginTop: "10px" }}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
