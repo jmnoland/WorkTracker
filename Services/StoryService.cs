@@ -33,5 +33,16 @@ namespace WorkTracker.Services
 				await _storyRepository.AddTasks(tasks);
 			}
 		}
+
+		public async System.Threading.Tasks.Task OrderUpdate(int userId, OrderUpdateRequest request)
+        {
+			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
+        }
+
+		public async System.Threading.Tasks.Task ChangeState(int userId, int storyId, OrderUpdateRequest request)
+		{
+			await _storyRepository.ChangeState(userId, storyId, request.StateId);
+			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
+		}
 	}
 }

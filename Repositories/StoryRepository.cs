@@ -41,6 +41,33 @@ namespace WorkTracker.Repositories
             await _dbContext.SaveChangesAsync();
             return storyToAdd.StoryId;
         }
+
+        public async System.Threading.Tasks.Task OrderUpdate(int stateId, int userId, Dictionary<int, int> updateList)
+        {
+            var stories = await (from s in _dbContext.Story
+                                 join ut in _dbContext.UserStory on s.StoryId equals ut.StoryId
+                                 where ut.UserId == userId && s.StateId == stateId
+                                 select s).ToListAsync();
+            foreach(var story in stories)
+            {
+                if (updateList.TryGetValue(story.StoryId, out int newOrderNum))
+                {
+                    story.ListOrder = newOrderNum;
+                }
+            }
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async System.Threading.Tasks.Task ChangeState(int userId, int storyId, int stateId)
+        {
+            var story = await (from s in _dbContext.Story
+                                 join ut in _dbContext.UserStory on s.StoryId equals ut.StoryId
+                                 where ut.UserId == userId && s.StoryId == storyId
+                                 select s).FirstOrDefaultAsync();
+            story.StateId = stateId;
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async System.Threading.Tasks.Task AddTasks(List<Models.ServiceModels.Task> taskList)
         {
             var addList = Mapper.Map(taskList);
