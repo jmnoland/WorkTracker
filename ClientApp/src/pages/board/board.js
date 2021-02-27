@@ -2,8 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserDetailContext } from "../../context/userDetails";
 import { CreateStoryModal } from "./components/createStoryModal";
-import { CreateStory, GetStories } from "../../services/story";
+import {
+  CreateStory,
+  GetStories,
+  OrderUpdate,
+  ChangeState,
+} from "../../services/story";
 import { StateColumn } from "./components/StateColumn";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const BoardContainer = styled.div`
   height: inherit;
@@ -47,16 +53,55 @@ export default function Board() {
     return result;
   };
 
-  const onDragEnd = (result, stateId) => {
-    if (!result.destination) {
+  const createPayload = (stateId, storyList) => {
+    const temp = storyList.reduce((total, story, index) => {
+      total[story.storyId] = index;
+      return total;
+    }, {});
+    return { stateId: Number(stateId), stories: temp };
+  };
+
+  const move = (source, destination, droppableSource, droppableDestination) => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+    destClone.splice(droppableDestination.index, 0, removed);
+
+    const result = {};
+    result[droppableSource.droppableId] = sourceClone;
+    result[droppableDestination.droppableId] = destClone;
+
+    return result;
+  };
+
+  const onDragEnd = async (result) => {
+    const { source, destination } = result;
+    if (!destination) {
       return;
     }
-    const items = reorder(
-      stories[stateId],
-      result.source.index,
-      result.destination.index
-    );
-    setStories({ ...stories, [stateId]: items });
+    if (source.droppableId === destination.droppableId) {
+      const stateId = Number(source.droppableId);
+      const items = reorder(stories[stateId], source.index, destination.index);
+      setStories({ ...stories, [stateId]: items });
+      await OrderUpdate(createPayload(stateId, items));
+    } else {
+      const storyId = Number(stories[source.droppableId][source.index].storyId);
+      const items = move(
+        stories[source.droppableId],
+        stories[destination.droppableId],
+        source,
+        destination
+      );
+      setStories({ ...stories, ...items });
+      await ChangeState(
+        storyId,
+        createPayload(destination.droppableId, items[destination.droppableId])
+      );
+      await OrderUpdate(
+        createPayload(source.droppableId, items[source.droppableId])
+      );
+    }
   };
 
   const onSave = async (title, description, state, tasks) => {
@@ -73,15 +118,17 @@ export default function Board() {
   return (
     <>
       <BoardContainer>
-        {userDetail.states.map((state) => (
-          <StateColumn
-            key={state.stateId}
-            state={state}
-            stories={stories && stories[state.stateId]}
-            createNew={createNew}
-            onDragEnd={onDragEnd}
-          />
-        ))}
+        <DragDropContext onDragEnd={(r) => onDragEnd(r)}>
+          {userDetail.states.map((state) => (
+            <StateColumn
+              key={state.stateId}
+              state={state}
+              stories={stories && stories[state.stateId]}
+              createNew={createNew}
+              onDragEnd={onDragEnd}
+            />
+          ))}
+        </DragDropContext>
       </BoardContainer>
       <CreateStoryModal
         defaultState={storyState}

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { useObject } from "../../helper";
-import { Input, Button, LoginTitle, Link } from "../../components";
+import { LoginInput, Button, LoginTitle, InLineLink } from "../../components";
 import { UserLogin } from "../../services/auth";
 import { UserDetailContext } from "../../context/userDetails";
 import Register from "./register";
@@ -89,14 +89,8 @@ export default function Login() {
     <LoginContainer>
       <LoginTitle />
       <Content>
-        <Input label="Email" position="above" center {...email} />
-        <Input
-          label="Password"
-          position="above"
-          center
-          type={"password"}
-          {...password}
-        />
+        <LoginInput label="Email" {...email} />
+        <LoginInput label="Password" type={"password"} {...password} />
         <ButtonContainer>
           <Button
             center
@@ -110,8 +104,12 @@ export default function Login() {
         </ButtonContainer>
         <div>
           Need an account?{" "}
-          <Link onClick={() => setRegister(true)}>Sign up here.</Link>
-          Forgot your <Link>password? </Link>
+          <InLineLink onClick={() => setRegister(true)}>
+            Sign up here.{" "}
+          </InLineLink>
+        </div>
+        <div>
+          Forgot your <InLineLink>password?</InLineLink>
         </div>
       </Content>
     </LoginContainer>

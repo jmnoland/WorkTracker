@@ -19,46 +19,46 @@ const StateHeader = styled.div`
 const StateButton = styled.button``;
 
 export function StateColumn({ state, stories, createNew, onDragEnd }) {
+  const { stateId, name } = state;
+
   return (
     <StateContainer>
       <StateHeader>
-        <span>{state.name}</span>
-        <StateButton onClick={() => createNew(state.stateId)}>Add</StateButton>
+        <span>{name}</span>
+        <StateButton onClick={() => createNew(stateId)}>Add</StateButton>
       </StateHeader>
-      <DragDropContext onDragEnd={(r) => onDragEnd(r, state.stateId)}>
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              style={{ minHeight: "50%" }}
-              ref={provided.innerRef}
-            >
-              {stories &&
-                stories.map((story, index) => (
-                  <Draggable
-                    key={`story-${story.storyId}`}
-                    draggableId={`story-${story.storyId}`}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        style={{ marginTop: "10px" }}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Story
-                          title={story.title}
-                          description={story.description}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Droppable droppableId={stateId.toString()}>
+        {(provided) => (
+          <div
+            {...provided.droppableProps}
+            style={{ minHeight: "50%" }}
+            ref={provided.innerRef}
+          >
+            {stories &&
+              stories.map((story, index) => (
+                <Draggable
+                  key={`story-${story.storyId}`}
+                  draggableId={`story-${story.storyId}`}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      style={{ marginTop: "10px" }}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Story
+                        title={story.title}
+                        description={story.description}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+          </div>
+        )}
+      </Droppable>
     </StateContainer>
   );
 }

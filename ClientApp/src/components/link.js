@@ -9,11 +9,26 @@ const LinkContainer = styled.div`
   }
 `;
 
+const InLineLinkContainer = styled.span`
+  > * {
+    color: white;
+    text-decoration: none;
+  }
+`;
+
 export function NavLink({ to, children }) {
   return (
     <LinkContainer>
       <Link to={to}>{children}</Link>
     </LinkContainer>
+  );
+}
+
+export function InLineLink({ onClick, children }) {
+  return (
+    <InLineLinkContainer>
+      <span onClick={onClick}>{children}</span>
+    </InLineLinkContainer>
   );
 }
 

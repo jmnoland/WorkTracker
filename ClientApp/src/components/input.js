@@ -10,7 +10,7 @@ const Container = styled.div`
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: ${(props) => (props.isLogin ? "190px" : "100%")};
   background: ${(props) => props.theme.colors.white};
   border: 2px solid
     ${(props) =>
@@ -84,6 +84,25 @@ export default function BaseInput({
   return (
     <Container center={center}>
       {inputLabel}
+      {!valid ? errors : null}
+      <Input value={value} valid={valid} type={type} onChange={valueChange} />
+    </Container>
+  );
+}
+
+export function LoginInput({ value, onChange, validation, label, type }) {
+  const valid = validation.errors.length === 0;
+
+  const errors = validation.errors.map((err) => {
+    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+  });
+
+  const valueChange = (e) => {
+    onChange(e.target.value);
+  };
+  return (
+    <Container center isLogin>
+      {<LabelAbove>{label}</LabelAbove>}
       {!valid ? errors : null}
       <Input value={value} valid={valid} type={type} onChange={valueChange} />
     </Container>
