@@ -23,7 +23,7 @@ namespace WorkTracker.Repositories
             var userStories = await (from us in _dbContext.UserStory
                                join story in _dbContext.Story on us.StoryId equals story.StoryId
                                where us.UserId == userId && story.StateId == stateId
-                               select story).ToListAsync();
+                               select story).OrderBy(o => o.ListOrder).ToListAsync();
             return Mapper.Map(userStories);
         }
         
@@ -42,7 +42,7 @@ namespace WorkTracker.Repositories
             return storyToAdd.StoryId;
         }
 
-        public async System.Threading.Tasks.Task OrderUpdate(int stateId, int userId, Dictionary<int, int> updateList)
+        public async System.Threading.Tasks.Task OrderUpdate(int stateId, int userId, Dictionary<string, int> updateList)
         {
             var stories = await (from s in _dbContext.Story
                                  join ut in _dbContext.UserStory on s.StoryId equals ut.StoryId
@@ -50,7 +50,7 @@ namespace WorkTracker.Repositories
                                  select s).ToListAsync();
             foreach(var story in stories)
             {
-                if (updateList.TryGetValue(story.StoryId, out int newOrderNum))
+                if (updateList.TryGetValue(story.StoryId.ToString(), out int newOrderNum))
                 {
                     story.ListOrder = newOrderNum;
                 }

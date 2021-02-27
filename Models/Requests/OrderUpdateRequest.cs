@@ -7,6 +7,6 @@ namespace WorkTracker.Models.Requests
     public class OrderUpdateRequest
     {
         public int StateId { get; set; }
-        public Dictionary<int, int> Stories { get; set; }
+        public Dictionary<string, int> Stories { get; set; }
     }
 }

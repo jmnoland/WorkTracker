@@ -13,10 +13,8 @@ namespace WorkTracker.Controllers
     public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
-        private readonly int userId;
         public StoryController(IStoryService storyService)
         {
-            userId = Helper.GetRequestUserId(HttpContext);
             _storyService = storyService;
         }
 
@@ -24,6 +22,7 @@ namespace WorkTracker.Controllers
         [HttpGet("{stateId}")]
         public async Task<ActionResult<List<Story>>> GetStoriesByStateId([FromRoute] int stateId)
         {
+            var userId = Helper.GetRequestUserId(HttpContext);
             return Ok(await _storyService.GetStoriesByStateId(userId, stateId));
         }
 
@@ -40,6 +39,7 @@ namespace WorkTracker.Controllers
         [HttpPatch("update/state/{storyId}")]
         public async Task<ActionResult> ChangeState([FromRoute] int storyId, [FromBody] OrderUpdateRequest request)
         {
+            var userId = Helper.GetRequestUserId(HttpContext);
             await _storyService.ChangeState(userId, storyId, request);
             return Ok();
         }
@@ -48,9 +48,9 @@ namespace WorkTracker.Controllers
         [HttpPatch("update/order")]
         public async Task<ActionResult> OrderUpdate([FromBody] OrderUpdateRequest request)
         {
+            var userId = Helper.GetRequestUserId(HttpContext);
             await _storyService.OrderUpdate(userId, request);
             return Ok();
         }
-
     }
 }
