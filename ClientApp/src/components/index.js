@@ -4,6 +4,7 @@ import { LoginTitle, MainTitle } from "./title";
 import { NavLink, InLineLink, BaseLink as Link } from "./link";
 import { Modal } from "./modal";
 import { TextArea } from "./textarea";
+import { EditableText, Text } from "./text";
 
 export {
   Input,
@@ -17,4 +18,6 @@ export {
   Link,
   Modal,
   TextArea,
+  EditableText,
+  Text,
 };
