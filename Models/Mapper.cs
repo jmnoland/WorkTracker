@@ -171,6 +171,31 @@ namespace WorkTracker.Models.Mapper
             }
             return taskList;
         }
+        public static (ServiceModels.Story, List<ServiceModels.Task>) Map(UpdateStoryRequest request)
+        {
+            var story = new ServiceModels.Story
+            {
+                Description = request.Description,
+                Title = request.Title,
+                ListOrder = request.ListOrder,
+                ProjectId = request.ProjectId,
+                SprintId = request.SprintId,
+                StateId = request.StateId,
+                StoryId = request.StoryId
+            };
+            var taskList = new List<ServiceModels.Task>();
+            foreach (var task in request.Tasks)
+            {
+                taskList.Add(new ServiceModels.Task
+                {
+                    Description = task.Description,
+                    Complete = task.Complete,
+                    StoryId = task.StoryId,
+                    TaskId = task.TaskId
+                });
+            }
+            return (story, taskList);
+        }
         #endregion
     }
 }

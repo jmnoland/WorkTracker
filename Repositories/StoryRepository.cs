@@ -42,6 +42,19 @@ namespace WorkTracker.Repositories
             return storyToAdd.StoryId;
         }
 
+        public async System.Threading.Tasks.Task UpdateStory(Models.ServiceModels.Story updatedStory)
+        {
+            var story = await _dbContext.Story
+                .Where(w => w.StoryId == updatedStory.StoryId)
+                .FirstOrDefaultAsync();
+            story.ProjectId = updatedStory.ProjectId ?? story.ProjectId;
+            story.SprintId = updatedStory.SprintId ?? story.ProjectId;
+            story.StateId = updatedStory.StateId;
+            story.Title = updatedStory.Title ?? story.Title;
+            story.Description = updatedStory.Description ?? story.Description;
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async System.Threading.Tasks.Task OrderUpdate(int stateId, int userId, Dictionary<string, int> updateList)
         {
             var stories = await (from s in _dbContext.Story
@@ -72,6 +85,21 @@ namespace WorkTracker.Repositories
         {
             var addList = Mapper.Map(taskList);
             _dbContext.AddRange(addList);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async System.Threading.Tasks.Task UpdateTasks(List<Models.ServiceModels.Task> taskList)
+        {
+            var editList = Mapper.Map(taskList);
+            List<int> idList = new List<int>();
+            foreach (var item in editList) idList.Add(item.TaskId);
+            var existingTasks = _dbContext.Task.Where(w => idList.Contains(w.TaskId));
+            foreach(var task in existingTasks)
+            {
+                var updatedTask = editList.Find(f => f.TaskId == task.TaskId);
+                task.Complete = updatedTask.Complete;
+                task.Description = updatedTask.Description ?? task.Description;
+            }
             await _dbContext.SaveChangesAsync();
         }
     }

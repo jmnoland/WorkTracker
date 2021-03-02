@@ -35,6 +35,14 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
+        [ValidateToken("edit_story")]
+        [HttpPatch]
+        public async Task<ActionResult> UpdateStory([FromBody] UpdateStoryRequest request)
+        {
+            await _storyService.UpdateStory(request);
+            return Ok();
+        }
+
         [ValidateToken("view_story")]
         [HttpPatch("update/state/{storyId}")]
         public async Task<ActionResult> ChangeState([FromRoute] int storyId, [FromBody] OrderUpdateRequest request)

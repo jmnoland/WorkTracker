@@ -34,6 +34,13 @@ namespace WorkTracker.Services
 			}
 		}
 
+		public async System.Threading.Tasks.Task UpdateStory(UpdateStoryRequest request)
+        {
+			var (story, tasks) = Mapper.Map(request);
+			await _storyRepository.UpdateStory(story);
+			await _storyRepository.UpdateTasks(tasks);
+        }
+
 		public async System.Threading.Tasks.Task OrderUpdate(int userId, OrderUpdateRequest request)
         {
 			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
