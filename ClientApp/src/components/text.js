@@ -15,16 +15,18 @@ export function Text({ value, onClick }) {
   );
 }
 
-export function EditableText({ value, canEdit, height, onChange }) {
+export function EditableText({ value, height, onChange }) {
   const [canEdit, setCanEdit] = useState(false);
+  let timer = null;
   const onClickHandler = (event) => {
     clearTimeout(timer);
     if (event.detail === 1) {
-      timer = setTimeout(onClick, 200);
+      timer = setTimeout(clearTimeout(timer), 200);
     } else if (event.detail === 2) {
       setCanEdit(true);
     }
   };
+
   return (
     <Container>
       {canEdit ? (

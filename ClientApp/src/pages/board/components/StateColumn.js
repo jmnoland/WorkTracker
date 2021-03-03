@@ -6,8 +6,6 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 const StateContainer = styled.div`
   box-shadow: 0px 0px 5px 2px ${(props) => props.theme.colors.dark};
   border-top: 2px solid ${(props) => props.theme.colors.dark};
-  padding: 10px;
-  width: 100%;
   padding: ${(props) => props.theme.padding.medium};
   width: 100%;
 `;
@@ -16,7 +14,14 @@ const StateHeader = styled.div`
   margin-bottom: ${(props) => props.theme.padding.large};
 `;
 
-const StateButton = styled.button``;
+const DropContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StateButton = styled.button`
+  float: right;
+`;
 
 export function StateColumn({ state, stories, createNew, onDragEnd }) {
   const { stateId, name } = state;
@@ -29,11 +34,7 @@ export function StateColumn({ state, stories, createNew, onDragEnd }) {
       </StateHeader>
       <Droppable droppableId={stateId.toString()}>
         {(provided) => (
-          <div
-            {...provided.droppableProps}
-            style={{ minHeight: "50%" }}
-            ref={provided.innerRef}
-          >
+          <DropContainer {...provided.droppableProps} ref={provided.innerRef}>
             {stories &&
               stories.map((story, index) => (
                 <Draggable
@@ -56,7 +57,7 @@ export function StateColumn({ state, stories, createNew, onDragEnd }) {
                   )}
                 </Draggable>
               ))}
-          </div>
+          </DropContainer>
         )}
       </Droppable>
     </StateContainer>

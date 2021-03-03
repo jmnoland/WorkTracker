@@ -29,7 +29,6 @@ const AppContainer = styled.div`
 
 const ContentContainer = styled.div`
   position: absolute;
-  height: -webkit-fill-available;
   width: 100%;
 `;
 
