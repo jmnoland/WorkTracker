@@ -28,6 +28,17 @@ namespace WorkTracker.Repositories
                 Password = user.Password
             };
         }
+        
+        public static List<Models.ServiceModels.User> Map(List<Models.DataModels.User> userList)
+        {
+            var tempList = new List<Models.ServiceModels.User>();
+            foreach (var user in userList)
+            {
+                tempList.Add(Map(user));
+            }
+            return tempList;
+        }
+
         public static Models.ServiceModels.User Map(Models.DataModels.User user)
         {
             return new Models.ServiceModels.User

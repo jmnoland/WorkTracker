@@ -8,6 +8,7 @@ namespace WorkTracker.Services.Interfaces
 {
     public interface IUserService
     {
+        Task<List<Models.DTOs.User>> GetAllUsers(int teamId);
         Task<List<Models.DTOs.User>> GetUsersByTeamId(int teamId);
         Task<Models.DTOs.UserDetail> GetUserDetail(int userId);
         Task CreateUser(CreateUserRequest request);

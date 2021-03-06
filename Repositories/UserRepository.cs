@@ -18,6 +18,29 @@ namespace WorkTracker.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<List<Models.ServiceModels.User>> GetAllUsers(int teamId)
+        {
+            var team = _dbContext.Teams.Where(w => w.TeamId == teamId).FirstOrDefault();
+            var userList = new List<User>();
+            if (team != null)
+            {
+                if (team.OrganisationId != null)
+                {
+                    userList = await (from users in _dbContext.Users
+                                      join ut in _dbContext.UserTeams on users.UserId equals ut.UserId
+                                      join teams in _dbContext.Teams on ut.TeamId equals teams.TeamId
+                                      where teams.OrganisationId == team.OrganisationId
+                                      select users).ToListAsync();
+                }
+                userList = await (from users in _dbContext.Users
+                                  join ut in _dbContext.UserTeams on users.UserId equals ut.UserId
+                                  where ut.TeamId == team.TeamId
+                                  select users).ToListAsync();
+            }
+
+            return Mapper.Map(userList);
+        }
+
         public async Task<List<Models.ServiceModels.User>> GetUsersByTeamId(int teamId)
         {
             string query = @"

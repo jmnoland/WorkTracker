@@ -8,6 +8,7 @@ namespace WorkTracker.Repositories.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        Task<List<Models.ServiceModels.User>> GetAllUsers(int teamId);
         Task<List<Models.ServiceModels.User>> GetUsersByTeamId(int teamId);
         Task<Models.ServiceModels.User> GetUser(int userId);
         Task<int> CreateUser(Models.ServiceModels.User user);

@@ -27,6 +27,11 @@ namespace WorkTracker.Services
             _stateRepository = stateRepository;
         }
 
+        public async Task<List<Models.DTOs.User>> GetAllUsers(int teamId)
+        {
+            return Mapper.Map(await _userRepository.GetAllUsers(teamId));
+        }
+
         public async Task<List<Models.DTOs.User>> GetUsersByTeamId(int teamId)
         {
             return Mapper.Map(await _userRepository.GetUsersByTeamId(teamId));
@@ -37,9 +42,12 @@ namespace WorkTracker.Services
             var details = new Models.DTOs.UserDetail()
             {
                 States = new List<Models.DTOs.State>(),
-                Teams = new List<Models.DTOs.Team>()
+                Teams = new List<Models.DTOs.Team>(),
+                Users = new List<Models.DTOs.User>()
             };
             var teams = _teamRepository.GetByUserId(userId);
+            if (teams != null)
+                details.Users.AddRange(Mapper.Map(await _userRepository.GetAllUsers(teams[0].TeamId)));
             foreach (var team in teams)
             {
                 details.States.AddRange(Mapper.Map(_stateRepository.GetByTeamId(team.TeamId)));
