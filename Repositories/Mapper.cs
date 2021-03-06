@@ -115,6 +115,10 @@ namespace WorkTracker.Repositories
                 Title = story.Title,
                 ListOrder = story.ListOrder,
                 Description = story.Description,
+                Archived = story.Archived,
+                CreatedAt = story.CreatedAt,
+                CreatedBy = story.CreatedBy,
+                ModifiedAt = story.ModifiedAt
             };
         }
         public static List<Models.ServiceModels.Story> Map(List<Models.DataModels.Story> storyList)

@@ -18,9 +18,9 @@ namespace WorkTracker.Services
 			_storyRepository = storyRepository;
 		}
 
-		public async Task<List<Models.DTOs.Story>> GetStoriesByStateId(int userId, int stateId)
+		public async Task<List<Models.DTOs.Story>> GetStoriesByStateId(int userId, int stateId, bool getArchived)
         {
-			return Mapper.Map(await _storyRepository.GetStoriesByStateId(userId, stateId));
+			return Mapper.Map(await _storyRepository.GetStoriesByStateId(userId, stateId, getArchived));
 		}
 
 		public async System.Threading.Tasks.Task CreateStory(int userId, CreateStoryRequest request)

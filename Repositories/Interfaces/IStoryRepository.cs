@@ -8,7 +8,7 @@ namespace WorkTracker.Repositories.Interfaces
 {
     public interface IStoryRepository
     {
-        Task<List<Models.ServiceModels.Story>> GetStoriesByStateId(int userId, int stateId);
+        Task<List<Models.ServiceModels.Story>> GetStoriesByStateId(int userId, int stateId, bool getArchived);
         Task<int> CreateStory(int userId, Models.ServiceModels.Story story);
         System.Threading.Tasks.Task UpdateStory(Models.ServiceModels.Story updatedStory);
         System.Threading.Tasks.Task OrderUpdate(int stateId, int userId, Dictionary<string, int> updateList);

@@ -23,7 +23,15 @@ namespace WorkTracker.Controllers
         public async Task<ActionResult<List<Story>>> GetStoriesByStateId([FromRoute] int stateId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            return Ok(await _storyService.GetStoriesByStateId(userId, stateId));
+            return Ok(await _storyService.GetStoriesByStateId(userId, stateId, false));
+        }
+
+        [ValidateToken("view_story")]
+        [HttpGet("archived/{stateId}")]
+        public async Task<ActionResult<List<Story>>> GetArchivedStories([FromRoute] int stateId)
+        {
+            var userId = Helper.GetRequestUserId(HttpContext);
+            return Ok(await _storyService.GetStoriesByStateId(userId, stateId, true));
         }
 
         [ValidateToken("create_story")]

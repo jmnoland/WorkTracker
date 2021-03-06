@@ -128,7 +128,11 @@ namespace WorkTracker.Models.Mapper
                 StateId = story.StateId,
                 StoryId = story.StoryId,
                 ListOrder = story.ListOrder,
-                Title = story.Title
+                Title = story.Title,
+                Archived = story.Archived,
+                CreatedAt = (DateTime)story.CreatedAt,
+                CreatedBy = (int)story.CreatedBy,
+                ModifiedAt = story.ModifiedAt
             };
         }
         public static List<DTOs.Story> Map(List<ServiceModels.Story> storyList)

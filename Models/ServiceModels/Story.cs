@@ -13,5 +13,9 @@ namespace WorkTracker.Models.ServiceModels
         public int ListOrder { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public bool? Archived { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedAt { get; set; }
     }
 }
