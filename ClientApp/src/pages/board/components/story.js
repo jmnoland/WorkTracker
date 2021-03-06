@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 const StoryContainer = styled.div`
@@ -11,11 +11,24 @@ const StoryContainer = styled.div`
   background: ${(props) => props.theme.colors.background};
 `;
 
-export function Story({ title, description }) {
+const Row = styled.div``;
+
+const Col = styled.div``;
+
+export function Story({ title, createdBy, updatedAt }) {
   return (
     <StoryContainer>
       <div>{title}</div>
-      <div>{description}</div>
+      <Row>
+        <Col>
+          <div>{`Created by: ${createdBy}`}</div>
+        </Col>
+        {updatedAt && (
+          <Col>
+            <div>{`Updated at: ${updatedAt}`}</div>
+          </Col>
+        )}
+      </Row>
     </StoryContainer>
   );
 }

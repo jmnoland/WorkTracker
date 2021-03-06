@@ -7,6 +7,12 @@ export async function GetStories(stateId) {
   return data;
 }
 
+// includes archived stories
+export async function GetAllStories(stateId) {
+  const { data } = await api.get(`${controller}/archive/${stateId}`);
+  return data;
+}
+
 export async function CreateStory(title, description, state, tasks) {
   const { data } = await api.post(`${controller}`, {
     title,

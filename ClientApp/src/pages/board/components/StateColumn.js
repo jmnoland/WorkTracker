@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import { Story } from "./story";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { UserDetailContext } from "../../../context/userDetails";
+import { getUserMapping, parseDateTime } from "../../../helper";
 
 const StateContainer = styled.div`
   box-shadow: 0px 0px 5px 2px ${(props) => props.theme.colors.dark};
@@ -23,8 +25,12 @@ const StateButton = styled.button`
   float: right;
 `;
 
-export function StateColumn({ state, stories, createNew, onDragEnd }) {
+export function StateColumn({ state, stories, createNew }) {
+  const {
+    userDetail: { users },
+  } = useContext(UserDetailContext);
   const { stateId, name } = state;
+  const userMapping = getUserMapping(users);
 
   return (
     <StateContainer>
@@ -51,7 +57,12 @@ export function StateColumn({ state, stories, createNew, onDragEnd }) {
                     >
                       <Story
                         title={story.title}
-                        description={story.description}
+                        createdBy={userMapping[story.createdBy]}
+                        updatedAt={
+                          story.modifiedAt
+                            ? parseDateTime(story.modifiedAt)
+                            : null
+                        }
                       />
                     </div>
                   )}

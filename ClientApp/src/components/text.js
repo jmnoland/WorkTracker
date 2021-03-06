@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { theme } from "../constants/theme";
 import { TextFieldInput } from "./index";
 
 const Container = styled.div``;

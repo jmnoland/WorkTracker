@@ -29,6 +29,17 @@ export function getToken() {
   return cookies[index];
 }
 
+export function parseDateTime(date) {
+  return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+}
+
+export function getUserMapping(users) {
+  return users.reduce((total, user) => {
+    total[user.userId] = user.name;
+    return total;
+  }, {});
+}
+
 export function useField(initial, initialVal) {
   const initialField = { ...initial, value: initialVal };
   const [field, _setField] = useState(initialField);
