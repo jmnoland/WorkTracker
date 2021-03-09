@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserDetailContext } from "../../context/userDetails";
 import { CreateStoryModal } from "./components/createStoryModal";
+import { ViewStoryModal } from "./components/viewStoryModal";
 import {
   CreateStory,
+  UpdateStory,
   GetStories,
   OrderUpdate,
   ChangeState,
@@ -21,7 +23,9 @@ const BoardContainer = styled.div`
 
 export default function Board() {
   const { userDetail } = useContext(UserDetailContext);
-  const [openModal, setOpenModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openViewModal, setOpenViewModal] = useState(false);
+  const [viewStory, setViewStory] = useState({});
   const [storyState, setStoryState] = useState(null);
   const [stories, setStories] = useState();
 
@@ -104,15 +108,33 @@ export default function Board() {
     }
   };
 
-  const onSave = async (title, description, state, tasks) => {
+  const onCreateSave = async (title, description, state, tasks) => {
     await CreateStory(title, description, state, tasks);
-    setOpenModal(false);
+    setOpenCreateModal(false);
     setStoryState(null);
+  };
+
+  const onEditSave = async (
+    storyId,
+    listOrder,
+    title,
+    description,
+    state,
+    tasks
+  ) => {
+    await UpdateStory(storyId, listOrder, title, description, state, tasks);
+    setOpenViewModal(false);
+    setViewStory(null);
   };
 
   const createNew = (stateId) => {
     setStoryState(stateId);
-    setOpenModal(true);
+    setOpenCreateModal(true);
+  };
+
+  const setViewValues = (story) => {
+    setViewStory(story);
+    setOpenViewModal(true);
   };
 
   return (
@@ -125,18 +147,29 @@ export default function Board() {
               state={state}
               stories={stories && stories[state.stateId]}
               createNew={createNew}
+              viewEdit={setViewValues}
               onDragEnd={onDragEnd}
             />
           ))}
         </DragDropContext>
       </BoardContainer>
-      <CreateStoryModal
-        defaultState={storyState}
-        userStates={userDetail.states}
-        openModal={openModal}
-        onSave={onSave}
-        onCancel={() => setOpenModal(false)}
-      />
+      {openViewModal && (
+        <ViewStoryModal
+          initialValues={viewStory}
+          openModal={openViewModal}
+          onSave={onEditSave}
+          onCancel={() => setOpenViewModal(false)}
+        />
+      )}
+      {openCreateModal && (
+        <CreateStoryModal
+          defaultState={storyState}
+          userStates={userDetail.states}
+          openModal={openCreateModal}
+          onSave={onCreateSave}
+          onCancel={() => setOpenCreateModal(false)}
+        />
+      )}
     </>
   );
 }

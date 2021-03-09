@@ -25,7 +25,7 @@ const StateButton = styled.button`
   float: right;
 `;
 
-export function StateColumn({ state, stories, createNew }) {
+export function StateColumn({ state, stories, viewEdit, createNew }) {
   const {
     userDetail: { users },
   } = useContext(UserDetailContext);
@@ -50,6 +50,7 @@ export function StateColumn({ state, stories, createNew }) {
                 >
                   {(provided) => (
                     <div
+                      onClick={() => viewEdit(story)}
                       ref={provided.innerRef}
                       style={{ marginTop: "10px" }}
                       {...provided.draggableProps}

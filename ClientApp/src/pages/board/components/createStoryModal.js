@@ -22,7 +22,7 @@ export function CreateStoryModal({
   onSave,
 }) {
   const [tasks, setTasks] = useState([
-    { taskId: 1, storyId: 0, description: "", complete: 0 },
+    { taskId: 1, storyId: 0, description: "", complete: false },
   ]);
   const [loading, setLoading] = useState(false);
   const initialValues = { title: "", description: "" };
@@ -57,7 +57,12 @@ export function CreateStoryModal({
   const addTask = () => {
     setTasks([
       ...tasks,
-      { taskId: tasks.length + 1, storyId: 0, description: "", complete: 0 },
+      {
+        taskId: tasks.length + 1,
+        storyId: 0,
+        description: "",
+        complete: false,
+      },
     ]);
   };
   const removeTask = (taskId) => {

@@ -11,7 +11,10 @@ const StoryContainer = styled.div`
   background: ${(props) => props.theme.colors.background};
 `;
 
-const Row = styled.div``;
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const Col = styled.div``;
 

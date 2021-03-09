@@ -23,6 +23,25 @@ export async function CreateStory(title, description, state, tasks) {
   return data;
 }
 
+export async function UpdateStory(
+  storyId,
+  listOrder,
+  title,
+  description,
+  state,
+  tasks
+) {
+  const { data } = await api.patch(`${controller}`, {
+    storyId,
+    stateId: state,
+    title,
+    description,
+    listOrder,
+    tasks,
+  });
+  return data;
+}
+
 export async function ChangeState(storyId, payload) {
   const { data } = await api.patch(
     `${controller}/update/state/${storyId}`,

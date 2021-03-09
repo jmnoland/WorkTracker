@@ -20,7 +20,7 @@ export function ViewStoryModal({
   onCancel,
   onSave,
 }) {
-  const [tasks, setTasks] = useState(initialValues.tasks);
+  const [tasks, setTasks] = useState(initialValues.tasks || []);
   const [loading, setLoading] = useState(false);
   const fields = useObject(
     {
@@ -45,15 +45,23 @@ export function ViewStoryModal({
           rules: [],
         },
       },
+      storyId: {},
+      listOrder: {},
+      stateId: {},
     },
     initialValues
   );
-  const { title, description } = fields.data;
+  const { title, description, storyId, listOrder, stateId } = fields.data;
 
   const addTask = () => {
     setTasks([
       ...tasks,
-      { taskId: tasks.length + 1, storyId: 0, description: "", complete: 0 },
+      {
+        taskId: tasks.length + 1,
+        storyId: storyId.value,
+        description: "",
+        complete: false,
+      },
     ]);
   };
 
@@ -73,7 +81,14 @@ export function ViewStoryModal({
 
   const handleSubmit = async () => {
     setLoading(true);
-    await onSave(title.value, description.value, defaultState, tasks);
+    await onSave(
+      storyId.value,
+      listOrder.value,
+      title.value,
+      description.value,
+      stateId.value,
+      tasks
+    );
     setLoading(false);
   };
 
@@ -103,7 +118,7 @@ export function ViewStoryModal({
           </div>
         ))}
         <Button primary onClick={addTask}>
-          Save
+          Add
         </Button>
       </TaskContainer>
     </>

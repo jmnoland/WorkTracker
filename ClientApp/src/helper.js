@@ -29,7 +29,9 @@ export function getToken() {
   return cookies[index];
 }
 
-export function parseDateTime(date) {
+export function parseDateTime(value) {
+  let date = value;
+  if (typeof date === "string") date = new Date(value);
   return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
 }
 
