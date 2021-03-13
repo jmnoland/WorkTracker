@@ -61,10 +61,17 @@ namespace WorkTracker.Controllers
 
         [ValidateToken("edit_story")]
         [HttpDelete("{storyId}")]
-        public async Task<ActionResult> DeleteStory([FromQuery] int storyId)
+        public async Task<ActionResult> DeleteStory([FromRoute] int storyId)
         {
             await _storyService.DeleteStory(storyId);
             return Ok();
+        }
+
+        [ValidateToken("view_story")]
+        [HttpGet("task/{storyId}")]
+        public async Task<ActionResult<List<Story>>> GetStoryTasks([FromRoute] int storyId)
+        {
+            return Ok(await _storyService.GetStoryTasks(storyId));
         }
 
         [ValidateToken("edit_story")]

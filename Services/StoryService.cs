@@ -51,6 +51,12 @@ namespace WorkTracker.Services
 			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
         }
 
+		public async Task<List<Models.DTOs.Task>> GetStoryTasks(int storyId)
+        {
+			var tasks = await _storyRepository.GetStoryTasks(storyId);
+			return Mapper.Map(tasks);
+        }
+
 		public async System.Threading.Tasks.Task DeleteTask(int taskId)
         {
 			await _storyRepository.DeleteTask(taskId);

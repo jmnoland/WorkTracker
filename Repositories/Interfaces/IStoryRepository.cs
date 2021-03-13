@@ -14,6 +14,7 @@ namespace WorkTracker.Repositories.Interfaces
         System.Threading.Tasks.Task DeleteStory(int storyId);
         System.Threading.Tasks.Task OrderUpdate(int stateId, int userId, Dictionary<string, int> updateList);
         System.Threading.Tasks.Task ChangeState(int userId, int storyId, int stateId);
+        Task<List<Models.ServiceModels.Task>> GetStoryTasks(int storyId);
         System.Threading.Tasks.Task AddTasks(List<Models.ServiceModels.Task> taskList);
         System.Threading.Tasks.Task UpdateTasks(List<Models.ServiceModels.Task> taskList);
         System.Threading.Tasks.Task DeleteTask(int taskId);

@@ -75,7 +75,7 @@ namespace WorkTracker.Models.Mapper
         #endregion
 
         #region TaskMapping
-        public ServiceModels.Task Map(DTOs.Task task)
+        public static ServiceModels.Task Map(DTOs.Task task)
         {
             return new ServiceModels.Task
             {
@@ -85,9 +85,28 @@ namespace WorkTracker.Models.Mapper
                 TaskId = task.TaskId
             };
         }
-        public List<ServiceModels.Task> Map(List<DTOs.Task> taskList)
+        public static List<ServiceModels.Task> Map(List<DTOs.Task> taskList)
         {
             var tempList = new List<ServiceModels.Task>();
+            foreach (var task in taskList)
+            {
+                tempList.Add(Map(task));
+            }
+            return tempList;
+        }
+        public static DTOs.Task Map(ServiceModels.Task task)
+        {
+            return new DTOs.Task
+            {
+                Description = task.Description,
+                Complete = task.Complete,
+                StoryId = task.StoryId,
+                TaskId = task.TaskId
+            };
+        }
+        public static List<DTOs.Task> Map(List<ServiceModels.Task> taskList)
+        {
+            var tempList = new List<DTOs.Task>();
             foreach (var task in taskList)
             {
                 tempList.Add(Map(task));

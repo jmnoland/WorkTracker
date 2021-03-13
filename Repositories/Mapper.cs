@@ -185,6 +185,25 @@ namespace WorkTracker.Repositories
             }
             return tempList;
         }
+        public static Models.ServiceModels.Task Map(Models.DataModels.Task task)
+        {
+            return new Models.ServiceModels.Task
+            {
+                Complete = task.Complete,
+                Description = task.Description,
+                StoryId = task.StoryId,
+                TaskId = task.TaskId
+            };
+        }
+        public static List<Models.ServiceModels.Task> Map(List<Models.DataModels.Task> taskList)
+        {
+            var tempList = new List<Models.ServiceModels.Task>();
+            foreach(var task in taskList)
+            {
+                tempList.Add(Map(task));
+            }
+            return tempList;
+        }
         #endregion
     }
 }

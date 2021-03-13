@@ -113,6 +113,12 @@ namespace WorkTracker.Repositories
             story.StateId = stateId;
             await _dbContext.SaveChangesAsync();
         }
+        
+        public async Task<List<Models.ServiceModels.Task>> GetStoryTasks(int storyId)
+        {
+            var tasks = await _dbContext.Task.Where(w => w.StoryId == storyId).ToListAsync();
+            return Mapper.Map(tasks);
+        }
 
         public async System.Threading.Tasks.Task AddTasks(List<Models.ServiceModels.Task> taskList)
         {
