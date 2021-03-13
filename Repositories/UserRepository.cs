@@ -109,8 +109,8 @@ namespace WorkTracker.Repositories
             {
                 conn.Open();
                 cmd.Parameters.AddWithValue("@userId", userId);
-                cmd.ExecuteNonQuery();
-                conn.Close();
+                await cmd.ExecuteNonQueryAsync();
+                await conn.CloseAsync();
             }
         }
 

@@ -10,7 +10,7 @@ namespace WorkTracker.Controllers
 {
     public class Helper
     {
-        public static int GetRequestUserId(HttpContext request)
+        public static int? GetRequestUserId(HttpContext request)
         {
             var token = request.Request.Cookies["X-User-Token"];
             var handler = new JwtSecurityTokenHandler();
@@ -20,7 +20,7 @@ namespace WorkTracker.Controllers
                 .Select(s => s.Value)
                 .SingleOrDefault();
             if (temp != null) return int.Parse(temp);
-            return 0;
+            return null;
         }
     }
 }

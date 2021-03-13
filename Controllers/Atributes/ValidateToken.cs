@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Text;
+using WorkTracker.Controllers.Exceptions;
 
 namespace WorkTracker.Controllers.Attributes
 {
@@ -63,8 +64,8 @@ namespace WorkTracker.Controllers.Attributes
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     IssuerSigningKey = securityKey
                 }, out SecurityToken validatedToken);
             }
@@ -73,18 +74,6 @@ namespace WorkTracker.Controllers.Attributes
                 return false;
             }
             return true;
-        }
-
-        private static string RequestRawUrl(HttpRequest request)
-        {
-            return $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
-        }
-
-        private static IDictionary<string, string> ToDictionary(IFormCollection collection)
-        {
-            return collection.Keys
-                .Select(key => new { Key = key, Value = collection[key] })
-                .ToDictionary(p => p.Key, p => p.Value.ToString());
         }
     }
 }

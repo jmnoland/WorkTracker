@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,24 @@ namespace WorkTracker.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async System.Threading.Tasks.Task DeleteStory(int storyId)
+        {
+            string query = @"
+                DELETE FROM Story WHERE StoryId = @storyId
+                DELETE FROM UserStory WHERE StoryId = @storyId
+                DELETE FROM Task WHERE StoryId = @storyId
+            ";
+
+            var conn = (SqlConnection)_dbContext.Database.GetDbConnection();
+            using (var cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                cmd.Parameters.AddWithValue("@storyId", storyId);
+                await cmd.ExecuteNonQueryAsync();
+                await conn.CloseAsync();
+            }
+        }
+
         public async System.Threading.Tasks.Task OrderUpdate(int stateId, int userId, Dictionary<string, int> updateList)
         {
             var stories = await (from s in _dbContext.Story
@@ -114,6 +133,12 @@ namespace WorkTracker.Repositories
                 task.Complete = updatedTask.Complete;
                 task.Description = updatedTask.Description ?? task.Description;
             }
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async System.Threading.Tasks.Task DeleteTask(int taskId)
+        {
+            _dbContext.Task.Remove(new Models.DataModels.Task { TaskId = taskId });
             await _dbContext.SaveChangesAsync();
         }
     }

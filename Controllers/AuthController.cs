@@ -23,6 +23,8 @@ namespace WorkTracker.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login([FromBody] UserLoginRequest request)
         {
+            if (!ModelState.IsValid) return BadRequest();
+
             var token = await _authService.Login(request);
             if (token != null)
             {

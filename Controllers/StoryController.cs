@@ -23,7 +23,9 @@ namespace WorkTracker.Controllers
         public async Task<ActionResult<List<Story>>> GetStoriesByStateId([FromRoute] int stateId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            return Ok(await _storyService.GetStoriesByStateId(userId, stateId, false));
+            if (userId == null) return BadRequest();
+
+            return Ok(await _storyService.GetStoriesByStateId((int)userId, stateId, false));
         }
 
         [ValidateToken("view_story")]
@@ -31,7 +33,9 @@ namespace WorkTracker.Controllers
         public async Task<ActionResult<List<Story>>> GetArchivedStories([FromRoute] int stateId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            return Ok(await _storyService.GetStoriesByStateId(userId, stateId, true));
+            if (userId == null) return BadRequest();
+
+            return Ok(await _storyService.GetStoriesByStateId((int)userId, stateId, true));
         }
 
         [ValidateToken("create_story")]
@@ -39,7 +43,9 @@ namespace WorkTracker.Controllers
         public async Task<ActionResult> CreateStory([FromBody] CreateStoryRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            await _storyService.CreateStory(userId, request);
+            if (userId == null || !ModelState.IsValid) return BadRequest();
+
+            await _storyService.CreateStory((int)userId, request);
             return Ok();
         }
 
@@ -47,7 +53,25 @@ namespace WorkTracker.Controllers
         [HttpPatch]
         public async Task<ActionResult> UpdateStory([FromBody] UpdateStoryRequest request)
         {
+            if (!ModelState.IsValid) return BadRequest();
+
             await _storyService.UpdateStory(request);
+            return Ok();
+        }
+
+        [ValidateToken("edit_story")]
+        [HttpDelete("{storyId}")]
+        public async Task<ActionResult> DeleteStory([FromQuery] int storyId)
+        {
+            await _storyService.DeleteStory(storyId);
+            return Ok();
+        }
+
+        [ValidateToken("edit_story")]
+        [HttpDelete("task/{taskId}")]
+        public async Task<ActionResult> DeleteTask([FromQuery] int taskId)
+        {
+            await _storyService.DeleteTask(taskId);
             return Ok();
         }
 
@@ -56,7 +80,9 @@ namespace WorkTracker.Controllers
         public async Task<ActionResult> ChangeState([FromRoute] int storyId, [FromBody] OrderUpdateRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            await _storyService.ChangeState(userId, storyId, request);
+            if (userId == null || !ModelState.IsValid) return BadRequest();
+
+            await _storyService.ChangeState((int)userId, storyId, request);
             return Ok();
         }
 
@@ -65,7 +91,9 @@ namespace WorkTracker.Controllers
         public async Task<ActionResult> OrderUpdate([FromBody] OrderUpdateRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            await _storyService.OrderUpdate(userId, request);
+            if (userId == null || !ModelState.IsValid) return BadRequest();
+
+            await _storyService.OrderUpdate((int)userId, request);
             return Ok();
         }
     }

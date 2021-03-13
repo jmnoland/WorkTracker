@@ -41,9 +41,19 @@ namespace WorkTracker.Services
 			await _storyRepository.UpdateTasks(tasks);
         }
 
+		public async System.Threading.Tasks.Task DeleteStory(int storyId)
+        {
+			await _storyRepository.DeleteStory(storyId);
+        }
+
 		public async System.Threading.Tasks.Task OrderUpdate(int userId, OrderUpdateRequest request)
         {
 			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
+        }
+
+		public async System.Threading.Tasks.Task DeleteTask(int taskId)
+        {
+			await _storyRepository.DeleteTask(taskId);
         }
 
 		public async System.Threading.Tasks.Task ChangeState(int userId, int storyId, OrderUpdateRequest request)

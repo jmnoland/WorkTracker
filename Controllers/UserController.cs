@@ -33,6 +33,7 @@ namespace WorkTracker.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
+            if (!ModelState.IsValid) return BadRequest();
             try
             {
                 await _userService.CreateUser(request);
@@ -47,6 +48,8 @@ namespace WorkTracker.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser([FromBody] CreateUserRequest request)
         {
+            if (!ModelState.IsValid) return BadRequest();
+
             await _userService.RegisterUser(request);
             return Ok();
         }
@@ -54,6 +57,8 @@ namespace WorkTracker.Controllers
         [HttpPatch]
         public async Task<ActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
+            if (!ModelState.IsValid) return BadRequest();
+
             try
             {
                 await _userService.UpdateUser(request);
@@ -61,9 +66,10 @@ namespace WorkTracker.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw new Exception("Update failed");
             }
         }
+
         [HttpDelete("{userId}")]
         public async Task<ActionResult> RemoveUser([FromRoute] int userId)
         {
