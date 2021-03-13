@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useObject } from "../../../helper";
-import { Modal, Button, EditableText } from "../../../components";
+import {
+  Modal,
+  Button,
+  EditableText,
+  TextFieldInput,
+  Icon,
+} from "../../../components";
+import { TrashIcon } from "../../../assets";
 
 const Content = styled.div``;
 
@@ -67,6 +74,11 @@ export function ViewStoryModal({
     ]);
   };
 
+  const onDelete = async () => {
+    setLoading(true);
+    await deleteStory(storyId.value, stateId.value);
+  };
+
   const removeTask = (taskId) => {
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
@@ -95,6 +107,7 @@ export function ViewStoryModal({
 
   const footerContent = (
     <Footer>
+      <Button onClick={onDelete}>Delete</Button>
       <Button secondary>Cancel</Button>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
@@ -110,12 +123,15 @@ export function ViewStoryModal({
         <Description>Tasks:</Description>
         {tasks.map((task) => (
           <div key={task.taskId}>
-            <EditableText
+            <TextFieldInput
               height={"30px"}
               onChange={(e) => handleChange(task.taskId, e)}
               value={task.description}
             />
-            <div onClick={() => removeTask(task.taskId)}>Remove</div>
+            <Icon
+              onClick={() => removeTask(task.taskId)}
+              src={TrashIcon}
+            ></Icon>
           </div>
         ))}
         <Button primary onClick={addTask}>

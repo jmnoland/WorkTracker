@@ -5,6 +5,7 @@ import { NavLink, InLineLink, BaseLink as Link } from "./link";
 import { Modal } from "./modal";
 import { TextArea } from "./textarea";
 import { EditableText, Text } from "./text";
+import { default as Icon } from "./icon";
 
 export {
   Input,
@@ -20,4 +21,5 @@ export {
   TextArea,
   EditableText,
   Text,
+  Icon,
 };

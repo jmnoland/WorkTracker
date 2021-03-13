@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useObject } from "../../../helper";
-import { Modal, Button, TextFieldInput, TextArea } from "../../../components";
+import {
+  Modal,
+  Button,
+  TextFieldInput,
+  TextArea,
+  Icon,
+} from "../../../components";
+import { TrashIcon } from "../../../assets";
 
 const Content = styled.div``;
 
@@ -117,7 +124,10 @@ export function CreateStoryModal({
                 onChange={(e) => handleChange(task.taskId, e)}
                 value={task.description}
               />
-              <div onClick={() => removeTask(task.taskId)}>Remove</div>
+              <Icon
+                onClick={() => removeTask(task.taskId)}
+                src={TrashIcon}
+              ></Icon>
             </div>
           ))}
           <Button primary onClick={addTask}>

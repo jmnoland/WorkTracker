@@ -139,6 +139,8 @@ export default function Board() {
   const onDelete = async (deleteFunc, id, state) => {
     await deleteFunc(id);
     await getStateStories(stories, state, true);
+    setOpenViewModal(false);
+    setViewStory(false);
   };
 
   const createNew = (stateId) => {
