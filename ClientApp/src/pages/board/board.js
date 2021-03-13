@@ -6,6 +6,8 @@ import { ViewStoryModal } from "./components/viewStoryModal";
 import {
   CreateStory,
   UpdateStory,
+  DeleteStory,
+  DeleteTask,
   GetStories,
   OrderUpdate,
   ChangeState,
@@ -28,6 +30,11 @@ export default function Board() {
   const [viewStory, setViewStory] = useState({});
   const [storyState, setStoryState] = useState(null);
   const [stories, setStories] = useState();
+
+  async function getStateStories(stories, stateId, save) {
+    stories[stateId] = await GetStories(stateId);
+    if (save) setStories(stories);
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -110,6 +117,7 @@ export default function Board() {
 
   const onCreateSave = async (title, description, state, tasks) => {
     await CreateStory(title, description, state, tasks);
+    await getStateStories(stories, state, true);
     setOpenCreateModal(false);
     setStoryState(null);
   };
@@ -123,8 +131,14 @@ export default function Board() {
     tasks
   ) => {
     await UpdateStory(storyId, listOrder, title, description, state, tasks);
+    await getStateStories(stories, state, true);
     setOpenViewModal(false);
     setViewStory(null);
+  };
+
+  const onDelete = async (deleteFunc, id, state) => {
+    await deleteFunc(id);
+    await getStateStories(stories, state, true);
   };
 
   const createNew = (stateId) => {
@@ -157,6 +171,8 @@ export default function Board() {
         <ViewStoryModal
           initialValues={viewStory}
           openModal={openViewModal}
+          deleteTask={(id, state) => onDelete(DeleteTask, id, state)}
+          deleteStory={(id, state) => onDelete(DeleteStory, id, state)}
           onSave={onEditSave}
           onCancel={() => setOpenViewModal(false)}
         />

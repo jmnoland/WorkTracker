@@ -42,6 +42,14 @@ export async function UpdateStory(
   return data;
 }
 
+export async function DeleteStory(storyId) {
+  await api.delete(`${controller}/${storyId}`);
+}
+
+export async function DeleteTask(taskId) {
+  await api.delete(`${controller}/task/${taskId}`);
+}
+
 export async function ChangeState(storyId, payload) {
   const { data } = await api.patch(
     `${controller}/update/state/${storyId}`,

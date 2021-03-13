@@ -17,6 +17,8 @@ export function ViewStoryModal({
   initialValues,
   userStates,
   openModal,
+  deleteStory,
+  deleteTask,
   onCancel,
   onSave,
 }) {
@@ -89,7 +91,6 @@ export function ViewStoryModal({
       stateId.value,
       tasks
     );
-    setLoading(false);
   };
 
   const footerContent = (
