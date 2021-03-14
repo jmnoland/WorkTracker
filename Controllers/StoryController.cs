@@ -76,7 +76,7 @@ namespace WorkTracker.Controllers
 
         [ValidateToken("edit_story")]
         [HttpDelete("task/{taskId}")]
-        public async Task<ActionResult> DeleteTask([FromQuery] int taskId)
+        public async Task<ActionResult> DeleteTask([FromRoute] int taskId)
         {
             await _storyService.DeleteTask(taskId);
             return Ok();

@@ -31,6 +31,11 @@ export async function UpdateStory(
   state,
   tasks
 ) {
+  tasks.forEach((val) => {
+    if (val.new) {
+      val.taskId = 0;
+    }
+  });
   const { data } = await api.patch(`${controller}`, {
     storyId,
     stateId: state,
@@ -44,6 +49,11 @@ export async function UpdateStory(
 
 export async function DeleteStory(storyId) {
   await api.delete(`${controller}/${storyId}`);
+}
+
+export async function GetStoryTasks(storyId) {
+  const { data } = await api.get(`${controller}/task/${storyId}`);
+  return data;
 }
 
 export async function DeleteTask(taskId) {

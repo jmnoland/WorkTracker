@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useObject } from "../../../helper";
 import {
@@ -9,6 +9,7 @@ import {
   Icon,
 } from "../../../components";
 import { TrashIcon } from "../../../assets";
+import { GetStoryTasks, DeleteTask } from "../../../services/story";
 
 const Content = styled.div``;
 
@@ -31,6 +32,15 @@ export function ViewStoryModal({
 }) {
   const [tasks, setTasks] = useState(initialValues.tasks || []);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await GetStoryTasks(initialValues.storyId);
+      setTasks(data);
+    }
+    fetchData();
+  }, []);
+
   const fields = useObject(
     {
       title: {
@@ -70,6 +80,7 @@ export function ViewStoryModal({
         storyId: storyId.value,
         description: "",
         complete: false,
+        new: true,
       },
     ]);
   };
@@ -79,7 +90,9 @@ export function ViewStoryModal({
     await deleteStory(storyId.value, stateId.value);
   };
 
-  const removeTask = (taskId) => {
+  const removeTask = async (taskId) => {
+    const taskToRemove = tasks.filter((task) => task.taskId === taskId);
+    if (taskToRemove && !taskToRemove.new) await DeleteTask(taskId);
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
 

@@ -139,12 +139,15 @@ namespace WorkTracker.Repositories
                 task.Complete = updatedTask.Complete;
                 task.Description = updatedTask.Description ?? task.Description;
             }
+            _dbContext.AddRange(editList.Where(w => w.TaskId == 0).ToList());
             await _dbContext.SaveChangesAsync();
         }
 
         public async System.Threading.Tasks.Task DeleteTask(int taskId)
         {
-            _dbContext.Task.Remove(new Models.DataModels.Task { TaskId = taskId });
+            var task = await _dbContext.Task.Where(w => w.TaskId == taskId).FirstOrDefaultAsync();
+            if (task == null) return;
+            _dbContext.Task.Remove(task);
             await _dbContext.SaveChangesAsync();
         }
     }
