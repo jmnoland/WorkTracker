@@ -173,7 +173,6 @@ export default function Board() {
         <ViewStoryModal
           initialValues={viewStory}
           openModal={openViewModal}
-          deleteTask={(id, state) => onDelete(DeleteTask, id, state)}
           deleteStory={(id, state) => onDelete(DeleteStory, id, state)}
           onSave={onEditSave}
           onCancel={() => setOpenViewModal(false)}

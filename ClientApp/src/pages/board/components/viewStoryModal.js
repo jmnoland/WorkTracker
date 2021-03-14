@@ -9,7 +9,7 @@ import {
   Icon,
 } from "../../../components";
 import { TrashIcon } from "../../../assets";
-import { GetStoryTasks, DeleteTask } from "../../../services/story";
+import { GetStoryTasks } from "../../../services/story";
 
 const Content = styled.div``;
 
@@ -26,7 +26,6 @@ export function ViewStoryModal({
   userStates,
   openModal,
   deleteStory,
-  deleteTask,
   onCancel,
   onSave,
 }) {
