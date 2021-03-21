@@ -7,7 +7,7 @@ namespace WorkTracker.Repositories.Interfaces
 {
     public interface ITeamRepository : IGenericRepository<Team>
     {
-        void AssignUser(int userId, int teamId);
+        System.Threading.Tasks.Task AssignUser(int userId, int teamId);
         List<Models.ServiceModels.Team> GetByUserId(int userId);
     }
 }

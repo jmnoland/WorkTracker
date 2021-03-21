@@ -63,6 +63,8 @@ namespace WorkTracker.Services
             await _userRepository.CreateUser(user);
         }
 
+        // To update when organisation/teams implemented fully
+        // For registering user to an existing team
         public async System.Threading.Tasks.Task RegisterUser(CreateUserRequest request)
         {
             var user = Mapper.Map(request);
@@ -74,8 +76,8 @@ namespace WorkTracker.Services
                 TeamId = 0,
                 Name = Guid.NewGuid().ToString()
             };
-            var team = _teamRepository.Add(newTeam);
-            _teamRepository.AssignUser(userId, team.TeamId);
+            var team = await _teamRepository.Add(newTeam);
+            await _teamRepository.AssignUser(userId, team.TeamId);
             _stateRepository.CreateDefaultStates(team.TeamId);
         }
 

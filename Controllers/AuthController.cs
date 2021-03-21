@@ -34,6 +34,14 @@ namespace WorkTracker.Controllers
             return BadRequest("User validation failed");
         }
 
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] UserRegisterRequest request)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            await _authService.Register(request);
+            return Ok();
+        }
+
         [ValidateToken]
         public async Task<ActionResult<string>> RefreshToken()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 
@@ -15,16 +16,16 @@ namespace WorkTracker.Repositories
         {
             _context = context;
         }
-        public T Add(T entity)
+        public async Task<T> Add(T entity)
         {
             _context.Set<T>().Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return entity;
         }
-        public void AddRange(IEnumerable<T> entities)
+        public async void AddRange(IEnumerable<T> entities)
         {
             _context.Set<T>().AddRange(entities);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         public IEnumerable<T> Find(Expression<Func<T, bool>> expression)
         {

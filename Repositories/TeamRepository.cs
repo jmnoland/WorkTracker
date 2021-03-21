@@ -18,7 +18,7 @@ namespace WorkTracker.Repositories
             _dbContext = dbContext;
         }
 
-        public void AssignUser(int userId, int teamId)
+        public async System.Threading.Tasks.Task AssignUser(int userId, int teamId)
         {
             string query = @"INSERT INTO UserTeams VALUES (@userId, @teamId)";
 
@@ -28,7 +28,7 @@ namespace WorkTracker.Repositories
                 conn.Open();
                 cmd.Parameters.AddWithValue("@userId", userId);
                 cmd.Parameters.AddWithValue("@teamId", teamId);
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
                 conn.Close();
             }
         }
