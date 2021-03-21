@@ -7,7 +7,6 @@ import {
   CreateStory,
   UpdateStory,
   DeleteStory,
-  DeleteTask,
   GetStories,
   OrderUpdate,
   ChangeState,

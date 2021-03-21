@@ -9,7 +9,7 @@ import {
   Icon,
 } from "../../../components";
 import { TrashIcon } from "../../../assets";
-import { GetStoryTasks } from "../../../services/story";
+import { GetStoryTasks, DeleteTask } from "../../../services/story";
 
 const Content = styled.div``;
 

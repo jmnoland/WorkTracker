@@ -195,7 +195,7 @@ namespace WorkTracker.Services
                 Buffer.BlockCopy(decodedHashedPassword, 13, salt, 0, salt.Length);
 
                 // Read the subkey (the rest of the payload): must be >= 128 bits
-                int subkeyLength = hashedPassword.Length - 13 - salt.Length;
+                int subkeyLength = decodedHashedPassword.Length - 13 - salt.Length;
                 if (subkeyLength < 128 / 8)
                 {
                     return false;
@@ -207,7 +207,7 @@ namespace WorkTracker.Services
                 byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, subkeyLength);
                 return ByteArraysEqual(actualSubkey, expectedSubkey);
             }
-            catch
+            catch (Exception e)
             {
                 return false;
             }

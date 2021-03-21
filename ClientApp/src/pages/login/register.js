@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Input, Button, LoginTitle } from "../../components";
 import { useObject } from "../../helper";
-import { CreateUser } from "../../services/user";
+import { UserRegister } from "../../services/auth";
 
 const LoginContainer = styled.div`
   width: 400px;
@@ -23,7 +23,12 @@ const Content = styled.div``;
 
 export default function Register({ setRegister }) {
   const [loading, setLoading] = useState(false);
-  const initialValues = { email: "", password: "", confirmPassword: "" };
+  const initialValues = {
+    email: "",
+    name: "",
+    password: "",
+    confirmPassword: "",
+  };
   const fields = useObject(
     {
       email: {
@@ -39,6 +44,10 @@ export default function Register({ setRegister }) {
             },
           ],
         },
+      },
+      name: {
+        name: "name",
+        value: "",
       },
       password: {
         name: "password",
@@ -78,12 +87,12 @@ export default function Register({ setRegister }) {
     initialValues
   );
 
-  const { email, password, confirmPassword } = fields.data;
+  const { email, name, password, confirmPassword } = fields.data;
 
   const handleRegister = async () => {
     if (fields.validate()) {
       setLoading(true);
-      await CreateUser(email.value, password.value);
+      await UserRegister(email.value, name.value, password.value);
       setLoading(false);
       setRegister(false);
     }
@@ -94,6 +103,7 @@ export default function Register({ setRegister }) {
       <LoginTitle />
       <Content>
         <Input label="Email" position="above" center {...email} />
+        <Input label="Name" position="above" center {...name} />
         <Input
           label="Password"
           position="above"
