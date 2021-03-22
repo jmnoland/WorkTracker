@@ -6,6 +6,7 @@ import { Modal } from "./modal";
 import { TextArea } from "./textarea";
 import { EditableText, Text } from "./text";
 import { default as Icon } from "./icon";
+import { default as Notification } from "./notification";
 
 export {
   Input,
@@ -22,4 +23,5 @@ export {
   EditableText,
   Text,
   Icon,
+  Notification,
 };

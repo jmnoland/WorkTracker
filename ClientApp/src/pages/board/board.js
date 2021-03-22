@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserDetailContext } from "../../context/userDetails";
+import { NotificationContext } from "../../context/notification";
+import { Notification } from "../../components";
 import { CreateStoryModal } from "./components/createStoryModal";
 import { ViewStoryModal } from "./components/viewStoryModal";
 import {
@@ -24,6 +26,8 @@ const BoardContainer = styled.div`
 
 export default function Board() {
   const { userDetail } = useContext(UserDetailContext);
+  const { setContent } = useContext(NotificationContext);
+
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [viewStory, setViewStory] = useState({});
@@ -119,6 +123,7 @@ export default function Board() {
     await getStateStories(stories, state, true);
     setOpenCreateModal(false);
     setStoryState(null);
+    setContent("New story created");
   };
 
   const onEditSave = async (
@@ -133,6 +138,7 @@ export default function Board() {
     await getStateStories(stories, state, true);
     setOpenViewModal(false);
     setViewStory(null);
+    setContent("Story updated");
   };
 
   const onDelete = async (deleteFunc, id, state) => {
@@ -140,6 +146,7 @@ export default function Board() {
     await getStateStories(stories, state, true);
     setOpenViewModal(false);
     setViewStory(false);
+    setContent("Story deleted");
   };
 
   const createNew = (stateId) => {
@@ -155,6 +162,7 @@ export default function Board() {
   return (
     <>
       <BoardContainer>
+        <Notification />
         <DragDropContext onDragEnd={(r) => onDragEnd(r)}>
           {userDetail.states.map((state) => (
             <StateColumn

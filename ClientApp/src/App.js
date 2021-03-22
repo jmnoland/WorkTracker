@@ -7,6 +7,7 @@ import Board from "./pages/board/board";
 import { theme } from "./constants/theme";
 import NavMenu from "./components/layout/navMenu";
 import { UserDetailProvider, UserDetailContext } from "./context/userDetails";
+import { NotificationProvider } from "./context/notification";
 
 const GlobalStyle = createGlobalStyle`
     body
@@ -44,17 +45,19 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <UserDetailProvider>
-        <GlobalStyle />
-        <AppContainer>
-          <NavMenu />
-          <Content>
-            <Switch>
-              <Route exact path="/" component={Board} />
-              <Route exact path="/report" component={Report} />
-            </Switch>
-          </Content>
-          <Login />
-        </AppContainer>
+        <NotificationProvider>
+          <GlobalStyle />
+          <AppContainer>
+            <NavMenu />
+            <Content>
+              <Switch>
+                <Route exact path="/" component={Board} />
+                <Route exact path="/report" component={Report} />
+              </Switch>
+            </Content>
+            <Login />
+          </AppContainer>
+        </NotificationProvider>
       </UserDetailProvider>
     </ThemeProvider>
   );
