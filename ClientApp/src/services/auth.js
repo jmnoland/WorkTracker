@@ -10,7 +10,7 @@ async function CookiesSupported() {
 export async function UserLogin(email, password) {
   const { data } = await api.post(`${controller}/login`, { email, password });
   const cookiesAllowed = await CookiesSupported();
-  if (!cookiesAllowed) localStorage.setItem("X-User-Token", data);
+  localStorage.setItem("X-User-Token", data);
   return data;
 }
 

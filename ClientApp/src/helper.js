@@ -33,7 +33,16 @@ export function getToken() {
 export function parseDateTime(value) {
   let date = value;
   if (typeof date === "string") date = new Date(value);
-  return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  let hour = date.getHours();
+  let minute = date.getMinutes();
+  return `${day < 10 ? `0${day}` : day}-${
+    month < 10 ? `0${month}` : month
+  }-${year} ${hour < 10 ? `0${hour}` : hour}:${
+    minute < 10 ? `0${minute}` : minute
+  }`;
 }
 
 export function getUserMapping(users) {

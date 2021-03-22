@@ -5,8 +5,11 @@ import { GetDetails } from "../services/user";
 export const UserDetailContext = createContext();
 
 export const UserDetailProvider = ({ children }) => {
+  const token = localStorage.getItem("X-User-Token");
   const [userDetail, setUserDetail] = useState({});
-  const [decodedToken, setDecodedToken] = useState(null);
+  const [decodedToken, setDecodedToken] = useState(
+    token ? decodeJwtToken(token) : null
+  );
   const [user, setUser] = useState(decodedToken ? decodedToken.nameid : null);
   const [permissions, setPermissions] = useState(
     decodedToken ? decodedToken.UserRole : []
