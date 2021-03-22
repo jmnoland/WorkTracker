@@ -2,8 +2,15 @@ import api from "./api";
 
 const controller = "auth";
 
+async function CookiesSupported() {
+  const { data } = await api.get(`${controller}`);
+  return data;
+}
+
 export async function UserLogin(email, password) {
   const { data } = await api.post(`${controller}/login`, { email, password });
+  const cookiesAllowed = await CookiesSupported();
+  if (!cookiesAllowed) localStorage.setItem("X-User-Token", data);
   return data;
 }
 

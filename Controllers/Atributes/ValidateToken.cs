@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using WorkTracker.Controllers.Exceptions;
 
@@ -32,7 +32,8 @@ namespace WorkTracker.Controllers.Attributes
             var context = actionContext.HttpContext;
             if (!IsValidRequest(context.Request))
             {
-                actionContext.HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                actionContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return;
             }
 
             base.OnActionExecuting(actionContext);
@@ -41,6 +42,7 @@ namespace WorkTracker.Controllers.Attributes
         private bool IsValidRequest(HttpRequest request)
         {
             var token = request.Cookies["X-User-Token"];
+            if (token == null) token = request.Headers["X-User-Token"];
             if (token == null) return false;
             var isValid = true;
             if (_permission != null) isValid = PermissionAllowed(token, _permission);

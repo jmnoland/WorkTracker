@@ -25,7 +25,8 @@ export function getToken() {
   const index = cookies.reduce((total, val, i) => {
     if (val === "X-User-Token") total = i + 1;
     return total;
-  }, 0);
+  }, -1);
+  if (index === -1) return localStorage.getItem("X-User-Token");
   return cookies[index];
 }
 

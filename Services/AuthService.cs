@@ -207,7 +207,7 @@ namespace WorkTracker.Services
                 byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, subkeyLength);
                 return ByteArraysEqual(actualSubkey, expectedSubkey);
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }

@@ -1,19 +1,19 @@
 import React, { createContext, useState, useEffect } from "react";
-import { getToken, decodeJwtToken } from "../helper";
+import { decodeJwtToken } from "../helper";
 import { GetDetails } from "../services/user";
 
 export const UserDetailContext = createContext();
 
 export const UserDetailProvider = ({ children }) => {
   const [userDetail, setUserDetail] = useState({});
-
-  const token = getToken();
-  const decodedToken = decodeJwtToken(token);
+  const [decodedToken, setDecodedToken] = useState(null);
   const [user, setUser] = useState(decodedToken ? decodedToken.nameid : null);
   const [permissions, setPermissions] = useState(
     decodedToken ? decodedToken.UserRole : []
   );
-  const [isLoggedIn, setIsLoggedIn] = useState(token ? !!decodedToken : false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    decodedToken ? !!decodedToken : false
+  );
 
   useEffect(() => {
     async function userDetailChange() {
@@ -33,6 +33,7 @@ export const UserDetailProvider = ({ children }) => {
 
   const setTokenDetails = (token) => {
     const decodedToken = decodeJwtToken(token);
+    setDecodedToken(decodedToken);
     if (decodedToken) {
       setUser(decodedToken.nameid);
       setPermissions(decodedToken.UserRole);

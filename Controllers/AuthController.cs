@@ -43,6 +43,7 @@ namespace WorkTracker.Controllers
         }
 
         [ValidateToken]
+        [HttpPost("refresh")]
         public async Task<ActionResult<string>> RefreshToken()
         {
             var token = Request.Cookies["X-User-Token"];
@@ -51,11 +52,19 @@ namespace WorkTracker.Controllers
             return newToken;
         }
 
+        [HttpGet]
+        public ActionResult<bool> CookiesSupported()
+        {
+            var token = Request.Cookies["X-User-Token"];
+            if (token == null) return Ok(false);
+            return Ok(true);
+        }
 
         private void AddRefreshToken(string token)
         {
             var options = new CookieOptions();
             options.SameSite = SameSiteMode.Strict;
+            options.HttpOnly = true;
             Response.Cookies.Append("X-User-Token", token, options);
         }
     }
