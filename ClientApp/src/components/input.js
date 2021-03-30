@@ -112,6 +112,8 @@ export function LoginInput({ value, onChange, validation, label, type }) {
 export function TextFieldInput({
   value,
   height,
+  useRef,
+  onBlur,
   onChange,
   validation,
   placeholder,
@@ -132,10 +134,12 @@ export function TextFieldInput({
     <Container center={center}>
       {!valid ? errors : null}
       <TextAreaInput
+        ref={useRef}
         height={height}
         placeholder={placeholder}
         value={value}
         valid={valid}
+        onBlur={onBlur}
         onChange={valueChange}
       />
     </Container>

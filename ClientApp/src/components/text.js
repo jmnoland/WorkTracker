@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { TextFieldInput } from "./index";
 
@@ -16,20 +16,26 @@ export function Text({ value, onClick }) {
 
 export function EditableText({ value, height, onChange }) {
   const [canEdit, setCanEdit] = useState(false);
-  let timer = null;
-  const onClickHandler = (event) => {
-    clearTimeout(timer);
-    if (event.detail === 1) {
-      timer = setTimeout(clearTimeout(timer), 200);
-    } else if (event.detail === 2) {
-      setCanEdit(true);
-    }
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (canEdit) inputRef.current.focus();
+  }, [canEdit]);
+
+  const onClickHandler = () => {
+    setCanEdit(true);
   };
 
   return (
     <Container>
       {canEdit ? (
-        <TextFieldInput height={height} onChange={onChange} value={value} />
+        <TextFieldInput
+          useRef={inputRef}
+          height={height}
+          onChange={onChange}
+          value={value}
+          onBlur={() => setCanEdit(false)}
+        />
       ) : (
         <Text value={value} onClick={onClickHandler}></Text>
       )}
