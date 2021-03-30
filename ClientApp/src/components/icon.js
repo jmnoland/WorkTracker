@@ -2,14 +2,14 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 30px;
+  width: ${(props) => props.width ?? "30"}px;
 `;
 
 const Img = styled.img``;
 
-export default function Icon({ onClick, src }) {
+export default function Icon({ onClick, width, src }) {
   return (
-    <Container onClick={onClick}>
+    <Container width={width} onClick={onClick}>
       <Img src={src} />
     </Container>
   );

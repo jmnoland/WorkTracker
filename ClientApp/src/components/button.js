@@ -12,7 +12,8 @@ const Container = styled.div`
 const Button = styled.button`
   background: ${(props) =>
     props.primary ? props.theme.colors.orange : props.theme.colors.white};
-  color: ${(props) => (props.primary ? props.theme.colors.white : "inherit")};
+  color: ${(props) =>
+    props.primary ? props.theme.colors.white : props.theme.colors.dark};
   border: 5px solid
     ${(props) =>
       props.primary ? props.theme.colors.orange : props.theme.colors.white};
