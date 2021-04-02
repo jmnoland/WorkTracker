@@ -14,6 +14,7 @@ using WorkTracker.Models;
 using System.IO;
 using WorkTracker.Services.Interfaces;
 using WorkTracker.Services;
+using WorkTracker.Controllers.Exceptions;
 
 namespace WorkTracker
 {
@@ -80,6 +81,7 @@ namespace WorkTracker
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

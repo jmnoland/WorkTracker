@@ -5,12 +5,9 @@ using System.Web.Mvc;
 
 namespace WorkTracker.Controllers.Exceptions
 {
-    class ApiException : HttpStatusCodeResult
+    public class ApiException
     {
-        public ApiException(string message)
-            : base(500, message)
-        {
-
-        }
+        public int StatusCode { get; set; }
+        public string Message { get; set; }
     }
 }
