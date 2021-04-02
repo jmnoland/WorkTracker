@@ -11,8 +11,8 @@ export const theme = {
   border: {
     shadow: "0px 0px 20px 5px #101417",
     radius: {
-      default: "10px",
-      button: "5px",
+      default: "0px",
+      button: "1px",
     },
   },
   padding: {

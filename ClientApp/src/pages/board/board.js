@@ -21,7 +21,6 @@ const BoardContainer = styled.div`
   margin-top: 40px;
   display: flex;
   justify-content: space-around;
-  overflow-x: auto;
 `;
 
 export default function Board() {
