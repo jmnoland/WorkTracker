@@ -3,9 +3,11 @@ export const theme = {
   name: "default",
   colors: {
     background: "#1d2228",
-    light: "#888888",
+    lighter: "#888888",
+    light: "#555555",
     dark: "#101417",
     orange: "#fb8122",
+    orange_dark: "#E1741E",
     white: "#e1e2e2",
     danger: "#ff0000",
   },

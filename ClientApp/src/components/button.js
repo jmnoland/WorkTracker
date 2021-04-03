@@ -11,17 +11,27 @@ const Container = styled.div`
 
 const Button = styled.button`
   background: ${(props) =>
-    props.primary ? props.theme.colors.orange : props.theme.colors.white};
-  color: ${(props) =>
-    props.primary ? props.theme.colors.white : props.theme.colors.dark};
+    props.primary ? props.theme.colors.orange : props.theme.colors.light};
+  color: ${(props) => props.theme.colors.white};
   border: 5px solid
     ${(props) =>
-      props.primary ? props.theme.colors.orange : props.theme.colors.white};
+      props.primary ? props.theme.colors.orange : props.theme.colors.light};
   border-radius: ${(props) => props.theme.border.radius.button};
-  font-size: ${(props) => props.theme.font.size.default}
+  font-size: ${(props) => props.theme.font.size.default};
   font-weight: 600;
   width: 100px;
 
+  &:hover {
+    background: ${(props) =>
+      props.primary
+        ? props.theme.colors.orange_dark
+        : props.theme.colors.white};
+    border-color: ${(props) =>
+      props.primary
+        ? props.theme.colors.orange_dark
+        : props.theme.colors.white};
+    color: ${(props) => (props.primary ? "inherit" : props.theme.colors.dark)};
+  }
   &:focus {
     outline: none;
     box-shadow: none;
@@ -34,16 +44,27 @@ const Button = styled.button`
 
 const LoginButton = styled.button`
   background: ${(props) =>
-    props.primary ? props.theme.colors.orange : props.theme.colors.white};
+    props.primary ? props.theme.colors.orange : props.theme.colors.light};
   color: ${(props) => (props.primary ? props.theme.colors.white : "inherit")};
   border: 5px solid
     ${(props) =>
-      props.primary ? props.theme.colors.orange : props.theme.colors.white};
+      props.primary ? props.theme.colors.orange : props.theme.colors.light};
   border-radius: ${(props) => props.theme.border.radius.button};
-  font-size: ${(props) => props.theme.font.size.default}
+  font-size: ${(props) => props.theme.font.size.default};
   font-weight: 600;
   width: 180px;
 
+  &:hover {
+    background: ${(props) =>
+      props.primary
+        ? props.theme.colors.orange_dark
+        : props.theme.colors.white};
+    border-color: ${(props) =>
+      props.primary
+        ? props.theme.colors.orange_dark
+        : props.theme.colors.white};
+    color: ${(props) => (props.primary ? "inherit" : props.theme.colors.dark)};
+  }
   &:focus {
     outline: none;
     box-shadow: none;
@@ -56,17 +77,27 @@ const LoginButton = styled.button`
 
 const SmallButton = styled.button`
   background: ${(props) =>
-    props.primary ? props.theme.colors.orange : props.theme.colors.white};
-  color: ${(props) =>
-    props.primary ? props.theme.colors.white : props.theme.colors.dark};
+    props.primary ? props.theme.colors.orange : props.theme.colors.light};
+  color: ${(props) => props.theme.colors.white};
   border: 1px solid
     ${(props) =>
-      props.primary ? props.theme.colors.orange : props.theme.colors.white};
+      props.primary ? props.theme.colors.orange : props.theme.colors.light};
   border-radius: ${(props) => props.theme.border.radius.button};
-  font-size: ${(props) => props.theme.font.size.default}
+  font-size: ${(props) => props.theme.font.size.default};
   font-weight: 600;
   width: 100px;
 
+  &:hover {
+    background: ${(props) =>
+      props.primary
+        ? props.theme.colors.orange_dark
+        : props.theme.colors.white};
+    border-color: ${(props) =>
+      props.primary
+        ? props.theme.colors.orange_dark
+        : props.theme.colors.white};
+    color: ${(props) => (props.primary ? "inherit" : props.theme.colors.dark)};
+  }
   &:focus {
     outline: none;
     box-shadow: none;

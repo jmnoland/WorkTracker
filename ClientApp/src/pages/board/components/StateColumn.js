@@ -29,10 +29,10 @@ const Content = styled.div`
     width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: ${(props) => props.theme.colors.light};
+    background: ${(props) => props.theme.colors.lighter};
   }
   ::-webkit-scrollbar-thumb {
-    background: #555555;
+    background: ${(props) => props.theme.colors.light};
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #4c4c4c;

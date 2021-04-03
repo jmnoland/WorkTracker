@@ -135,7 +135,7 @@ export function CreateStoryModal({
         />
         <TaskContainer>
           <TaskHeader>
-            <Description>Add some tasks to the story.</Description>
+            <Description>Add tasks to this story.</Description>
             <Button primary isSmallButton onClick={addTask}>
               Add
             </Button>
