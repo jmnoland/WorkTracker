@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useObject } from "../../../helper";
-import { Modal, Button, TextFieldInput, TextArea } from "../../../components";
+import {
+  Modal,
+  Button,
+  TextFieldInput,
+  TextArea,
+  ScrollableContainer,
+} from "../../../components";
 
 const Content = styled.div``;
-
-const TaskContainer = styled.div``;
 
 const Description = styled.div`
   flex: 1;
@@ -111,7 +115,9 @@ export function CreateStoryModal({
 
   const footerContent = (
     <Footer>
-      <Button secondary>Cancel</Button>
+      <Button secondary onClick={onCancel}>
+        Cancel
+      </Button>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>
@@ -133,13 +139,18 @@ export function CreateStoryModal({
           {...description}
           height={"150px"}
         />
-        <TaskContainer>
-          <TaskHeader>
-            <Description>Add tasks to this story.</Description>
-            <Button primary isSmallButton onClick={addTask}>
-              Add
-            </Button>
-          </TaskHeader>
+        <ScrollableContainer
+          height={170}
+          contentTopMargin={20}
+          header={
+            <TaskHeader>
+              <Description>Add tasks to this story.</Description>
+              <Button primary isSmallButton onClick={addTask}>
+                Add
+              </Button>
+            </TaskHeader>
+          }
+        >
           {tasks.map((task) => (
             <Row key={task.taskId}>
               <TaskInputContainer>
@@ -154,7 +165,7 @@ export function CreateStoryModal({
               </SVG>
             </Row>
           ))}
-        </TaskContainer>
+        </ScrollableContainer>
       </Content>
     </Modal>
   );

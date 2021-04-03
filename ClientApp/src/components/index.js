@@ -7,6 +7,7 @@ import { TextArea } from "./textarea";
 import { EditableText, Text } from "./text";
 import { default as Icon } from "./icon";
 import { default as Notification } from "./notification";
+import { default as ScrollableContainer } from "./scrollableContainer";
 
 export {
   Input,
@@ -24,4 +25,5 @@ export {
   Text,
   Icon,
   Notification,
+  ScrollableContainer,
 };

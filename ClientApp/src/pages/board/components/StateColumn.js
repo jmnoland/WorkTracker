@@ -52,8 +52,8 @@ function getMaxHeight(container, header, footer) {
   const hh = header.getBoundingClientRect().height;
   const ch = container.getBoundingClientRect().height;
   const fh = footer.getBoundingClientRect().height;
-  // element heights - 10 padding 20 margin
-  return `${ch - hh - fh - 10 - 20}px`;
+  // element heights - 22 padding 20 margin
+  return `${ch - hh - fh - 22 - 20}px`;
 }
 
 export function StateColumn({ state, stories, viewEdit, createNew }) {

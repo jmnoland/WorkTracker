@@ -6,12 +6,11 @@ import {
   Button,
   EditableText,
   TextFieldInput,
+  ScrollableContainer,
 } from "../../../components";
 import { GetStoryTasks, DeleteTask } from "../../../services/story";
 
 const Content = styled.div``;
-
-const TaskContainer = styled.div``;
 
 const Description = styled.div`
   flex: 1;
@@ -154,14 +153,18 @@ export function ViewStoryModal({
     <>
       <EditableText {...title} />
       <EditableText {...description} height={"150px"} />
-      <TaskContainer>
-        <Description>Tasks:</Description>
-        <TaskHeader>
-          <Description>Add tasks to this story.</Description>
-          <Button primary isSmallButton onClick={addTask}>
-            Add
-          </Button>
-        </TaskHeader>
+      <ScrollableContainer
+        height={170}
+        contentTopMargin={20}
+        header={
+          <TaskHeader>
+            <Description>Add tasks to this story.</Description>
+            <Button primary isSmallButton onClick={addTask}>
+              Add
+            </Button>
+          </TaskHeader>
+        }
+      >
         {tasks.map((task) => (
           <Row key={task.taskId}>
             <TaskInputContainer>
@@ -176,7 +179,7 @@ export function ViewStoryModal({
             </SVG>
           </Row>
         ))}
-      </TaskContainer>
+      </ScrollableContainer>
     </>
   );
 
