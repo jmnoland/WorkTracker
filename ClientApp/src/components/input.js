@@ -28,9 +28,9 @@ const TextAreaInput = styled.input`
   height: ${(props) => (props.height ? props.height : "auto")};
   text-overflow: ellipsis;
   background: ${(props) => props.theme.colors.dark};
-  border: 2px dashed
+  border: 1px solid
     ${(props) =>
-      props.valid ? props.theme.colors.white : props.theme.colors.danger};
+      props.valid ? props.theme.colors.light : props.theme.colors.danger};
   border-radius: ${(props) => props.theme.border.radius.button};
   color: ${(props) => props.theme.colors.white};
   padding: ${(props) => props.theme.padding.medium};

@@ -29,7 +29,7 @@ const Content = styled.div`
     width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #888888;
+    background: ${(props) => props.theme.colors.light};
   }
   ::-webkit-scrollbar-thumb {
     background: #555555;

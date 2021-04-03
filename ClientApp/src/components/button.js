@@ -6,7 +6,7 @@ const Container = styled.div`
   width: max-content;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
-  padding: ${(props) => props.theme.padding.default};
+  padding: ${(props) => (props.small ? "0px" : props.theme.padding.default)};
 `;
 
 const Button = styled.button`
@@ -54,6 +54,29 @@ const LoginButton = styled.button`
   }
 `;
 
+const SmallButton = styled.button`
+  background: ${(props) =>
+    props.primary ? props.theme.colors.orange : props.theme.colors.white};
+  color: ${(props) =>
+    props.primary ? props.theme.colors.white : props.theme.colors.dark};
+  border: 1px solid
+    ${(props) =>
+      props.primary ? props.theme.colors.orange : props.theme.colors.white};
+  border-radius: ${(props) => props.theme.border.radius.button};
+  font-size: ${(props) => props.theme.font.size.default}
+  font-weight: 600;
+  width: 100px;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
 export default function BaseButton({
   value,
   onClick,
@@ -62,6 +85,7 @@ export default function BaseButton({
   primary,
   children,
   isLoginButton,
+  isSmallButton,
 }) {
   if (isLoginButton) {
     return (
@@ -69,6 +93,15 @@ export default function BaseButton({
         <LoginButton value={value} primary={primary} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </LoginButton>
+      </Container>
+    );
+  }
+  if (isSmallButton) {
+    return (
+      <Container small center={center}>
+        <SmallButton value={value} primary={primary} onClick={onClick}>
+          {loading ? <Loading small primary={primary} /> : children}
+        </SmallButton>
       </Container>
     );
   }

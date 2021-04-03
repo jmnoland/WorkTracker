@@ -3,6 +3,7 @@ export const theme = {
   name: "default",
   colors: {
     background: "#1d2228",
+    light: "#888888",
     dark: "#101417",
     orange: "#fb8122",
     white: "#e1e2e2",
@@ -11,7 +12,7 @@ export const theme = {
   border: {
     shadow: "0px 0px 20px 5px #101417",
     radius: {
-      default: "0px",
+      default: "1px",
       button: "1px",
     },
   },
