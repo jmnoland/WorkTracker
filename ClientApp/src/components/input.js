@@ -119,7 +119,7 @@ export function TextFieldInput({
   placeholder,
   center,
 }) {
-  const valid = validation && validation.errors.length === 0;
+  const valid = validation ? validation.errors.length === 0 : true;
 
   const errors =
     validation &&

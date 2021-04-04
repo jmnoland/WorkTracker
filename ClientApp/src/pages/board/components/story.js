@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { SubText } from "../../../components";
 
 const StoryContainer = styled.div`
   cursor: pointer;
@@ -9,11 +10,16 @@ const StoryContainer = styled.div`
   box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors.dark};
   border-top: 2px solid ${(props) => props.theme.colors.dark};
   background: ${(props) => props.theme.colors.background};
+
+  &:hover {
+    background: ${(props) => props.theme.colors.dark};
+  }
 `;
 
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 6px;
 `;
 
 const Col = styled.div``;
@@ -24,11 +30,11 @@ export function Story({ title, createdBy, updatedAt }) {
       <div>{title}</div>
       <Row>
         <Col>
-          <div>{`Created by: ${createdBy}`}</div>
+          <SubText>{`Created by: ${createdBy}`}</SubText>
         </Col>
         {updatedAt && (
           <Col>
-            <div>{`Updated at: ${updatedAt}`}</div>
+            <SubText>{`Updated at: ${updatedAt}`}</SubText>
           </Col>
         )}
       </Row>

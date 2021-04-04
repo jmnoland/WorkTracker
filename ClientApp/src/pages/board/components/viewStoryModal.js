@@ -5,7 +5,6 @@ import {
   Modal,
   Button,
   EditableText,
-  TextFieldInput,
   ScrollableContainer,
 } from "../../../components";
 import { GetStoryTasks, DeleteTask } from "../../../services/story";
@@ -53,6 +52,8 @@ export function ViewStoryModal({
 }) {
   const [tasks, setTasks] = useState(initialValues.tasks || []);
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [taskCount, setTaskCount] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -97,27 +98,28 @@ export function ViewStoryModal({
     setTasks([
       ...tasks,
       {
-        taskId: tasks.length + 1,
+        taskId: taskCount + 1,
         storyId: storyId.value,
         description: "",
         complete: false,
         new: true,
       },
     ]);
+    setTaskCount(taskCount + 1);
   };
 
   const onDelete = async () => {
-    setLoading(true);
+    setDeleteLoading(true);
     try {
       await deleteStory(storyId.value, stateId.value);
       fields.reset();
     } catch {
-      setLoading(false);
+      setDeleteLoading(false);
     }
   };
 
   const removeTask = async (taskId) => {
-    const taskToRemove = tasks.filter((task) => task.taskId === taskId);
+    const taskToRemove = tasks.filter((task) => task.taskId === taskId)[0];
     if (taskToRemove && !taskToRemove.new) await DeleteTask(taskId);
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
@@ -151,7 +153,9 @@ export function ViewStoryModal({
 
   const footerContent = (
     <Footer>
-      <Button onClick={onDelete}>Delete</Button>
+      <Button onClick={onDelete} loading={deleteLoading}>
+        Delete
+      </Button>
       <Button secondary onClick={onCancel}>
         Cancel
       </Button>
@@ -184,8 +188,10 @@ export function ViewStoryModal({
         {tasks.map((task) => (
           <Row key={task.taskId}>
             <TaskInputContainer>
-              <TextFieldInput
+              <EditableText
+                edit={task.new}
                 height={"30px"}
+                margin={"10px"}
                 onChange={(e) => handleChange(task.taskId, e)}
                 value={task.description}
               />

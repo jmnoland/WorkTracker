@@ -4,5 +4,5 @@ import styled from "styled-components";
 const ReportContainer = styled.div``;
 
 export default function Report() {
-  return <ReportContainer>Reports</ReportContainer>;
+  return <ReportContainer>Coming soon</ReportContainer>;
 }

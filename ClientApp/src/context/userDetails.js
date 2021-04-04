@@ -32,6 +32,7 @@ export const UserDetailProvider = ({ children }) => {
     setPermissions([]);
     setUserDetail({});
     setIsLoggedIn(false);
+    localStorage.removeItem("X-User-Token");
   };
 
   const setTokenDetails = (token) => {

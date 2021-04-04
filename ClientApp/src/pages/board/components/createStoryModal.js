@@ -54,6 +54,7 @@ export function CreateStoryModal({
     { taskId: 1, storyId: 0, description: "", complete: false },
   ]);
   const [loading, setLoading] = useState(false);
+  const [taskCount, setTaskCount] = useState(0);
   const initialValues = { title: "", description: "" };
   const fields = useObject(
     {
@@ -87,12 +88,13 @@ export function CreateStoryModal({
     setTasks([
       ...tasks,
       {
-        taskId: tasks.length + 1,
+        taskId: taskCount + 1,
         storyId: 0,
         description: "",
         complete: false,
       },
     ]);
+    setTaskCount(taskCount + 1);
   };
   const removeTask = (taskId) => {
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);

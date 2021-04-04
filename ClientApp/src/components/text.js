@@ -11,6 +11,7 @@ const TextContainer = styled.div`
   height: ${(props) => (props.height ? props.height : "auto")};
   padding-right: 7px;
   margin-bottom: 10px;
+  margin: ${(props) => (props.margin ? props.margin : null)};
 
   ::-webkit-scrollbar {
     width: 10px;
@@ -26,18 +27,18 @@ const TextContainer = styled.div`
   }
 `;
 
-export function Text({ value, height, onClick }) {
+export function Text({ value, height, margin, onClick }) {
   return (
     <Container>
-      <TextContainer height={height} onClick={onClick}>
+      <TextContainer height={height} margin={margin} onClick={onClick}>
         {value}
       </TextContainer>
     </Container>
   );
 }
 
-export function EditableText({ value, type, height, onChange }) {
-  const [canEdit, setCanEdit] = useState(false);
+export function EditableText({ value, type, height, margin, onChange, edit }) {
+  const [canEdit, setCanEdit] = useState(!!edit);
   const inputRef = useRef();
 
   useEffect(() => {
@@ -72,7 +73,12 @@ export function EditableText({ value, type, height, onChange }) {
       {canEdit ? (
         editableElement
       ) : (
-        <Text height={height} value={value} onClick={onClickHandler}></Text>
+        <Text
+          height={height}
+          margin={margin}
+          value={value}
+          onClick={onClickHandler}
+        ></Text>
       )}
     </Container>
   );

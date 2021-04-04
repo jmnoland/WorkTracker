@@ -31,8 +31,20 @@ const NavLinkContainer = styled.div`
   margin-right: 20px;
 `;
 
+const ProfileContainer = styled.div`
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 20px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    color: ${(props) => props.theme.colors.orange};
+  }
+`;
+
 export default function NavMenu() {
-  const { isLoggedIn } = useContext(UserDetailContext);
+  const { isLoggedIn, logout } = useContext(UserDetailContext);
 
   if (!isLoggedIn) {
     return null;
@@ -57,7 +69,7 @@ export default function NavMenu() {
               </NavLinkContainer>
             </NavItem>
           </LinkContainer>
-          <div>Profile</div>
+          <ProfileContainer onClick={logout}>Logout</ProfileContainer>
         </Container>
       </Navbar>
     </header>
