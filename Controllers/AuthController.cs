@@ -42,6 +42,18 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
+        [HttpPost("demologin")]
+        public async Task<ActionResult<string>> DemoLogin()
+        {
+            var token = await _authService.DemoLogin();
+            if (token != null)
+            {
+                AddRefreshToken(token);
+                return token;
+            }
+            return Ok();
+        }
+
         [ValidateToken]
         [HttpPost("refresh")]
         public async Task<ActionResult<string>> RefreshToken()

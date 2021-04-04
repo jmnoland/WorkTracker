@@ -139,6 +139,17 @@ namespace WorkTracker.Services
             await _teamRepository.AssignUser(user.UserId, team.TeamId);
         }
 
+        public async Task<string> DemoLogin()
+        {
+            var user = _userRepository.Find(w => w.Email == "demo@email.com").FirstOrDefault();
+
+            if (user != null)
+            {
+                return await GenerateToken(user.UserId);
+            }
+            return null;
+        }
+
         #region Private Methods
         // https://github.com/aspnet/Identity/blob/c7276ce2f76312ddd7fccad6e399da96b9f6fae1/src/Core/PasswordHasher.cs
         // HashPasswordV3

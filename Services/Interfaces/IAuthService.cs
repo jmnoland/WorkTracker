@@ -14,5 +14,6 @@ namespace WorkTracker.Services.Interfaces
         bool PermissionAllowed(string token, string permission);
         Task<string> Login(UserLoginRequest request);
         Task Register(UserRegisterRequest request);
+        Task<string> DemoLogin();
     }
 }
