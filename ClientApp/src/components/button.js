@@ -108,6 +108,29 @@ const SmallButton = styled.button`
   }
 `;
 
+const InactivePrimary = styled.button`
+  background: ${(props) => props.theme.colors.light};
+  color: ${(props) => props.theme.colors.white};
+  border: 1px solid ${(props) => props.theme.colors.light};
+  border-radius: ${(props) => props.theme.border.radius.button};
+  font-size: ${(props) => props.theme.font.size.default};
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: ${(props) => props.theme.colors.orange};
+    border-color: ${(props) => props.theme.colors.orange};
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
 export default function BaseButton({
   value,
   onClick,
@@ -117,6 +140,7 @@ export default function BaseButton({
   children,
   isLoginButton,
   isSmallButton,
+  isInactivePrimary,
 }) {
   if (isLoginButton) {
     return (
@@ -133,6 +157,15 @@ export default function BaseButton({
         <SmallButton value={value} primary={primary} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </SmallButton>
+      </Container>
+    );
+  }
+  if (isInactivePrimary) {
+    return (
+      <Container small center={center}>
+        <InactivePrimary value={value} onClick={onClick}>
+          {loading ? <Loading small primary={primary} /> : children}
+        </InactivePrimary>
       </Container>
     );
   }

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { Story } from "./story";
 import { UserDetailContext } from "../../../context/userDetails";
+import { Button } from "../../../components";
 import { getUserMapping, parseDateTime } from "../../../helper";
 
 const StateContainer = styled.div`
@@ -44,7 +45,7 @@ const DropContainer = styled.div`
   flex-direction: column;
 `;
 
-const StateButton = styled.button`
+const StateButton = styled.div`
   float: right;
 `;
 
@@ -89,7 +90,11 @@ export function StateColumn({ state, stories, viewEdit, createNew }) {
     <StateContainer ref={containerRef}>
       <StateHeader ref={headerRef}>
         <span>{name}</span>
-        <StateButton onClick={() => createNew(stateId)}>Add</StateButton>
+        <StateButton>
+          <Button isInactivePrimary onClick={() => createNew(stateId)}>
+            Create
+          </Button>
+        </StateButton>
       </StateHeader>
       <Content ref={contentRef}>
         <Droppable droppableId={stateId.toString()}>
