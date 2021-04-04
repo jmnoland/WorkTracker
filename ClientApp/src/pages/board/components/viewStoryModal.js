@@ -108,7 +108,12 @@ export function ViewStoryModal({
 
   const onDelete = async () => {
     setLoading(true);
-    await deleteStory(storyId.value, stateId.value);
+    try {
+      await deleteStory(storyId.value, stateId.value);
+      fields.reset();
+    } catch {
+      setLoading(false);
+    }
   };
 
   const removeTask = async (taskId) => {
@@ -129,20 +134,27 @@ export function ViewStoryModal({
 
   const handleSubmit = async () => {
     setLoading(true);
-    await onSave(
-      storyId.value,
-      listOrder.value,
-      title.value,
-      description.value,
-      stateId.value,
-      tasks
-    );
+    try {
+      await onSave(
+        storyId.value,
+        listOrder.value,
+        title.value,
+        description.value,
+        stateId.value,
+        tasks
+      );
+      fields.reset();
+    } catch {
+      setLoading(false);
+    }
   };
 
   const footerContent = (
     <Footer>
       <Button onClick={onDelete}>Delete</Button>
-      <Button secondary>Cancel</Button>
+      <Button secondary onClick={onCancel}>
+        Cancel
+      </Button>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>
@@ -151,10 +163,14 @@ export function ViewStoryModal({
 
   const modalContent = (
     <>
-      <EditableText {...title} />
-      <EditableText {...description} height={"150px"} />
+      <EditableText
+        type={"area"}
+        height={"150px"}
+        {...description}
+        height={"150px"}
+      />
       <ScrollableContainer
-        height={170}
+        height={260}
         contentTopMargin={20}
         header={
           <TaskHeader>
@@ -184,7 +200,16 @@ export function ViewStoryModal({
   );
 
   return (
-    <Modal visible={openModal} onClose={onCancel} footer={footerContent}>
+    <Modal
+      title={
+        <span>
+          <EditableText height={"50px"} {...title} />
+        </span>
+      }
+      visible={openModal}
+      onClose={onCancel}
+      footer={footerContent}
+    >
       <Content>{modalContent}</Content>
     </Modal>
   );

@@ -109,8 +109,12 @@ export function CreateStoryModal({
 
   const handleSubmit = async () => {
     setLoading(true);
-    await onSave(title.value, description.value, defaultState, tasks);
-    setLoading(false);
+    try {
+      await onSave(title.value, description.value, defaultState, tasks);
+      fields.reset();
+    } catch {
+      setLoading(false);
+    }
   };
 
   const footerContent = (

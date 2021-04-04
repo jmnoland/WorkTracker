@@ -25,6 +25,18 @@ const TextAreaInput = styled.textarea`
     outline: none;
     box-shadow: none;
   }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: ${(props) => props.theme.colors.lighter};
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.colors.light};
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4c4c4c;
+  }
 `;
 
 const ValidationLabel = styled.span`
@@ -41,17 +53,21 @@ const ValidationLabel = styled.span`
 export function TextArea({
   value,
   onChange,
+  onBlur,
   validation,
   placeholder,
   center,
   height,
+  useRef,
   type,
 }) {
-  const valid = validation.errors.length === 0;
+  const valid = validation ? validation.errors.length === 0 : true;
 
-  const errors = validation.errors.map((err) => {
-    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
-  });
+  const errors =
+    validation &&
+    validation.errors.map((err) => {
+      return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+    });
 
   const valueChange = (e) => {
     onChange(e.target.value);
@@ -60,12 +76,14 @@ export function TextArea({
     <Container center={center}>
       {!valid ? errors : null}
       <TextAreaInput
+        ref={useRef}
         height={height}
         placeholder={placeholder}
         value={value}
         valid={valid}
         type={type}
         onChange={valueChange}
+        onBlur={onBlur}
       />
     </Container>
   );
