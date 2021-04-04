@@ -108,9 +108,9 @@ export default function Login() {
             Sign up here.{" "}
           </InLineLink>
         </div>
-        <div>
+        {/* <div>
           Forgot your <InLineLink>password?</InLineLink>
-        </div>
+        </div> */}
       </Content>
     </LoginContainer>
   );

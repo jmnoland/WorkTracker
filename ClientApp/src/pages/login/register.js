@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Input, Button, LoginTitle } from "../../components";
+import { Input, Button, LoginTitle, InLineLink } from "../../components";
 import { useObject } from "../../helper";
 import { UserRegister } from "../../services/auth";
 
@@ -129,6 +129,11 @@ export default function Register({ setRegister }) {
             Sign up
           </Button>
         </ButtonContainer>
+        <div>
+          <InLineLink onClick={() => setRegister(false)}>
+            Back to login?{" "}
+          </InLineLink>
+        </div>
       </Content>
     </LoginContainer>
   );

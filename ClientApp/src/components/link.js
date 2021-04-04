@@ -10,9 +10,13 @@ const LinkContainer = styled.div`
 `;
 
 const InLineLinkContainer = styled.span`
+  cursor: pointer;
   > * {
     color: white;
     text-decoration: none;
+  }
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
