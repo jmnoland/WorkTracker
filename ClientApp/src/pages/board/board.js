@@ -118,8 +118,14 @@ export default function Board() {
     }
   };
 
-  const onCreateSave = async (title, description, state, tasks) => {
-    await CreateStory(title, description, state, tasks);
+  const onCreateSave = async (
+    title,
+    description,
+    state,
+    tasks,
+    storyPosition
+  ) => {
+    await CreateStory(title, description, storyPosition, state, tasks);
     await getStateStories(stories, state, true);
     setOpenCreateModal(false);
     setStoryState(null);
@@ -190,6 +196,9 @@ export default function Board() {
           defaultState={storyState}
           userStates={userDetail.states}
           openModal={openCreateModal}
+          storyPosition={
+            stories && stories[storyState] && stories[storyState].length
+          }
           onSave={onCreateSave}
           onCancel={() => setOpenCreateModal(false)}
         />

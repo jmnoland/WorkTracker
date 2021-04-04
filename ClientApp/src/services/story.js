@@ -13,12 +13,19 @@ export async function GetAllStories(stateId) {
   return data;
 }
 
-export async function CreateStory(title, description, state, tasks) {
+export async function CreateStory(
+  title,
+  description,
+  storyPosition,
+  state,
+  tasks
+) {
   const { data } = await api.post(`${controller}`, {
     title,
+    tasks,
     description,
     StateId: state,
-    tasks,
+    listOrder: storyPosition,
   });
   return data;
 }
