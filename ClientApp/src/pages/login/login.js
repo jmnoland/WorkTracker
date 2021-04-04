@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { useObject } from "../../helper";
 import { LoginInput, Button, LoginTitle, InLineLink } from "../../components";
-import { UserLogin } from "../../services/auth";
+import { UserLogin, DemoLogin } from "../../services/auth";
 import { UserDetailContext } from "../../context/userDetails";
 import Register from "./register";
 
@@ -25,6 +25,7 @@ const Content = styled.div``;
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
   const [register, setRegister] = useState(false);
   const { isLoggedIn, setIsLoggedIn, setTokenDetails } = useContext(
     UserDetailContext
@@ -71,9 +72,24 @@ export default function Login() {
     const isValid = fields.validate();
     if (isValid) {
       setLoading(true);
-      setTokenDetails(await UserLogin(email.value, password.value));
+      try {
+        setTokenDetails(await UserLogin(email.value, password.value));
+        setIsLoggedIn(true);
+        setLoading(false);
+      } catch {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setDemoLoading(true);
+    try {
+      setTokenDetails(await DemoLogin());
       setIsLoggedIn(true);
-      setLoading(false);
+      setDemoLoading(false);
+    } catch {
+      setDemoLoading(false);
     }
   };
 
@@ -100,6 +116,14 @@ export default function Login() {
             onClick={handleSubmit}
           >
             Login
+          </Button>
+          <Button
+            center
+            isLoginButton
+            loading={demoLoading}
+            onClick={handleDemoLogin}
+          >
+            Demo login
           </Button>
         </ButtonContainer>
         <div>

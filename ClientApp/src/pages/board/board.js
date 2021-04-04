@@ -17,7 +17,7 @@ import { StateColumn } from "./components/StateColumn";
 import { DragDropContext } from "react-beautiful-dnd";
 
 const BoardContainer = styled.div`
-  max-height: 88vh;
+  height: 88vh;
   margin-top: 40px;
   display: flex;
   justify-content: space-around;
