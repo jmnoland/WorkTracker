@@ -38,7 +38,6 @@ const ProfileContainer = styled.div`
   cursor: pointer;
 
   &:hover {
-    text-decoration: underline;
     color: ${(props) => props.theme.colors.orange};
   }
 `;
