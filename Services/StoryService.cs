@@ -34,16 +34,16 @@ namespace WorkTracker.Services
 			}
 		}
 
-		public async System.Threading.Tasks.Task UpdateStory(UpdateStoryRequest request)
+		public async System.Threading.Tasks.Task UpdateStory(UpdateStoryRequest request, int userId)
         {
 			var (story, tasks) = Mapper.Map(request);
-			await _storyRepository.UpdateStory(story);
+			await _storyRepository.UpdateStory(story, userId);
 			await _storyRepository.UpdateTasks(tasks);
         }
 
-		public async System.Threading.Tasks.Task DeleteStory(int storyId)
+		public async System.Threading.Tasks.Task DeleteStory(int storyId, int userId)
         {
-			await _storyRepository.DeleteStory(storyId);
+			await _storyRepository.DeleteStory(storyId, userId);
         }
 
 		public async System.Threading.Tasks.Task OrderUpdate(int userId, OrderUpdateRequest request)
@@ -51,15 +51,15 @@ namespace WorkTracker.Services
 			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
         }
 
-		public async Task<List<Models.DTOs.Task>> GetStoryTasks(int storyId)
+		public async Task<List<Models.DTOs.Task>> GetStoryTasks(int storyId, int userId)
         {
-			var tasks = await _storyRepository.GetStoryTasks(storyId);
+			var tasks = await _storyRepository.GetStoryTasks(storyId, userId);
 			return Mapper.Map(tasks);
         }
 
-		public async System.Threading.Tasks.Task DeleteTask(int taskId)
+		public async System.Threading.Tasks.Task DeleteTask(int taskId, int userId)
         {
-			await _storyRepository.DeleteTask(taskId);
+			await _storyRepository.DeleteTask(taskId, userId);
         }
 
 		public async System.Threading.Tasks.Task ChangeState(int userId, int storyId, OrderUpdateRequest request)

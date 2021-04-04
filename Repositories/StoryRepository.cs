@@ -56,11 +56,12 @@ namespace WorkTracker.Repositories
             return storyToAdd.StoryId;
         }
 
-        public async System.Threading.Tasks.Task UpdateStory(Models.ServiceModels.Story updatedStory)
+        public async System.Threading.Tasks.Task UpdateStory(Models.ServiceModels.Story updatedStory, int userId)
         {
-            var story = await _dbContext.Story
-                .Where(w => w.StoryId == updatedStory.StoryId)
-                .FirstOrDefaultAsync();
+            var story = await (from s in _dbContext.Story
+                              join us in _dbContext.UserStory on s.StoryId equals us.StoryId
+                              where s.StoryId == updatedStory.StoryId && us.UserId == userId
+                              select s).FirstOrDefaultAsync();
             story.ProjectId = updatedStory.ProjectId ?? story.ProjectId;
             story.SprintId = updatedStory.SprintId ?? story.ProjectId;
             story.StateId = updatedStory.StateId;
@@ -70,8 +71,13 @@ namespace WorkTracker.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async System.Threading.Tasks.Task DeleteStory(int storyId)
+        public async System.Threading.Tasks.Task DeleteStory(int storyId, int userId)
         {
+            var story = await (from s in _dbContext.Story
+                               join us in _dbContext.UserStory on s.StoryId equals us.StoryId
+                               where s.StoryId == storyId && us.UserId == userId
+                               select s).AnyAsync();
+            if (!story) return;
             string query = @"
                 DELETE FROM Story WHERE StoryId = @storyId
                 DELETE FROM UserStory WHERE StoryId = @storyId
@@ -114,8 +120,14 @@ namespace WorkTracker.Repositories
             await _dbContext.SaveChangesAsync();
         }
         
-        public async Task<List<Models.ServiceModels.Task>> GetStoryTasks(int storyId)
+        public async Task<List<Models.ServiceModels.Task>> GetStoryTasks(int storyId, int userId)
         {
+            var story = await (from s in _dbContext.Story
+                               join us in _dbContext.UserStory on s.StoryId equals us.StoryId
+                               where s.StoryId == storyId && us.UserId == userId
+                               select s).AnyAsync();
+            if (!story) throw new Exception(string.Format("Task not found for user {0}", userId));
+
             var tasks = await _dbContext.Task.Where(w => w.StoryId == storyId).ToListAsync();
             return Mapper.Map(tasks);
         }
@@ -143,8 +155,15 @@ namespace WorkTracker.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async System.Threading.Tasks.Task DeleteTask(int taskId)
+        public async System.Threading.Tasks.Task DeleteTask(int taskId, int userId)
         {
+            var story = await (from s in _dbContext.Story
+                               join us in _dbContext.UserStory on s.StoryId equals us.StoryId
+                               join tas in _dbContext.Task on s.StoryId equals tas.StoryId
+                               where tas.TaskId == taskId && us.UserId == userId
+                               select s).AnyAsync();
+            if (!story) throw new Exception(string.Format("Task not owned by user {0}", userId));
+
             var task = await _dbContext.Task.Where(w => w.TaskId == taskId).FirstOrDefaultAsync();
             if (task == null) return;
             _dbContext.Task.Remove(task);

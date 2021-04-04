@@ -53,9 +53,10 @@ namespace WorkTracker.Controllers
         [HttpPatch]
         public async Task<ActionResult> UpdateStory([FromBody] UpdateStoryRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            var userId = Helper.GetRequestUserId(HttpContext);
+            if (userId == null || !ModelState.IsValid) return BadRequest();
 
-            await _storyService.UpdateStory(request);
+            await _storyService.UpdateStory(request, (int)userId);
             return Ok();
         }
 
@@ -63,7 +64,10 @@ namespace WorkTracker.Controllers
         [HttpDelete("{storyId}")]
         public async Task<ActionResult> DeleteStory([FromRoute] int storyId)
         {
-            await _storyService.DeleteStory(storyId);
+            var userId = Helper.GetRequestUserId(HttpContext);
+            if (userId == null) return BadRequest();
+
+            await _storyService.DeleteStory(storyId, (int)userId);
             return Ok();
         }
 
@@ -71,14 +75,20 @@ namespace WorkTracker.Controllers
         [HttpGet("task/{storyId}")]
         public async Task<ActionResult<List<Story>>> GetStoryTasks([FromRoute] int storyId)
         {
-            return Ok(await _storyService.GetStoryTasks(storyId));
+            var userId = Helper.GetRequestUserId(HttpContext);
+            if (userId == null) return BadRequest();
+
+            return Ok(await _storyService.GetStoryTasks(storyId, (int)userId));
         }
 
         [ValidateToken("edit_story")]
         [HttpDelete("task/{taskId}")]
         public async Task<ActionResult> DeleteTask([FromRoute] int taskId)
         {
-            await _storyService.DeleteTask(taskId);
+            var userId = Helper.GetRequestUserId(HttpContext);
+            if (userId == null) return BadRequest();
+
+            await _storyService.DeleteTask(taskId, (int)userId);
             return Ok();
         }
 

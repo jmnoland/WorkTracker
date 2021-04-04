@@ -41,7 +41,6 @@ export function EditableText({ value, type, height, onChange }) {
   const inputRef = useRef();
 
   useEffect(() => {
-    console.log(inputRef);
     if (canEdit) inputRef.current.focus();
   }, [canEdit]);
 
