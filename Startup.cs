@@ -15,6 +15,7 @@ using System.IO;
 using WorkTracker.Services.Interfaces;
 using WorkTracker.Services;
 using WorkTracker.Controllers.Exceptions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace WorkTracker
 {
@@ -76,6 +77,10 @@ namespace WorkTracker
             }
 
             app.UseCors();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
