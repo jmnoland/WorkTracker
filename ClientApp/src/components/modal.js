@@ -21,6 +21,10 @@ const ModalWindow = styled.div`
   padding: ${(props) => props.theme.padding.large};
   box-shadow: ${(props) => props.theme.border.shadow};
   border-radius: ${(props) => props.theme.border.radius.default};
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 const ModalHeading = styled.div`

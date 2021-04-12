@@ -21,6 +21,12 @@ const BoardContainer = styled.div`
   margin-top: 40px;
   display: flex;
   justify-content: space-around;
+
+  @media (max-width: 768px) {
+    margin-top: 0px;
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 export default function Board() {
