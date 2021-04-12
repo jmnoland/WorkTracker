@@ -136,6 +136,11 @@ export function ViewStoryModal({
 
   const handleSubmit = async () => {
     setLoading(true);
+    const finalTasks = tasks.reduce((total, task) => {
+      var desc = task.description && task.description.trim();
+      if (desc) total.push(task);
+      return total;
+    }, []);
     try {
       await onSave(
         storyId.value,
@@ -143,7 +148,7 @@ export function ViewStoryModal({
         title.value,
         description.value,
         stateId.value,
-        tasks
+        finalTasks
       );
       fields.reset();
     } catch {
