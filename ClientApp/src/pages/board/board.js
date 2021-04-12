@@ -133,7 +133,6 @@ export default function Board() {
   ) => {
     await CreateStory(title, description, storyPosition, state, tasks);
     await getStateStories(stories, state, true);
-    setOpenCreateModal(false);
     setStoryState(null);
     setContent("New story created");
   };
@@ -148,16 +147,14 @@ export default function Board() {
   ) => {
     await UpdateStory(storyId, listOrder, title, description, state, tasks);
     await getStateStories(stories, state, true);
-    setOpenViewModal(false);
-    setViewStory(null);
+    setViewStory({});
     setContent("Story updated");
   };
 
   const onDelete = async (deleteFunc, id, state) => {
     await deleteFunc(id);
     await getStateStories(stories, state, true);
-    setOpenViewModal(false);
-    setViewStory(false);
+    setViewStory({});
     setContent("Story deleted");
   };
 

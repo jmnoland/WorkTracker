@@ -111,11 +111,13 @@ export function CreateStoryModal({
 
   const handleSubmit = async () => {
     setLoading(true);
-    const finalTasks = tasks.reduce((total, task) => {
-      var desc = task.description && task.description.trim();
-      if (desc) total.push(task);
-      return total;
-    }, []);
+    const finalTasks =
+      tasks &&
+      tasks.reduce((total, task) => {
+        var desc = task.description && task.description.trim();
+        if (desc) total.push(task);
+        return total;
+      }, []);
     try {
       await onSave(
         title.value,
@@ -125,6 +127,7 @@ export function CreateStoryModal({
         storyPosition
       );
       fields.reset();
+      onCancel();
     } catch {
       setLoading(false);
     }

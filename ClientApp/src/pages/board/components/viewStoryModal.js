@@ -50,7 +50,9 @@ export function ViewStoryModal({
   onCancel,
   onSave,
 }) {
-  const [tasks, setTasks] = useState(initialValues.tasks || []);
+  const [tasks, setTasks] = useState(
+    (initialValues && initialValues.tasks) || []
+  );
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [taskCount, setTaskCount] = useState(0);
@@ -113,6 +115,7 @@ export function ViewStoryModal({
     try {
       await deleteStory(storyId.value, stateId.value);
       fields.reset();
+      onCancel();
     } catch {
       setDeleteLoading(false);
     }
@@ -136,11 +139,13 @@ export function ViewStoryModal({
 
   const handleSubmit = async () => {
     setLoading(true);
-    const finalTasks = tasks.reduce((total, task) => {
-      var desc = task.description && task.description.trim();
-      if (desc) total.push(task);
-      return total;
-    }, []);
+    const finalTasks =
+      tasks &&
+      tasks.reduce((total, task) => {
+        var desc = task.description && task.description.trim();
+        if (desc) total.push(task);
+        return total;
+      }, []);
     try {
       await onSave(
         storyId.value,
@@ -151,6 +156,7 @@ export function ViewStoryModal({
         finalTasks
       );
       fields.reset();
+      onCancel();
     } catch {
       setLoading(false);
     }

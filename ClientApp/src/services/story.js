@@ -38,11 +38,12 @@ export async function UpdateStory(
   state,
   tasks
 ) {
-  tasks.forEach((val) => {
-    if (val.new) {
-      val.taskId = 0;
-    }
-  });
+  tasks &&
+    tasks.forEach((val) => {
+      if (val.new) {
+        val.taskId = 0;
+      }
+    });
   const { data } = await api.patch(`${controller}`, {
     storyId,
     stateId: state,

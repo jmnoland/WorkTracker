@@ -10,7 +10,9 @@ const Container = styled.div`
   margin-right: auto;
 `;
 
-const Message = styled.div``;
+const Message = styled.div`
+  color: ${(props) => props.theme.colors.success};
+`;
 
 export default function Notification() {
   const { content, visible } = useContext(NotificationContext);

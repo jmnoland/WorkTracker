@@ -10,6 +10,7 @@ export const theme = {
     orange_dark: "#E1741E",
     white: "#e1e2e2",
     danger: "#ff0000",
+    success: "#228B22",
   },
   border: {
     shadow: "0px 0px 20px 5px #101417",
