@@ -20,5 +20,8 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react"],
-  rules: {},
+  rules: {
+    "prettier/prettier": 0,
+    "react/prop-types": 0,
+  },
 };

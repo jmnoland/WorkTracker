@@ -178,12 +178,7 @@ export function ViewStoryModal({
 
   const modalContent = (
     <>
-      <EditableText
-        type={"area"}
-        height={"150px"}
-        {...description}
-        height={"150px"}
-      />
+      <EditableText type={"area"} height={"150px"} {...description} />
       <ScrollableContainer
         height={260}
         contentTopMargin={20}

@@ -5,7 +5,7 @@ import Login from "./pages/login/login";
 import Report from "./pages/report/report";
 import Board from "./pages/board/board";
 import { theme } from "./constants/theme";
-import NavMenu from "./components/layout/navMenu";
+import NavMenu from "./components/layout/NavMenu";
 import { UserDetailProvider, UserDetailContext } from "./context/userDetails";
 import { NotificationProvider } from "./context/notification";
 
