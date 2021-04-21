@@ -114,7 +114,7 @@ export function CreateStoryModal({
     const finalTasks =
       tasks &&
       tasks.reduce((total, task) => {
-        var desc = task.description && task.description.trim();
+        const desc = task.description && task.description.trim();
         if (desc) total.push(task);
         return total;
       }, []);

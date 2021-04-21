@@ -74,6 +74,7 @@ export default function Login() {
       setLoading(true);
       try {
         setTokenDetails(await UserLogin(email.value, password.value));
+        fields.reset();
         setIsLoggedIn(true);
         setLoading(false);
       } catch {
