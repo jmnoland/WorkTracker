@@ -13,6 +13,8 @@ namespace WorkTracker.Models.DataModels
         public DbSet<State> States { get; set; }
         public DbSet<Story> Story { get; set; }
         public DbSet<Task> Task { get; set; }
+        public DbSet<ErrorLog> ErrorLogs { get; set; }
+        public DbSet<ServiceLog> ServiceLogs { get; set; }
 
         public DbSet<UserTeam> UserTeams { get; set; }
         public DbSet<UserStory> UserStory { get; set; }
@@ -27,6 +29,7 @@ namespace WorkTracker.Models.DataModels
             {
                 _created = true;
                 Database.EnsureCreated();
+                Database.Migrate();
             }
         }
 
