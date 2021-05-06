@@ -44,12 +44,14 @@ namespace WorkTracker
 
             services.AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IRoleRepository, RoleRepository>()
+                .AddScoped<IAuthService, AuthService>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IStoryService, StoryService>()
                 .AddScoped<ITeamRepository, TeamRepository>()
                 .AddScoped<IStateRepository, StateRepository>()
                 .AddScoped<IStoryRepository, StoryRepository>()
-                .AddScoped<IAuthService, AuthService>();
+                .AddScoped<IErrorLogRepository, ErrorLogRepository>()
+                .AddScoped<IServiceLogRepository, ServiceLogRepository>();
 
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
 
