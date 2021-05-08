@@ -24,16 +24,19 @@ namespace WorkTracker.Services
 		private readonly IRoleRepository _roleRepository;
 		private readonly IUserRepository _userRepository;
         private readonly ITeamRepository _teamRepository;
+        private readonly IServiceLogRepository _serviceLogRepository;
 		private readonly IOptions<AppSettings> _appSettings;
         private readonly RandomNumberGenerator _rng;
         public AuthService(IRoleRepository roleRepository,
 						   IUserRepository userRepository,
                            ITeamRepository teamRepository,
-						   IOptions<AppSettings> appSettings)
+                           IServiceLogRepository serviceLogRepository,
+                           IOptions<AppSettings> appSettings)
         {
 			_roleRepository = roleRepository;
 			_userRepository = userRepository;
             _teamRepository = teamRepository;
+            _serviceLogRepository = serviceLogRepository;
 			_appSettings = appSettings;
             _rng = RandomNumberGenerator.Create();
         }
@@ -109,12 +112,17 @@ namespace WorkTracker.Services
 		public async Task<string> Login(UserLoginRequest request)
         {
 			var user = _userRepository.Find(w => w.Email == request.Email).FirstOrDefault();
-			
+            string token = null;
 			if (user != null && VerifyHashedPassword(user.Password, request.Password))
             {
-				return await GenerateToken(user.UserId);
+				token = await GenerateToken(user.UserId);
+                await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+                {
+                    UserId = user.UserId,
+                    FunctionName = "Login",
+                });
             }
-			return null;
+			return token;
         }
 
         // Register for user without exisiting team/organisation or invite
@@ -137,17 +145,28 @@ namespace WorkTracker.Services
             };
             await _teamRepository.Add(team);
             await _teamRepository.AssignUser(user.UserId, team.TeamId);
+            await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+            {
+                UserId = user.UserId,
+                TeamId = team.TeamId,
+                FunctionName = "Register",
+            });
         }
 
         public async Task<string> DemoLogin()
         {
             var user = _userRepository.Find(w => w.Email == "demo@email.com").FirstOrDefault();
-
+            string token = null;
             if (user != null)
             {
-                return await GenerateToken(user.UserId);
+                token = await GenerateToken(user.UserId);
+                await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+                {
+                    UserId = user.UserId,
+                    FunctionName = "DemoLogin",
+                });
             }
-            return null;
+            return token;
         }
 
         #region Private Methods

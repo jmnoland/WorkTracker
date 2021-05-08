@@ -13,9 +13,13 @@ namespace WorkTracker.Services
     public class StoryService : IStoryService
     {
 		private readonly IStoryRepository _storyRepository;
-		public StoryService(IStoryRepository storyRepository)
+		private readonly IServiceLogRepository _serviceLogRepository;
+
+		public StoryService(IStoryRepository storyRepository,
+						    IServiceLogRepository serviceLogRepository)
 		{
 			_storyRepository = storyRepository;
+			_serviceLogRepository = serviceLogRepository;
 		}
 
 		public async Task<List<Models.DTOs.Story>> GetStoriesByStateId(int userId, int stateId, bool getArchived)
@@ -32,6 +36,12 @@ namespace WorkTracker.Services
             {
 				await _storyRepository.AddTasks(tasks);
 			}
+			await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+			{
+				UserId = userId,
+				CountAffected = 1,
+				FunctionName = "CreateStory"
+			});
 		}
 
 		public async System.Threading.Tasks.Task UpdateStory(UpdateStoryRequest request, int userId)
@@ -39,12 +49,24 @@ namespace WorkTracker.Services
 			var (story, tasks) = Mapper.Map(request);
 			await _storyRepository.UpdateStory(story, userId);
 			await _storyRepository.UpdateTasks(tasks);
-        }
+			await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+			{
+				UserId = userId,
+				CountAffected = 1,
+				FunctionName = "UpdateStory"
+			});
+		}
 
 		public async System.Threading.Tasks.Task DeleteStory(int storyId, int userId)
         {
 			await _storyRepository.DeleteStory(storyId, userId);
-        }
+			await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+			{
+				UserId = userId,
+				CountAffected = 1,
+				FunctionName = "DeleteStory"
+			});
+		}
 
 		public async System.Threading.Tasks.Task OrderUpdate(int userId, OrderUpdateRequest request)
         {
@@ -60,12 +82,24 @@ namespace WorkTracker.Services
 		public async System.Threading.Tasks.Task DeleteTask(int taskId, int userId)
         {
 			await _storyRepository.DeleteTask(taskId, userId);
-        }
+			await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+			{
+				UserId = userId,
+				CountAffected = 1,
+				FunctionName = "DeleteTask"
+			});
+		}
 
 		public async System.Threading.Tasks.Task ChangeState(int userId, int storyId, OrderUpdateRequest request)
 		{
 			await _storyRepository.ChangeState(userId, storyId, request.StateId);
 			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
+			await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+			{
+				UserId = userId,
+				CountAffected = 1,
+				FunctionName = "ChangeState"
+			});
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace WorkTracker.Repositories
                                          join story in _dbContext.Story on us.StoryId equals story.StoryId
                                          where us.UserId == userId && story.StateId == stateId
                                          select story).OrderBy(o => o.ListOrder).ToListAsync();
-                return Mapper.Map(userStories);
+                Mapper.Map(userStories);
             }
             userStories = await (from us in _dbContext.UserStory
                                         join story in _dbContext.Story on us.StoryId equals story.StoryId

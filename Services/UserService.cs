@@ -16,15 +16,18 @@ namespace WorkTracker.Services
         private readonly IRoleRepository _roleRepository;
         private readonly ITeamRepository _teamRepository;
         private readonly IStateRepository _stateRepository;
+        private readonly IServiceLogRepository _serviceLogRepository;
         public UserService(IUserRepository userRepository,
                            IRoleRepository roleRepository,
                            ITeamRepository teamRepository,
-                           IStateRepository stateRepository)
+                           IStateRepository stateRepository,
+                           IServiceLogRepository serviceLogRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _teamRepository = teamRepository;
             _stateRepository = stateRepository;
+            _serviceLogRepository = serviceLogRepository;
         }
 
         public async Task<List<Models.DTOs.User>> GetAllUsers(int teamId)
@@ -50,7 +53,7 @@ namespace WorkTracker.Services
                 details.Users.AddRange(Mapper.Map(await _userRepository.GetAllUsers(teams[0].TeamId)));
             foreach (var team in teams)
             {
-                details.States.AddRange(Mapper.Map(_stateRepository.GetByTeamId(team.TeamId)));
+                details.States.AddRange(Mapper.Map(await _stateRepository.GetByTeamId(team.TeamId)));
                 details.Teams.Add(Mapper.Map(team));
             }
             return details;
@@ -61,6 +64,11 @@ namespace WorkTracker.Services
             var user = Mapper.Map(request);
             if (user.RoleId == 0) user.RoleId = 1;
             await _userRepository.CreateUser(user);
+            await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+            {
+                UserId = user.UserId,
+                FunctionName = "CreateUser",
+            });
         }
 
         // To update when organisation/teams implemented fully
@@ -78,18 +86,36 @@ namespace WorkTracker.Services
             };
             var team = await _teamRepository.Add(newTeam);
             await _teamRepository.AssignUser(userId, team.TeamId);
-            _stateRepository.CreateDefaultStates(team.TeamId);
+            await _stateRepository.CreateDefaultStates(team.TeamId);
+
+            await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+            {
+                UserId = user.UserId,
+                TeamId = team.TeamId,
+                FunctionName = "RegisterUser",
+            });
         }
 
         public async System.Threading.Tasks.Task UpdateUser(UpdateUserRequest request)
         {
             var user = await _userRepository.GetUser(request.UserId);
             await _userRepository.UpdateUser(Mapper.Map(request, user));
+
+            await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+            {
+                UserId = user.UserId,
+                FunctionName = "UpdateUser",
+            });
         }
 
         public async System.Threading.Tasks.Task DeleteUser(int userId)
         {
             await _userRepository.DeleteUser(userId);
+            await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+            {
+                UserId = userId,
+                FunctionName = "DeleteUser",
+            });
         }
     }
 }

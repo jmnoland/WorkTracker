@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 
 namespace WorkTracker.Repositories.Interfaces
 {
     public interface IStateRepository
     {
-        void CreateDefaultStates(int teamId);
-        List<Models.ServiceModels.State> GetByTeamId(int teamId);
+        Task<List<State>> CreateDefaultStates(int teamId);
+        Task<List<Models.ServiceModels.State>> GetByTeamId(int teamId);
     }
 }
