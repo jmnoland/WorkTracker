@@ -5,7 +5,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
-    "browserslist": "^4.16.4",
+    "browserslist": "^4.16.6",
     "caniuse-lite": "^1.0.30001208",
     "jquery": "^3.6.0",
     "jwt-decode": "^3.1.2",
