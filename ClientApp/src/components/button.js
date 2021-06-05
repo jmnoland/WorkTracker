@@ -75,6 +75,30 @@ const LoginButton = styled.button`
   }
 `;
 
+const DeleteButton = styled.button`
+  background: ${(props) => props.theme.colors.light};
+  color: ${(props) => props.theme.colors.white};
+  border: 5px solid ${(props) => props.theme.colors.light};
+  border-radius: ${(props) => props.theme.border.radius.button};
+  font-size: ${(props) => props.theme.font.size.default};
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: ${(props) => props.theme.colors.danger};
+    border-color: ${(props) => props.theme.colors.danger};
+    color: ${(props) => props.theme.colors.white};
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+
 const SmallButton = styled.button`
   background: ${(props) =>
     props.primary ? props.theme.colors.orange : props.theme.colors.light};
@@ -140,6 +164,7 @@ export default function BaseButton({
   children,
   isLoginButton,
   isSmallButton,
+  isDeleteButton,
   isInactivePrimary,
 }) {
   if (isLoginButton) {
@@ -148,6 +173,15 @@ export default function BaseButton({
         <LoginButton value={value} primary={primary} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </LoginButton>
+      </Container>
+    );
+  }
+  if (isDeleteButton) {
+    return (
+      <Container center={center}>
+        <DeleteButton value={value} onClick={onClick}>
+          {loading ? <Loading small primary={primary} /> : children}
+        </DeleteButton>
       </Container>
     );
   }

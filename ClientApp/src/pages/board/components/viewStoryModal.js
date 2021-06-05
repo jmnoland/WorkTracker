@@ -164,9 +164,6 @@ export function ViewStoryModal({
 
   const footerContent = (
     <Footer>
-      <Button onClick={onDelete} loading={deleteLoading}>
-        Delete
-      </Button>
       <Button secondary onClick={onCancel}>
         Cancel
       </Button>
@@ -176,9 +173,20 @@ export function ViewStoryModal({
     </Footer>
   );
 
+  const footerLeft = (
+    <Button isDeleteButton onClick={onDelete} loading={deleteLoading}>
+      Delete
+    </Button>
+  );
+
   const modalContent = (
     <>
-      <EditableText type={"area"} height={"150px"} {...description} />
+      <EditableText
+        type={"area"}
+        height={"150px"}
+        useBackground
+        {...description}
+      />
       <ScrollableContainer
         height={260}
         contentTopMargin={20}
@@ -221,6 +229,7 @@ export function ViewStoryModal({
       visible={openModal}
       onClose={onCancel}
       footer={footerContent}
+      footerLeft={footerLeft}
     >
       <Content>{modalContent}</Content>
     </Modal>

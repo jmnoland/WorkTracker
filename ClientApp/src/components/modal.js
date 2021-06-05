@@ -47,6 +47,15 @@ const ModalFooter = styled.div`
   padding-bottom: ${(props) => props.theme.padding.large};
 `;
 
+const ModalFooterLeft = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-left: ${(props) => props.theme.padding.large};
+  padding-top: ${(props) => props.theme.padding.large};
+  padding-bottom: ${(props) => props.theme.padding.large};
+`;
+
 const Title = styled.div`
   flex: 1;
 `;
@@ -65,7 +74,14 @@ const SVG = styled.svg`
   }
 `;
 
-export function Modal({ title, visible, footer, onClose, children }) {
+export function Modal({
+  title,
+  visible,
+  footer,
+  footerLeft,
+  onClose,
+  children,
+}) {
   if (!visible) {
     return null;
   }
@@ -82,6 +98,7 @@ export function Modal({ title, visible, footer, onClose, children }) {
           </CloseButton>
         </ModalHeading>
         <ModalContent>{children}</ModalContent>
+        <ModalFooterLeft>{footerLeft}</ModalFooterLeft>
         <ModalFooter>{footer}</ModalFooter>
       </ModalWindow>
     </ModalContainer>
