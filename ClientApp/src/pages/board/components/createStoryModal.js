@@ -54,7 +54,7 @@ export function CreateStoryModal({
     { taskId: 1, storyId: 0, description: "", complete: false },
   ]);
   const [loading, setLoading] = useState(false);
-  const [taskCount, setTaskCount] = useState(0);
+  const [taskCount, setTaskCount] = useState(1);
   const initialValues = { title: "", description: "" };
   const fields = useObject(
     {

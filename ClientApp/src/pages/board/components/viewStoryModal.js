@@ -20,6 +20,7 @@ const Footer = styled.div`
 `;
 
 const TaskInputContainer = styled.div`
+  overflow: hidden;
   flex: 1;
 `;
 

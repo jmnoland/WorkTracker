@@ -87,6 +87,7 @@ export default function Login() {
     setDemoLoading(true);
     try {
       setTokenDetails(await DemoLogin());
+      fields.reset();
       setIsLoggedIn(true);
       setDemoLoading(false);
     } catch {

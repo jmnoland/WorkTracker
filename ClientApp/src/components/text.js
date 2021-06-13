@@ -6,7 +6,6 @@ const Container = styled.div``;
 
 const TextContainer = styled.div`
   word-break: break-word;
-  overflow-y: auto;
   text-overflow: ellipsis;
   height: ${(props) => (props.height ? props.height : "auto")};
   margin-bottom: 10px;
