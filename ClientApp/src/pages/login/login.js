@@ -21,6 +21,14 @@ const ButtonContainer = styled.div`
   margin-bottom: ${(props) => props.theme.margin.medium};
 `;
 
+const VersionNumber = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  padding: ${(props) => props.theme.padding.medium};
+  text-align: center;
+  font-size: ${(props) => props.theme.font.size.small};
+`;
+
 const Content = styled.div``;
 
 export default function Login() {
@@ -74,6 +82,7 @@ export default function Login() {
       setLoading(true);
       try {
         setTokenDetails(await UserLogin(email.value, password.value));
+        fields.reset();
         setIsLoggedIn(true);
         setLoading(false);
       } catch {
@@ -86,6 +95,7 @@ export default function Login() {
     setDemoLoading(true);
     try {
       setTokenDetails(await DemoLogin());
+      fields.reset();
       setIsLoggedIn(true);
       setDemoLoading(false);
     } catch {
@@ -102,40 +112,43 @@ export default function Login() {
   }
 
   return (
-    <LoginContainer>
-      <LoginTitle />
-      <Content>
-        <LoginInput label="Email" {...email} />
-        <LoginInput label="Password" type={"password"} {...password} />
-        <ButtonContainer>
-          <Button
-            center
-            isLoginButton
-            primary
-            loading={loading}
-            onClick={handleSubmit}
-          >
-            Login
-          </Button>
-          <Button
-            center
-            isLoginButton
-            loading={demoLoading}
-            onClick={handleDemoLogin}
-          >
-            Demo login
-          </Button>
-        </ButtonContainer>
-        <div>
-          Need an account?{" "}
-          <InLineLink onClick={() => setRegister(true)}>
-            Sign up here.{" "}
-          </InLineLink>
-        </div>
-        {/* <div>
+    <>
+      <LoginContainer>
+        <LoginTitle />
+        <Content>
+          <LoginInput label="Email" {...email} />
+          <LoginInput label="Password" type={"password"} {...password} />
+          <ButtonContainer>
+            <Button
+              center
+              isLoginButton
+              primary
+              loading={loading}
+              onClick={handleSubmit}
+            >
+              Login
+            </Button>
+            <Button
+              center
+              isLoginButton
+              loading={demoLoading}
+              onClick={handleDemoLogin}
+            >
+              Demo login
+            </Button>
+          </ButtonContainer>
+          <div>
+            Need an account?{" "}
+            <InLineLink onClick={() => setRegister(true)}>
+              Sign up here.{" "}
+            </InLineLink>
+          </div>
+          {/* <div>
           Forgot your <InLineLink>password?</InLineLink>
         </div> */}
-      </Content>
-    </LoginContainer>
+        </Content>
+      </LoginContainer>
+      <VersionNumber>Version 1.0.1</VersionNumber>
+    </>
   );
 }

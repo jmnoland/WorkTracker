@@ -20,6 +20,7 @@ const Footer = styled.div`
 `;
 
 const TaskInputContainer = styled.div`
+  overflow: hidden;
   flex: 1;
 `;
 
@@ -142,7 +143,7 @@ export function ViewStoryModal({
     const finalTasks =
       tasks &&
       tasks.reduce((total, task) => {
-        var desc = task.description && task.description.trim();
+        const desc = task.description && task.description.trim();
         if (desc) total.push(task);
         return total;
       }, []);
@@ -164,9 +165,6 @@ export function ViewStoryModal({
 
   const footerContent = (
     <Footer>
-      <Button onClick={onDelete} loading={deleteLoading}>
-        Delete
-      </Button>
       <Button secondary onClick={onCancel}>
         Cancel
       </Button>
@@ -176,13 +174,19 @@ export function ViewStoryModal({
     </Footer>
   );
 
+  const footerLeft = (
+    <Button isDeleteButton onClick={onDelete} loading={deleteLoading}>
+      Delete
+    </Button>
+  );
+
   const modalContent = (
     <>
       <EditableText
         type={"area"}
         height={"150px"}
+        useBackground
         {...description}
-        height={"150px"}
       />
       <ScrollableContainer
         height={260}
@@ -226,6 +230,7 @@ export function ViewStoryModal({
       visible={openModal}
       onClose={onCancel}
       footer={footerContent}
+      footerLeft={footerLeft}
     >
       <Content>{modalContent}</Content>
     </Modal>

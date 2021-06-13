@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 export function verifyTokenExpiry(decodedToken) {
   // Adding miliseconds to timestamp
@@ -13,7 +13,7 @@ export function verifyTokenExpiry(decodedToken) {
 
 export function decodeJwtToken(token) {
   if (!token) return;
-  const decodedToken = jwt_decode(token);
+  const decodedToken = jwtDecode(token);
   if (verifyTokenExpiry(decodedToken)) {
     return decodedToken;
   }
@@ -33,11 +33,11 @@ export function getToken() {
 export function parseDateTime(value) {
   let date = value;
   if (typeof date === "string") date = new Date(value);
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  let hour = date.getHours();
-  let minute = date.getMinutes();
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
   return `${day < 10 ? `0${day}` : day}-${
     month < 10 ? `0${month}` : month
   }-${year} ${hour < 10 ? `0${hour}` : hour}:${

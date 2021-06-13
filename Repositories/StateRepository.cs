@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 
@@ -16,7 +18,7 @@ namespace WorkTracker.Repositories
             _dbContext = dbContext;
         }
 
-        public void CreateDefaultStates(int teamId)
+        public async Task<List<State>> CreateDefaultStates(int teamId)
         {
             var states = new List<State>()
             {
@@ -25,12 +27,13 @@ namespace WorkTracker.Repositories
                 new State { StateId = 0, TeamId = teamId, Name = "Complete", Type = "Complete"},
             };
             _dbContext.States.AddRange(states);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
+            return states;
         }
 
-        public List<Models.ServiceModels.State> GetByTeamId(int teamId)
+        public async Task<List<Models.ServiceModels.State>> GetByTeamId(int teamId)
         {
-            return Mapper.Map(_dbContext.States.Where(w => w.TeamId == teamId).ToList());
+            return Mapper.Map(await _dbContext.States.Where(w => w.TeamId == teamId).ToListAsync());
         }
 
     }

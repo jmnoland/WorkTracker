@@ -6,12 +6,24 @@ const Container = styled.div``;
 
 const TextContainer = styled.div`
   word-break: break-word;
-  overflow-y: auto;
   text-overflow: ellipsis;
   height: ${(props) => (props.height ? props.height : "auto")};
-  padding-right: 7px;
   margin-bottom: 10px;
   margin: ${(props) => (props.margin ? props.margin : null)};
+
+  padding: ${(props) =>
+    props.useBackground ? props.theme.padding.medium : "7px"};
+  color: ${(props) =>
+    props.useBackground ? props.theme.colors.white : "inherit"};
+  border: 1px solid
+    ${(props) =>
+      props.useBackground
+        ? props.theme.colors.light
+        : props.theme.colors.background};
+  background: ${(props) =>
+    props.useBackground ? props.theme.colors.dark : "inherit"};
+  border-radius: ${(props) =>
+    props.useBackground ? props.theme.border.radius.button : "0px"};
 
   ::-webkit-scrollbar {
     width: 10px;
@@ -27,17 +39,30 @@ const TextContainer = styled.div`
   }
 `;
 
-export function Text({ value, height, margin, onClick }) {
+export function Text({ value, height, margin, useBackground, onClick }) {
   return (
     <Container>
-      <TextContainer height={height} margin={margin} onClick={onClick}>
+      <TextContainer
+        height={height}
+        margin={margin}
+        useBackground={useBackground}
+        onClick={onClick}
+      >
         {value}
       </TextContainer>
     </Container>
   );
 }
 
-export function EditableText({ value, type, height, margin, onChange, edit }) {
+export function EditableText({
+  value,
+  type,
+  height,
+  margin,
+  useBackground,
+  onChange,
+  edit,
+}) {
   const [canEdit, setCanEdit] = useState(!!edit);
   const inputRef = useRef();
 
@@ -77,6 +102,7 @@ export function EditableText({ value, type, height, margin, onChange, edit }) {
           height={height}
           margin={margin}
           value={value}
+          useBackground={useBackground}
           onClick={onClickHandler}
         ></Text>
       )}

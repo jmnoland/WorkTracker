@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -8,10 +9,13 @@ namespace WorkTracker.Controllers.Exceptions
 {
     public class ExceptionMiddleware
     {
+        private readonly ILoggerFactory _loggerFactory;
         private readonly RequestDelegate _requestDelegate;
 
-        public ExceptionMiddleware(RequestDelegate requestDelegate)
+        public ExceptionMiddleware(RequestDelegate requestDelegate,
+                                   ILoggerFactory loggerFactory)
         {
+            _loggerFactory = loggerFactory;
             _requestDelegate = requestDelegate;
         }
 
@@ -23,6 +27,12 @@ namespace WorkTracker.Controllers.Exceptions
             }
             catch (Exception e)
             {
+                var _logger = _loggerFactory.CreateLogger<ExceptionMiddleware>();
+                if (httpContext.Request.Path.HasValue)
+                {
+                    _logger.LogError($"{httpContext.Request.Path.Value} threw an error ${e.Message}");
+                }
+                _logger.LogError(e.StackTrace);
                 await HandleError(httpContext, e);
             }
         }
