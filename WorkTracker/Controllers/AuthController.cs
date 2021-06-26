@@ -21,7 +21,7 @@ namespace WorkTracker.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] UserLoginRequest request)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
             if (!ModelState.IsValid) return BadRequest();
 
@@ -29,43 +29,43 @@ namespace WorkTracker.Controllers
             if (token != null)
             {
                 AddRefreshToken(token);
-                return token;
+                return Ok(token);
             }
             return BadRequest("User validation failed");
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] UserRegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] UserRegisterRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return BadRequest("Request data is invalid");
             await _authService.Register(request);
             return Ok();
         }
 
         [HttpPost("demologin")]
-        public async Task<ActionResult<string>> DemoLogin()
+        public async Task<IActionResult> DemoLogin()
         {
             var token = await _authService.DemoLogin();
             if (token != null)
             {
                 AddRefreshToken(token);
-                return token;
+                return Ok(token);
             }
-            return Ok();
+            return BadRequest("Demo login failed");
         }
 
         [ValidateToken]
         [HttpPost("refresh")]
-        public async Task<ActionResult<string>> RefreshToken()
+        public async Task<IActionResult> RefreshToken()
         {
             var token = Request.Cookies["X-User-Token"];
             var newToken = await _authService.RefreshToken(token);
             AddRefreshToken(newToken);
-            return newToken;
+            return Ok(newToken);
         }
 
         [HttpGet]
-        public ActionResult<bool> CookiesSupported()
+        public IActionResult CookiesSupported()
         {
             var token = Request.Cookies["X-User-Token"];
             if (token == null) return Ok(false);
@@ -74,6 +74,7 @@ namespace WorkTracker.Controllers
 
         private void AddRefreshToken(string token)
         {
+            if (token == null) return;
             var options = new CookieOptions();
             options.SameSite = SameSiteMode.Strict;
             options.HttpOnly = true;

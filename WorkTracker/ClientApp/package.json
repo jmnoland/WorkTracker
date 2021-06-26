@@ -40,6 +40,7 @@
     "nan": "^2.14.2",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
+    "react-test-renderer": "^17.0.2",
     "typescript": "^3.9.9"
   },
   "eslintConfig": {
@@ -49,7 +50,7 @@
     "start": "rimraf ./build && react-scripts start",
     "build": "react-scripts build",
     "format": "prettier --write \"src/**/*.{js,jsx,json,md}\"",
-    "test": "cross-env CI=true react-scripts test --env=jsdom",
+    "test": "cross-env CI=true react-scripts test -u --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint ./src/",
     "lint-fix": "eslint ./ --fix"
