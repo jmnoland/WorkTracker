@@ -37,7 +37,7 @@ namespace WorkTracker.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest("Request data is invalid");
+            if (request.Validate().Count != 0) return BadRequest("Request data is invalid");
             await _authService.Register(request);
             return Ok();
         }

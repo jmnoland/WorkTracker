@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -81,10 +82,38 @@ namespace WorkTracker.Test
         [Test]
         public async Task Register_Successful()
         {
-            var request = new UserRegisterRequest();
+            var request = new UserRegisterRequest()
+            {
+                Email = "test@email.com",
+                Name = "test",
+                Password = "password"
+            };
             var result = await _authController.Register(request);
             Assert.IsInstanceOf<ActionResult>(result);
         }
 
+        [Test]
+        public async Task Register_Unsuccessful()
+        {
+            var request = new UserRegisterRequest()
+            { 
+                Name = null
+            };
+            var result = await _authController.Register(request);
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            Assert.AreEqual("Request data is invalid", ((BadRequestObjectResult)result).Value);
+        }
+
+        [Test]
+        public void CookiesSupported_Unsuccessful()
+        {
+            _authController.ControllerContext = new ControllerContext();
+            _authController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var result = _authController.CookiesSupported();
+            Assert.IsInstanceOf<ActionResult>(result);
+            var value = (OkObjectResult)result;
+            Assert.AreEqual(false, value.Value);
+        }
     }
 }
