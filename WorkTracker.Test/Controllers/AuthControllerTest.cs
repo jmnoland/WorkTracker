@@ -8,7 +8,7 @@ using WorkTracker.Controllers;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
 
-namespace WorkTracker.Test
+namespace WorkTracker.Test.Controllers
 {
     public class AuthControllerTest
     {

@@ -59,6 +59,7 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> RefreshToken()
         {
             var token = Request.Cookies["X-User-Token"];
+            if (token == null) token = Request.Headers["X-User-Token"];
             var newToken = await _authService.RefreshToken(token);
             AddRefreshToken(newToken);
             return Ok(newToken);
