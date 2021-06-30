@@ -50,7 +50,9 @@ namespace WorkTracker.Controllers.Attributes
 
         public bool PermissionAllowed(string token, string permission)
         {
+            if (string.IsNullOrEmpty(token)) return false;
             var handler = new JwtSecurityTokenHandler();
+            if (!handler.CanReadToken(token)) return false;
             var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
             return decodedToken.Claims.Any(w => w.Type == "UserRole" && w.Value == permission);
         }
