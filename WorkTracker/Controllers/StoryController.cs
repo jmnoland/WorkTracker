@@ -23,7 +23,7 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> GetStoriesByStateId([FromRoute] int stateId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null) return BadRequest("User token missing");
+            if (userId == null) return BadRequest("User id missing");
 
             return Ok(await _storyService.GetStoriesByStateId((int)userId, stateId, false));
         }
@@ -33,7 +33,7 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> GetArchivedStories([FromRoute] int stateId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
 
             return Ok(await _storyService.GetStoriesByStateId((int)userId, stateId, true));
         }
@@ -43,7 +43,8 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> CreateStory([FromBody] CreateStoryRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null || !ModelState.IsValid) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
+            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
 
             await _storyService.CreateStory((int)userId, request);
             return Ok();
@@ -54,7 +55,8 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> UpdateStory([FromBody] UpdateStoryRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null || !ModelState.IsValid) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
+            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
 
             await _storyService.UpdateStory(request, (int)userId);
             return Ok();
@@ -65,7 +67,7 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> DeleteStory([FromRoute] int storyId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
 
             await _storyService.DeleteStory(storyId, (int)userId);
             return Ok();
@@ -76,7 +78,7 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> GetStoryTasks([FromRoute] int storyId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
 
             return Ok(await _storyService.GetStoryTasks(storyId, (int)userId));
         }
@@ -86,7 +88,7 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> DeleteTask([FromRoute] int taskId)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
 
             await _storyService.DeleteTask(taskId, (int)userId);
             return Ok();
@@ -97,7 +99,8 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> ChangeState([FromRoute] int storyId, [FromBody] OrderUpdateRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null || !ModelState.IsValid) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
+            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
 
             await _storyService.ChangeState((int)userId, storyId, request);
             return Ok();
@@ -108,7 +111,8 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> OrderUpdate([FromBody] OrderUpdateRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
-            if (userId == null || !ModelState.IsValid) return BadRequest();
+            if (userId == null) return BadRequest("User id missing");
+            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
 
             await _storyService.OrderUpdate((int)userId, request);
             return Ok();
