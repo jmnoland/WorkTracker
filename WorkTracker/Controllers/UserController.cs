@@ -19,25 +19,25 @@ namespace WorkTracker.Controllers
         }
 
         [HttpGet("{teamId}")]
-        public async Task<ActionResult<List<User>>> GetUsers([FromRoute] int teamId)
+        public async Task<IActionResult> GetUsers([FromRoute] int teamId)
         {
-            return await _userService.GetUsersByTeamId(teamId);
+            return Ok(await _userService.GetUsersByTeamId(teamId));
         }
 
         [HttpGet("details/{userId}")]
         public async Task<ActionResult<UserDetail>> GetUserDetails([FromRoute] int userId)
         {
-            return await _userService.GetUserDetail(userId);
+            return Ok(await _userService.GetUserDetail(userId));
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (request.Validate().Count > 0) return BadRequest("Invalid request");
             try
             {
                 await _userService.CreateUser(request);
-                return Ok();
+                return Ok("User created successfully");
             }
             catch (ArgumentNullException)
             {
@@ -48,21 +48,21 @@ namespace WorkTracker.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser([FromBody] CreateUserRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (request.Validate().Count > 0) return BadRequest("Invalid request");
 
             await _userService.RegisterUser(request);
-            return Ok();
+            return Ok("User registered successfully");
         }
 
         [HttpPatch]
         public async Task<ActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (request.Validate().Count > 0) return BadRequest("Invalid request");
 
             try
             {
                 await _userService.UpdateUser(request);
-                return Ok();
+                return Ok("User updated successfully");
             }
             catch
             {
@@ -76,7 +76,7 @@ namespace WorkTracker.Controllers
             try
             {
                 await _userService.DeleteUser(userId);
-                return Ok();
+                return Ok("User removed successfully");
             }
             catch
             {

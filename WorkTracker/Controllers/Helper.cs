@@ -8,7 +8,7 @@ using System.Text;
 
 namespace WorkTracker.Controllers
 {
-    public class Helper
+    public static class Helper
     {
         public static int? GetRequestUserId(HttpContext request)
         {
