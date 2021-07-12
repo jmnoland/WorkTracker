@@ -20,7 +20,6 @@ namespace WorkTracker.Services
 {
     public class AuthService : IAuthService
     {
-		public static readonly string ClaimsRole = "UserRole";
 		private readonly IRoleRepository _roleRepository;
 		private readonly IUserRepository _userRepository;
         private readonly ITeamRepository _teamRepository;
@@ -41,33 +40,12 @@ namespace WorkTracker.Services
             _rng = RandomNumberGenerator.Create();
         }
 
-        public async Task<string> GenerateToken(int userId)
+        public async Task<string> CreateToken(int userId)
         {
-			var secret = _appSettings.Value.JwtSecret;
-			var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
-
-			var role = await _roleRepository.GetUserRole(userId);
-			var permissions = role.Permissions.Split(',');
-			var claims = new List<Claim>()
-			{
-				new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-			};
-			foreach(var permission in permissions)
-            {
-				claims.Add(new Claim(ClaimsRole, permission));
-            }
-
-			var tokenHandler = new JwtSecurityTokenHandler();
-			var tokenDescriptor = new SecurityTokenDescriptor
-			{
-				Subject = new ClaimsIdentity(claims),
-				Expires = DateTime.UtcNow.AddMinutes(30),
-				SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
-			};
-
-			var token = tokenHandler.CreateToken(tokenDescriptor);
-			return tokenHandler.WriteToken(token);
-		}
+            var role = await _roleRepository.GetUserRole(userId);
+            var permissions = role.Permissions.Split(',');
+            return Helper.GenerateToken(userId, permissions, _appSettings.Value.JwtSecret);
+        }
 
 		public async Task<string> RefreshToken(string token)
         {
@@ -76,7 +54,7 @@ namespace WorkTracker.Services
 			var userId = decodedToken.Claims
 				.Where(w => w.Type == ClaimTypes.NameIdentifier)
 				.Select(s => s.Value).FirstOrDefault();
-			return await GenerateToken(int.Parse(userId));
+			return await CreateToken(int.Parse(userId));
 		}
 
 		public bool ValidateCurrentToken(string token)
@@ -106,7 +84,7 @@ namespace WorkTracker.Services
         {
 			var handler = new JwtSecurityTokenHandler();
 			var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
-			return decodedToken.Claims.Any(w => w.Type == ClaimsRole && w.Value == permission);
+			return decodedToken.Claims.Any(w => w.Type == "UserRole" && w.Value == permission);
 		}
 
 		public async Task<string> Login(UserLoginRequest request)
@@ -115,7 +93,7 @@ namespace WorkTracker.Services
             string token = null;
 			if (user != null && VerifyHashedPassword(user.Password, request.Password))
             {
-				token = await GenerateToken(user.UserId);
+				token = await CreateToken(user.UserId);
                 await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
                 {
                     UserId = user.UserId,
@@ -159,7 +137,7 @@ namespace WorkTracker.Services
             string token = null;
             if (user != null)
             {
-                token = await GenerateToken(user.UserId);
+                token = await CreateToken(user.UserId);
                 await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
                 {
                     UserId = user.UserId,

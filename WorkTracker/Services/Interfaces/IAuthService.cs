@@ -8,7 +8,7 @@ namespace WorkTracker.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> GenerateToken(int userId);
+        Task<string> CreateToken(int userId);
         Task<string> RefreshToken(string token);
         bool ValidateCurrentToken(string token);
         bool PermissionAllowed(string token, string permission);

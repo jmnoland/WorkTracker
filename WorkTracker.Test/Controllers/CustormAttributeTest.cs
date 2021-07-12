@@ -1,20 +1,20 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using WorkTracker.Controllers.Attributes;
+using WorkTracker.Models;
 
 namespace WorkTracker.Test.Controllers
 {
     public class CustormAttributeTest
     {
         private readonly ValidateTokenAttribute _validateTokenAttribute;
+        private readonly AppSettings _appSettings;
         private readonly string _token;
         public CustormAttributeTest()
         {
             _validateTokenAttribute = new ValidateTokenAttribute();
-            // Todo: fetch from db for tests
-            _token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyMiIsIlVzZXJSb2xlIjpbImNyZWF0ZV91c2VyIiwiZGVsZXRlX3VzZXIiLCJjcmVhdGVfc3RvcnkiLCJ2aWV3X3N0b3J5Il0sIm5iZiI6MTYyNTA4Njk2MSwiZXhwIjoxNjI1MDg4NzYxLCJpYXQiOjE2MjUwODY5NjF9.rMSgeQN9MQdkFg0NBpuUcNnOHBTtAGn46CjHKQT5xR8";
+            _appSettings = Helper.getAppSettings();
+            var permissions = new string[] { "create_story", "create_user", "view_story", "edit_story" };
+            _token = Services.Helper.GenerateToken(0, permissions, _appSettings.JwtSecret);
         }
 
         [Test]

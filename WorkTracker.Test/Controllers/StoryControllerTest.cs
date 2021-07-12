@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkTracker.Controllers;
+using WorkTracker.Models;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
 
@@ -14,6 +15,7 @@ namespace WorkTracker.Test.Controllers
     {
         private readonly Mock<IStoryService> _storyInterface;
         private readonly StoryController _storyController;
+        private readonly AppSettings _appSettings;
         private readonly int _demoUserId = 22;
         private readonly string _token;
 
@@ -21,7 +23,10 @@ namespace WorkTracker.Test.Controllers
         {
             _storyInterface = new Mock<IStoryService>();
             _storyController = new StoryController(_storyInterface.Object);
-            _token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyMiIsIlVzZXJSb2xlIjpbImNyZWF0ZV91c2VyIiwiZGVsZXRlX3VzZXIiLCJjcmVhdGVfc3RvcnkiLCJ2aWV3X3N0b3J5Il0sIm5iZiI6MTYyNTA4Njk2MSwiZXhwIjoxNjI1MDg4NzYxLCJpYXQiOjE2MjUwODY5NjF9.rMSgeQN9MQdkFg0NBpuUcNnOHBTtAGn46CjHKQT5xR8";
+
+            _appSettings = Helper.getAppSettings();
+            var permissions = new string[] { "create_story", "create_user", "view_story", "edit_story" };
+            _token = Services.Helper.GenerateToken(_demoUserId, permissions, _appSettings.JwtSecret);
         }
 
         [SetUp]
