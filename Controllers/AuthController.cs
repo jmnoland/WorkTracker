@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using WorkTracker.Controllers.Attributes;
-using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
 
 namespace WorkTracker.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class AuthController : ControllerBase
@@ -20,6 +19,7 @@ namespace WorkTracker.Controllers
             _authService = authService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login([FromBody] UserLoginRequest request)
         {
@@ -28,12 +28,12 @@ namespace WorkTracker.Controllers
             var token = await _authService.Login(request);
             if (token != null)
             {
-                AddRefreshToken(token);
-                return token;
+                return Ok(token);
             }
             return BadRequest("User validation failed");
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] UserRegisterRequest request)
         {
@@ -42,43 +42,27 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpPost("demologin")]
         public async Task<ActionResult<string>> DemoLogin()
         {
             var token = await _authService.DemoLogin();
             if (token != null)
             {
-                AddRefreshToken(token);
-                return token;
+                return Ok(token);
             }
             return Ok();
         }
 
-        [ValidateToken]
         [HttpPost("refresh")]
         public async Task<ActionResult<string>> RefreshToken()
         {
-            var token = Request.Cookies["X-User-Token"];
+            var token = Request.Headers["Authorization"]
+                .FirstOrDefault()?
+                .Split(" ")
+                .LastOrDefault();
             var newToken = await _authService.RefreshToken(token);
-            AddRefreshToken(newToken);
-            return newToken;
-        }
-
-        [ValidateToken]
-        [HttpGet]
-        public ActionResult<bool> CookiesSupported()
-        {
-            var token = Request.Cookies["X-User-Token"];
-            if (token == null) return Ok(false);
-            return Ok(true);
-        }
-
-        private void AddRefreshToken(string token)
-        {
-            var options = new CookieOptions();
-            options.SameSite = SameSiteMode.Strict;
-            options.HttpOnly = true;
-            Response.Cookies.Append("X-User-Token", token, options);
+            return Ok(newToken);
         }
     }
 }

@@ -12,7 +12,11 @@ namespace WorkTracker.Controllers
     {
         public static int? GetRequestUserId(HttpContext request)
         {
-            var token = request.Request.Cookies["X-User-Token"];
+            var token = request.Request.Headers["Authorization"]
+                .FirstOrDefault()?
+                .Split(" ")
+                .LastOrDefault();
+            if (token == null) return null;
             var handler = new JwtSecurityTokenHandler();
             var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
             var temp = decodedToken.Claims
