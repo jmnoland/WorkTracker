@@ -143,12 +143,9 @@ export default function Login() {
               Sign up here.{" "}
             </InLineLink>
           </div>
-          {/* <div>
-          Forgot your <InLineLink>password?</InLineLink>
-        </div> */}
         </Content>
       </LoginContainer>
-      <VersionNumber>Version 1.0.1</VersionNumber>
+      <VersionNumber>Version 1.0.3</VersionNumber>
     </>
   );
 }
