@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WorkTracker.Controllers.Attributes;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
@@ -18,18 +19,21 @@ namespace WorkTracker.Controllers
             _userService = userService;
         }
 
+        [ValidateToken("view_user")]
         [HttpGet("{teamId}")]
         public async Task<ActionResult<List<User>>> GetUsers([FromRoute] int teamId)
         {
             return await _userService.GetUsersByTeamId(teamId);
         }
 
+        [ValidateToken("view_user")]
         [HttpGet("details/{userId}")]
         public async Task<ActionResult<UserDetail>> GetUserDetails([FromRoute] int userId)
         {
             return await _userService.GetUserDetail(userId);
         }
 
+        [ValidateToken("create_user")]
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
@@ -54,6 +58,7 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
+        [ValidateToken("edit_user")]
         [HttpPatch]
         public async Task<ActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
@@ -70,6 +75,7 @@ namespace WorkTracker.Controllers
             }
         }
 
+        [ValidateToken("delete_user")]
         [HttpDelete("{userId}")]
         public async Task<ActionResult> RemoveUser([FromRoute] int userId)
         {

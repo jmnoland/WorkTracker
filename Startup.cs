@@ -78,7 +78,6 @@ namespace WorkTracker
                 app.UseHsts();
             }
 
-            app.UseCors();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
