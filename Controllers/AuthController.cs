@@ -64,6 +64,7 @@ namespace WorkTracker.Controllers
             return newToken;
         }
 
+        [ValidateToken]
         [HttpGet]
         public ActionResult<bool> CookiesSupported()
         {
