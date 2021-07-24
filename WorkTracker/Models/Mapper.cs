@@ -37,7 +37,7 @@ namespace WorkTracker.Models.Mapper
                 Email = request.Email,
                 Name = request.Name,
                 Password = request.Password,
-                RoleId = request.RoleId,
+                RoleId = (int)request.RoleId,
                 UserId = 0
             };
         }
@@ -45,7 +45,7 @@ namespace WorkTracker.Models.Mapper
         {
             user.Email = request.Email == user.Email ? user.Email : request.Email;
             user.Name = request.Name == user.Name ? user.Name : request.Name;
-            user.RoleId = request.RoleId == user.RoleId ? user.RoleId : request.RoleId;
+            user.RoleId = request.RoleId == user.RoleId ? user.RoleId : (int)request.RoleId;
             return user;
         }
         #endregion

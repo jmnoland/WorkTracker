@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkTracker.Controllers;
+using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
 
 namespace WorkTracker.Test.Controllers
@@ -32,6 +34,227 @@ namespace WorkTracker.Test.Controllers
             Assert.IsInstanceOf<ActionResult>(response);
             var responseValue = ((OkObjectResult)response).Value;
             Assert.IsInstanceOf<List<Models.DTOs.User>>(responseValue);
+        }
+        [Test]
+        public async Task GetUsers_NoResponse()
+        {
+            List<Models.DTOs.User> result = null;
+            _userService.Setup(x => x.GetUsersByTeamId(0)).ReturnsAsync(result);
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.GetUsers(0);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<NoContentResult>(response);
+        }
+        [Test]
+        public async Task GetUserDetails_Successful()
+        {
+            var result = new Models.DTOs.UserDetail();
+            _userService.Setup(x => x.GetUserDetail(0)).ReturnsAsync(result);
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.GetUserDetails(0);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<OkObjectResult>(response);
+            var responseValue = ((OkObjectResult)response).Value;
+            Assert.IsInstanceOf<Models.DTOs.UserDetail>(responseValue);
+        }
+        [Test]
+        public async Task GetUserDetails_NoResponse()
+        {
+            Models.DTOs.UserDetail result = null;
+            _userService.Setup(x => x.GetUserDetail(0)).ReturnsAsync(result);
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.GetUserDetails(0);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<NoContentResult>(response);
+        }
+        [Test]
+        public async Task CreateUser_Successful()
+        {
+            var request = new CreateUserRequest()
+            {
+                Email = "test@email.com",
+                Name = "test",
+                Password = "pass",
+                RoleId = 1
+            };
+            _userService.Setup(x => x.CreateUser(request));
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.CreateUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<OkObjectResult>(response);
+            var responseValue = ((OkObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("User created successfully", responseValue);
+        }
+        [Test]
+        public async Task CreateUser_InvalidRequest()
+        {
+            var request = new CreateUserRequest();
+            _userService.Setup(x => x.CreateUser(request));
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.CreateUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<BadRequestObjectResult>(response);
+            var responseValue = ((BadRequestObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("Invalid request", responseValue);
+        }
+        [Test]
+        public async Task CreateUser_RoleDoesNotExist()
+        {
+            var request = new CreateUserRequest()
+            {
+                Email = "test@email.com",
+                Name = "test",
+                Password = "pass",
+                RoleId = 1
+            };
+            _userService.Setup(x => x.CreateUser(request))
+                .Throws(new ArgumentNullException());
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.CreateUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<BadRequestObjectResult>(response);
+            var responseValue = ((BadRequestObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("Role does not exist", responseValue);
+        }
+        [Test]
+        public async Task RegisterUser_Successful()
+        {
+            var request = new CreateUserRequest()
+            {
+                Email = "test@email.com",
+                Name = "test",
+                Password = "pass",
+                RoleId = 0
+            };
+            _userService.Setup(x => x.CreateUser(request));
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.RegisterUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<OkObjectResult>(response);
+            var responseValue = ((OkObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("User registered successfully", responseValue);
+        }
+        [Test]
+        public async Task RegisterUser_InvalidRequest()
+        {
+            var request = new CreateUserRequest();
+            _userService.Setup(x => x.CreateUser(request));
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.RegisterUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<BadRequestObjectResult>(response);
+            var responseValue = ((BadRequestObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("Invalid request", responseValue);
+        }
+        [Test]
+        public async Task UpdateUser_Successful()
+        {
+            var request = new UpdateUserRequest()
+            {
+                UserId = 0,
+                Email = "test@email.com",
+                Name = "test",
+                Password = "pass",
+                RoleId = 0
+            };
+            _userService.Setup(x => x.UpdateUser(request))
+                .ReturnsAsync(new Models.DTOs.User());
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.UpdateUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<OkObjectResult>(response);
+            var responseValue = ((OkObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("User updated successfully", responseValue);
+        }
+        [Test]
+        public async Task UpdateUser_InvalidRequest()
+        {
+            var request = new UpdateUserRequest();
+            _userService.Setup(x => x.UpdateUser(request));
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.UpdateUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<BadRequestObjectResult>(response);
+            var responseValue = ((BadRequestObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("Invalid request", responseValue);
+        }
+        [Test]
+        public async Task UpdateUser_ServiceUpdateFail()
+        {
+            var request = new UpdateUserRequest()
+            {
+                UserId = 0,
+                Email = "test@email.com",
+                Name = "test",
+                Password = "pass",
+                RoleId = 0
+            };
+            Models.DTOs.User serviceResponse = null;
+            _userService.Setup(x => x.UpdateUser(request)).ReturnsAsync(serviceResponse);
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.UpdateUser(request);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<BadRequestObjectResult>(response);
+            var responseValue = ((BadRequestObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("User update failed", responseValue);
+        }
+        [Test]
+        public async Task RemoveUser_Successful()
+        {
+            _userService.Setup(x => x.DeleteUser(0));
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.RemoveUser(0);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<OkObjectResult>(response);
+            var responseValue = ((OkObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("User removed successfully", responseValue);
+        }
+        [Test]
+        public async Task RemoveUser_ServiceDeleteFail()
+        {
+            _userService.Setup(x => x.DeleteUser(0)).Throws(new Exception());
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            var response = await _userController.RemoveUser(0);
+            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<BadRequestObjectResult>(response);
+            var responseValue = ((BadRequestObjectResult)response).Value;
+            Assert.IsInstanceOf<string>(responseValue);
+            Assert.AreEqual("Unable to remove user", responseValue);
         }
     }
 }

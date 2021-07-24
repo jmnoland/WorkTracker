@@ -13,7 +13,7 @@ namespace WorkTracker.Services.Interfaces
         Task<Models.DTOs.UserDetail> GetUserDetail(int userId);
         Task CreateUser(CreateUserRequest request);
         Task RegisterUser(CreateUserRequest request);
-        Task UpdateUser(UpdateUserRequest request);
+        Task<Models.DTOs.User> UpdateUser(UpdateUserRequest request);
         Task DeleteUser(int userId);
     }
 }

@@ -61,9 +61,10 @@ namespace WorkTracker.Repositories
                 cmd.Parameters.AddWithValue("@teamId", teamId);
                 using (var rdr = cmd.ExecuteReader())
                 {
-                    var userList = new List<Models.ServiceModels.User>();
+                    List<Models.ServiceModels.User> userList = null;
                     if (rdr.HasRows)
                     {
+                        userList = new List<Models.ServiceModels.User>();
                         while (rdr.Read())
                         {
                             userList.Add(Mapper.MapUser(rdr));

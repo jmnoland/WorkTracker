@@ -21,17 +21,21 @@ namespace WorkTracker.Controllers
         [HttpGet("{teamId}")]
         public async Task<IActionResult> GetUsers([FromRoute] int teamId)
         {
-            return Ok(await _userService.GetUsersByTeamId(teamId));
+            var response = await _userService.GetUsersByTeamId(teamId);
+            if (response == null) return NoContent();
+            return Ok(response);
         }
 
         [HttpGet("details/{userId}")]
-        public async Task<ActionResult<UserDetail>> GetUserDetails([FromRoute] int userId)
+        public async Task<IActionResult> GetUserDetails([FromRoute] int userId)
         {
-            return Ok(await _userService.GetUserDetail(userId));
+            var response = await _userService.GetUserDetail(userId);
+            if (response == null) return NoContent();
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
             if (request.Validate().Count > 0) return BadRequest("Invalid request");
             try
@@ -41,12 +45,12 @@ namespace WorkTracker.Controllers
             }
             catch (ArgumentNullException)
             {
-                return BadRequest("Role does not exist.");
+                return BadRequest("Role does not exist");
             }
         }
-
+        
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody] CreateUserRequest request)
+        public async Task<IActionResult> RegisterUser([FromBody] CreateUserRequest request)
         {
             if (request.Validate().Count > 0) return BadRequest("Invalid request");
 
@@ -55,23 +59,16 @@ namespace WorkTracker.Controllers
         }
 
         [HttpPatch]
-        public async Task<ActionResult> UpdateUser([FromBody] UpdateUserRequest request)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
             if (request.Validate().Count > 0) return BadRequest("Invalid request");
-
-            try
-            {
-                await _userService.UpdateUser(request);
-                return Ok("User updated successfully");
-            }
-            catch
-            {
-                throw new Exception("Update failed");
-            }
+            var result = await _userService.UpdateUser(request);
+            if (result == null) return BadRequest("User update failed");
+            return Ok("User updated successfully");
         }
 
         [HttpDelete("{userId}")]
-        public async Task<ActionResult> RemoveUser([FromRoute] int userId)
+        public async Task<IActionResult> RemoveUser([FromRoute] int userId)
         {
             try
             {
@@ -80,7 +77,7 @@ namespace WorkTracker.Controllers
             }
             catch
             {
-                return BadRequest("Unable to remove user.");
+                return BadRequest("Unable to remove user");
             }
         }
     }
