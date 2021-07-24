@@ -11,7 +11,7 @@ export async function CreateUser(email, password) {
   });
 }
 
-export async function GetDetails(userId) {
-  const { data } = await api.get(`${controller}/details/${userId}`);
+export async function GetDetails() {
+  const { data } = await api.get(`${controller}/details`);
   return data;
 }

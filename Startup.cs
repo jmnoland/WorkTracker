@@ -16,6 +16,9 @@ using WorkTracker.Services.Interfaces;
 using WorkTracker.Services;
 using WorkTracker.Controllers.Exceptions;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WorkTracker
 {
@@ -57,6 +60,25 @@ namespace WorkTracker
 
             services.AddControllersWithViews();
 
+            services.AddAuthentication(auth =>
+            {
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    //ValidIssuer = appSettings.JwtToken.Issuer,
+                    ValidateAudience = false,
+                    //ValidAudience = appSettings.JwtToken.Audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.JwtSecret))
+                };
+            });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -87,8 +109,12 @@ namespace WorkTracker
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-            app.UseMiddleware<ExceptionMiddleware>();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseStatusCodePages();
+
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

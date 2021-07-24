@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WorkTracker.Controllers.Attributes;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
@@ -19,21 +19,28 @@ namespace WorkTracker.Controllers
             _userService = userService;
         }
 
-        [ValidateToken("view_user")]
+        [Authorize(Roles = "view_user")]
         [HttpGet("{teamId}")]
-        public async Task<ActionResult<List<User>>> GetUsers([FromRoute] int teamId)
+        public async Task<ActionResult<List<User>>> GetUsers()
         {
-            return await _userService.GetUsersByTeamId(teamId);
+            var currentUserId = Helper.GetRequestUserId(HttpContext);
+            if (currentUserId == null) return BadRequest("UserId missing");
+            var userList = await _userService.GetUsersByTeamId((int)currentUserId);
+            return userList;
         }
 
-        [ValidateToken("view_user")]
-        [HttpGet("details/{userId}")]
-        public async Task<ActionResult<UserDetail>> GetUserDetails([FromRoute] int userId)
+        [Authorize(Roles = "view_user")]
+        [HttpGet("details")]
+        public async Task<ActionResult<UserDetail>> GetUserDetails()
         {
-            return await _userService.GetUserDetail(userId);
+            var currentUserId = Helper.GetRequestUserId(HttpContext);
+            if (currentUserId == null) return BadRequest("UserId missing");
+            var response = await _userService.GetUserDetail((int)currentUserId);
+            if (response == null) return NoContent();
+            return Ok(response);
         }
 
-        [ValidateToken("create_user")]
+        [Authorize(Roles = "create_user")]
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
@@ -49,6 +56,7 @@ namespace WorkTracker.Controllers
             }
         }
 
+        [Authorize(Roles = "create_user")]
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser([FromBody] CreateUserRequest request)
         {
@@ -58,11 +66,12 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
-        [ValidateToken("edit_user")]
+        [Authorize(Roles = "edit_user")]
         [HttpPatch]
         public async Task<ActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            var currentUserId = Helper.GetRequestUserId(HttpContext);
+            if (currentUserId == null) return BadRequest("UserId missing");
 
             try
             {
@@ -75,12 +84,15 @@ namespace WorkTracker.Controllers
             }
         }
 
-        [ValidateToken("delete_user")]
+        [Authorize(Roles = "delete_user")]
         [HttpDelete("{userId}")]
         public async Task<ActionResult> RemoveUser([FromRoute] int userId)
         {
             try
             {
+                var currentUserId = Helper.GetRequestUserId(HttpContext);
+                if (currentUserId == null) return BadRequest("UserId missing");
+                if (userId != currentUserId) return BadRequest("UserId must match");
                 await _userService.DeleteUser(userId);
                 return Ok();
             }

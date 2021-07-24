@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WorkTracker.Controllers.Attributes;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
@@ -18,7 +18,7 @@ namespace WorkTracker.Controllers
             _storyService = storyService;
         }
 
-        [ValidateToken("view_story")]
+        [Authorize(Roles = "view_story")]
         [HttpGet("{stateId}")]
         public async Task<ActionResult<List<Story>>> GetStoriesByStateId([FromRoute] int stateId)
         {
@@ -28,7 +28,7 @@ namespace WorkTracker.Controllers
             return Ok(await _storyService.GetStoriesByStateId((int)userId, stateId, false));
         }
 
-        [ValidateToken("view_story")]
+        [Authorize(Roles = "view_story")]
         [HttpGet("archived/{stateId}")]
         public async Task<ActionResult<List<Story>>> GetArchivedStories([FromRoute] int stateId)
         {
@@ -38,7 +38,7 @@ namespace WorkTracker.Controllers
             return Ok(await _storyService.GetStoriesByStateId((int)userId, stateId, true));
         }
 
-        [ValidateToken("create_story")]
+        [Authorize(Roles = "create_story")]
         [HttpPost]
         public async Task<ActionResult> CreateStory([FromBody] CreateStoryRequest request)
         {
@@ -49,7 +49,7 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
-        [ValidateToken("edit_story")]
+        [Authorize(Roles = "edit_story")]
         [HttpPatch]
         public async Task<ActionResult> UpdateStory([FromBody] UpdateStoryRequest request)
         {
@@ -60,7 +60,7 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
-        [ValidateToken("edit_story")]
+        [Authorize(Roles = "delete_story")]
         [HttpDelete("{storyId}")]
         public async Task<ActionResult> DeleteStory([FromRoute] int storyId)
         {
@@ -71,7 +71,7 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
-        [ValidateToken("view_story")]
+        [Authorize(Roles = "view_story")]
         [HttpGet("task/{storyId}")]
         public async Task<ActionResult<List<Story>>> GetStoryTasks([FromRoute] int storyId)
         {
@@ -81,7 +81,7 @@ namespace WorkTracker.Controllers
             return Ok(await _storyService.GetStoryTasks(storyId, (int)userId));
         }
 
-        [ValidateToken("edit_story")]
+        [Authorize(Roles = "edit_story")]
         [HttpDelete("task/{taskId}")]
         public async Task<ActionResult> DeleteTask([FromRoute] int taskId)
         {
@@ -92,7 +92,7 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
-        [ValidateToken("view_story")]
+        [Authorize(Roles = "view_story")]
         [HttpPatch("update/state/{storyId}")]
         public async Task<ActionResult> ChangeState([FromRoute] int storyId, [FromBody] OrderUpdateRequest request)
         {
@@ -103,7 +103,7 @@ namespace WorkTracker.Controllers
             return Ok();
         }
 
-        [ValidateToken("view_story")]
+        [Authorize(Roles = "view_story")]
         [HttpPatch("update/order")]
         public async Task<ActionResult> OrderUpdate([FromBody] OrderUpdateRequest request)
         {
