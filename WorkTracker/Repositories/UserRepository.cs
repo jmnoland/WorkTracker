@@ -41,39 +41,19 @@ namespace WorkTracker.Repositories
             return Mapper.Map(userList);
         }
 
-        public async Task<List<Models.ServiceModels.User>> GetUsersByTeamId(int teamId)
+        public async Task<List<Models.ServiceModels.User>> GetUsersByTeamId(IEnumerable<int> teamIds)
         {
-            string query = @"
-                SELECT
-                    u.UserId,
-                    u.RoleId,
-                    u.Name,
-                    u.Email,
-                    u.Password
-                FROM Users u
-                LEFT JOIN UserTeams ut ON ut.UserId = u.UserId
-                WHERE ut.TeamId = @teamId";
-
-            var conn = (SqlConnection)_dbContext.Database.GetDbConnection();
-            using (var cmd = new SqlCommand(query, conn))
-            {
-                conn.Open();
-                cmd.Parameters.AddWithValue("@teamId", teamId);
-                using (var rdr = cmd.ExecuteReader())
-                {
-                    List<Models.ServiceModels.User> userList = null;
-                    if (rdr.HasRows)
-                    {
-                        userList = new List<Models.ServiceModels.User>();
-                        while (rdr.Read())
-                        {
-                            userList.Add(Mapper.MapUser(rdr));
-                        }
-                    }
-                    conn.Close();
-                    return userList;
-                }
-            }
+            var userList = await (from users in _dbContext.Users
+                              join ut in _dbContext.UserTeams on users.UserId equals ut.UserId
+                              where teamIds.Contains(ut.TeamId)
+                              select new Models.ServiceModels.User
+                              {
+                                  Email = users.Email,
+                                  Name = users.Name,
+                                  RoleId = users.RoleId,
+                                  UserId = users.UserId
+                              }).ToListAsync();
+            return userList;
         }
 
         public async Task<Models.ServiceModels.User> GetUser(int userId)

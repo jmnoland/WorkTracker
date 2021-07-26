@@ -20,16 +20,6 @@ export function decodeJwtToken(token) {
   return null;
 }
 
-export function getToken() {
-  const cookies = document.cookie.split("=");
-  const index = cookies.reduce((total, val, i) => {
-    if (val === "X-User-Token") total = i + 1;
-    return total;
-  }, -1);
-  if (index === -1) return localStorage.getItem("X-User-Token");
-  return cookies[index];
-}
-
 export function parseDateTime(value) {
   let date = value;
   if (typeof date === "string") date = new Date(value);

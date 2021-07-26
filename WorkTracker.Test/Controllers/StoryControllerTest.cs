@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -25,7 +26,13 @@ namespace WorkTracker.Test.Controllers
             _storyController = new StoryController(_storyInterface.Object);
 
             _appSettings = Helper.getAppSettings();
-            var permissions = new string[] { "create_story", "create_user", "view_story", "edit_story" };
+            var permissions = new string[]
+            {
+                "create_story",
+                "create_user",
+                "view_story",
+                "edit_story"
+            };
             _token = Services.Helper.GenerateToken(_demoUserId, permissions, _appSettings.JwtSecret);
         }
 
@@ -33,9 +40,13 @@ namespace WorkTracker.Test.Controllers
         public void Setup()
         {
             _storyController.ControllerContext = new ControllerContext();
-            var defaultContext = new DefaultHttpContext();
-            defaultContext.Request.Headers["X-User-Token"] = _token;
-            _storyController.ControllerContext.HttpContext = defaultContext;
+            _storyController.ControllerContext.HttpContext = new DefaultHttpContext();
+            var header = new KeyValuePair<string, StringValues>
+            (
+                "Authorization",
+                $"Bearer {_token}"
+            );
+            _storyController.ControllerContext.HttpContext.Request.Headers.Add(header);
         }
 
         [Test]

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
@@ -18,26 +20,33 @@ namespace WorkTracker.Controllers
             _userService = userService;
         }
 
+        [Authorize(Roles = "view_user")]
         [HttpGet("{teamId}")]
-        public async Task<IActionResult> GetUsers([FromRoute] int teamId)
+        public async Task<IActionResult> GetUsers()
         {
-            var response = await _userService.GetUsersByTeamId(teamId);
+            var currentUserId = Helper.GetRequestUserId(HttpContext);
+            if (currentUserId == null) return BadRequest("UserId missing");
+            var userList = await _userService.GetUsersByTeamId((int)currentUserId);
+            if (userList == null) return NoContent();
+            return Ok(userList);
+        }
+
+        [Authorize(Roles = "view_user")]
+        [HttpGet("details")]
+        public async Task<IActionResult> GetUserDetails()
+        {
+            var currentUserId = Helper.GetRequestUserId(HttpContext);
+            if (currentUserId == null) return BadRequest("UserId missing");
+            var response = await _userService.GetUserDetail((int)currentUserId);
             if (response == null) return NoContent();
             return Ok(response);
         }
 
-        [HttpGet("details/{userId}")]
-        public async Task<IActionResult> GetUserDetails([FromRoute] int userId)
-        {
-            var response = await _userService.GetUserDetail(userId);
-            if (response == null) return NoContent();
-            return Ok(response);
-        }
-
+        [Authorize(Roles = "create_user")]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
-            if (request.Validate().Count > 0) return BadRequest("Invalid request");
+            if (request.Validate().Count() > 0) return BadRequest("Invalid request");
             try
             {
                 await _userService.CreateUser(request);
@@ -48,30 +57,44 @@ namespace WorkTracker.Controllers
                 return BadRequest("Role does not exist");
             }
         }
-        
+
+        [Authorize(Roles = "create_user")]
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] CreateUserRequest request)
         {
-            if (request.Validate().Count > 0) return BadRequest("Invalid request");
+            if (request.Validate().Count() > 0) return BadRequest("Invalid request");
 
             await _userService.RegisterUser(request);
             return Ok("User registered successfully");
         }
 
+        [Authorize(Roles = "edit_user")]
         [HttpPatch]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
-            if (request.Validate().Count > 0) return BadRequest("Invalid request");
-            var result = await _userService.UpdateUser(request);
-            if (result == null) return BadRequest("User update failed");
-            return Ok("User updated successfully");
+            var currentUserId = Helper.GetRequestUserId(HttpContext);
+            if (currentUserId == null) return BadRequest("UserId missing");
+            if (request.Validate().Count() > 0) return BadRequest("Invalid request");
+            try
+            {
+                await _userService.UpdateUser(request);
+                return Ok("User updated successfully");
+            }
+            catch
+            {
+                return BadRequest("User update failed");
+            }
         }
 
+        [Authorize(Roles = "delete_user")]
         [HttpDelete("{userId}")]
         public async Task<IActionResult> RemoveUser([FromRoute] int userId)
         {
             try
             {
+                var currentUserId = Helper.GetRequestUserId(HttpContext);
+                if (currentUserId == null) return BadRequest("UserId missing");
+                if (userId != currentUserId) return BadRequest("UserId must match");
                 await _userService.DeleteUser(userId);
                 return Ok("User removed successfully");
             }

@@ -7,6 +7,7 @@ using WorkTracker.Models.ServiceModels;
 using WorkTracker.Services.Interfaces;
 using WorkTracker.Models.Requests;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace WorkTracker.Services
 {
@@ -40,9 +41,10 @@ namespace WorkTracker.Services
             return null;
         }
 
-        public async Task<List<Models.DTOs.User>> GetUsersByTeamId(int teamId)
+        public async Task<List<Models.DTOs.User>> GetUsersByTeamId(int currentUserId)
         {
-            var result = await _userRepository.GetUsersByTeamId(teamId);
+            var teams = _teamRepository.GetByUserId(currentUserId);
+            var result = await _userRepository.GetUsersByTeamId(teams.Select(s => s.TeamId));
             if (result != null)
             {
                 return Mapper.Map(result);
@@ -53,7 +55,7 @@ namespace WorkTracker.Services
         public async Task<Models.DTOs.UserDetail> GetUserDetail(int userId)
         {
             var teams = _teamRepository.GetByUserId(userId);
-            if (teams != null)
+            if (teams.Count() > 0)
             {
                 var details = new Models.DTOs.UserDetail()
                 {
@@ -109,21 +111,16 @@ namespace WorkTracker.Services
             });
         }
 
-        public async Task<Models.DTOs.User> UpdateUser(UpdateUserRequest request)
+        public async System.Threading.Tasks.Task UpdateUser(UpdateUserRequest request)
         {
             var user = await _userRepository.GetUser((int)request.UserId);
-            if (user != null)
-            {
-                await _userRepository.UpdateUser(Mapper.Map(request, user));
+            await _userRepository.UpdateUser(Mapper.Map(request, user));
 
-                await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
-                {
-                    UserId = user.UserId,
-                    FunctionName = "UpdateUser",
-                });
-                return Mapper.Map(user);
-            }
-            return null;
+            await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
+            {
+                UserId = user.UserId,
+                FunctionName = "UpdateUser",
+            });
         }
 
         public async System.Threading.Tasks.Task DeleteUser(int userId)

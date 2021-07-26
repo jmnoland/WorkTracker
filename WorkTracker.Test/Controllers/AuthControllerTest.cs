@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -102,18 +101,6 @@ namespace WorkTracker.Test.Controllers
             var result = await _authController.Register(request);
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
             Assert.AreEqual("Request data is invalid", ((BadRequestObjectResult)result).Value);
-        }
-
-        [Test]
-        public void CookiesSupported_Unsuccessful()
-        {
-            _authController.ControllerContext = new ControllerContext();
-            _authController.ControllerContext.HttpContext = new DefaultHttpContext();
-
-            var result = _authController.CookiesSupported();
-            Assert.IsInstanceOf<ActionResult>(result);
-            var value = (OkObjectResult)result;
-            Assert.AreEqual(false, value.Value);
         }
     }
 }

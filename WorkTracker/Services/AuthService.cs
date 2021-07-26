@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -15,6 +13,7 @@ using WorkTracker.Services.Interfaces;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 namespace WorkTracker.Services
 {
@@ -23,18 +22,22 @@ namespace WorkTracker.Services
 		private readonly IRoleRepository _roleRepository;
 		private readonly IUserRepository _userRepository;
         private readonly ITeamRepository _teamRepository;
+        private readonly IStateRepository _stateRepository;
+
         private readonly IServiceLogRepository _serviceLogRepository;
 		private readonly IOptions<AppSettings> _appSettings;
         private readonly RandomNumberGenerator _rng;
         public AuthService(IRoleRepository roleRepository,
 						   IUserRepository userRepository,
                            ITeamRepository teamRepository,
+                           IStateRepository stateRepository,
                            IServiceLogRepository serviceLogRepository,
                            IOptions<AppSettings> appSettings)
         {
 			_roleRepository = roleRepository;
 			_userRepository = userRepository;
             _teamRepository = teamRepository;
+            _stateRepository = stateRepository;
             _serviceLogRepository = serviceLogRepository;
 			_appSettings = appSettings;
             _rng = RandomNumberGenerator.Create();
@@ -84,7 +87,7 @@ namespace WorkTracker.Services
         {
 			var handler = new JwtSecurityTokenHandler();
 			var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
-			return decodedToken.Claims.Any(w => w.Type == "UserRole" && w.Value == permission);
+			return decodedToken.Claims.Any(w => w.Type == ClaimTypes.Role && w.Value == permission);
 		}
 
 		public async Task<string> Login(UserLoginRequest request)
@@ -115,14 +118,16 @@ namespace WorkTracker.Services
                 UserId = 0,
             };
             await _userRepository.Add(user);
-            var team = new Models.DataModels.Team
+            var newTeam = new Models.DataModels.Team()
             {
-                Name = Guid.NewGuid().ToString(),
                 OrganisationId = null,
                 TeamId = 0,
+                Name = Guid.NewGuid().ToString()
             };
-            await _teamRepository.Add(team);
+            var team = await _teamRepository.Add(newTeam);
             await _teamRepository.AssignUser(user.UserId, team.TeamId);
+            await _stateRepository.CreateDefaultStates(team.TeamId);
+
             await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
             {
                 UserId = user.UserId,

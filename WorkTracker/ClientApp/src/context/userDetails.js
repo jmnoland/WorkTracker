@@ -12,7 +12,7 @@ export const UserDetailProvider = ({ children }) => {
   );
   const [user, setUser] = useState(decodedToken ? decodedToken.nameid : null);
   const [permissions, setPermissions] = useState(
-    decodedToken ? decodedToken.UserRole : []
+    decodedToken ? decodedToken.role : []
   );
   const [isLoggedIn, setIsLoggedIn] = useState(
     decodedToken ? !!decodedToken : false
@@ -21,7 +21,7 @@ export const UserDetailProvider = ({ children }) => {
   useEffect(() => {
     async function userDetailChange() {
       if (user) {
-        setUserDetail(await GetDetails(user));
+        setUserDetail(await GetDetails());
       }
     }
     userDetailChange();
@@ -40,7 +40,7 @@ export const UserDetailProvider = ({ children }) => {
     setDecodedToken(decodedToken);
     if (decodedToken) {
       setUser(decodedToken.nameid);
-      setPermissions(decodedToken.UserRole);
+      setPermissions(decodedToken.role);
     }
   };
 

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkTracker.Controllers;
+using WorkTracker.Models;
 using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
 
@@ -15,11 +17,35 @@ namespace WorkTracker.Test.Controllers
     {
         private readonly Mock<IUserService> _userService;
         private readonly UserController _userController;
-
+        private readonly AppSettings _appSettings;
+        private readonly string _token;
         public UserControllerTest()
         {
+            _appSettings = Helper.getAppSettings();
+            var permissions = new string[]
+            {
+                "create_story",
+                "create_user",
+                "view_story",
+                "edit_story"
+            };
+            _token = Services.Helper.GenerateToken(0, permissions, _appSettings.JwtSecret);
+
             _userService = new Mock<IUserService>();
             _userController = new UserController(_userService.Object);
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            _userController.ControllerContext = new ControllerContext();
+            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+            var header = new KeyValuePair<string, StringValues>
+            (
+                "Authorization",
+                $"Bearer {_token}"
+            );
+            _userController.ControllerContext.HttpContext.Request.Headers.Add(header);
         }
 
         [Test]
@@ -27,10 +53,8 @@ namespace WorkTracker.Test.Controllers
         {
             var result = new List<Models.DTOs.User>();
             _userService.Setup(x => x.GetUsersByTeamId(0)).ReturnsAsync(result);
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
-            var response = await _userController.GetUsers(0);
+            var response = await _userController.GetUsers();
             Assert.IsInstanceOf<ActionResult>(response);
             var responseValue = ((OkObjectResult)response).Value;
             Assert.IsInstanceOf<List<Models.DTOs.User>>(responseValue);
@@ -40,10 +64,8 @@ namespace WorkTracker.Test.Controllers
         {
             List<Models.DTOs.User> result = null;
             _userService.Setup(x => x.GetUsersByTeamId(0)).ReturnsAsync(result);
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
-            var response = await _userController.GetUsers(0);
+            var response = await _userController.GetUsers();
             Assert.IsInstanceOf<ActionResult>(response);
             Assert.IsInstanceOf<NoContentResult>(response);
         }
@@ -52,10 +74,8 @@ namespace WorkTracker.Test.Controllers
         {
             var result = new Models.DTOs.UserDetail();
             _userService.Setup(x => x.GetUserDetail(0)).ReturnsAsync(result);
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
-            var response = await _userController.GetUserDetails(0);
+            var response = await _userController.GetUserDetails();
             Assert.IsInstanceOf<ActionResult>(response);
             Assert.IsInstanceOf<OkObjectResult>(response);
             var responseValue = ((OkObjectResult)response).Value;
@@ -66,10 +86,8 @@ namespace WorkTracker.Test.Controllers
         {
             Models.DTOs.UserDetail result = null;
             _userService.Setup(x => x.GetUserDetail(0)).ReturnsAsync(result);
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
-            var response = await _userController.GetUserDetails(0);
+            var response = await _userController.GetUserDetails();
             Assert.IsInstanceOf<ActionResult>(response);
             Assert.IsInstanceOf<NoContentResult>(response);
         }
@@ -84,8 +102,6 @@ namespace WorkTracker.Test.Controllers
                 RoleId = 1
             };
             _userService.Setup(x => x.CreateUser(request));
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.CreateUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -99,8 +115,6 @@ namespace WorkTracker.Test.Controllers
         {
             var request = new CreateUserRequest();
             _userService.Setup(x => x.CreateUser(request));
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.CreateUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -121,8 +135,6 @@ namespace WorkTracker.Test.Controllers
             };
             _userService.Setup(x => x.CreateUser(request))
                 .Throws(new ArgumentNullException());
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.CreateUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -142,8 +154,6 @@ namespace WorkTracker.Test.Controllers
                 RoleId = 0
             };
             _userService.Setup(x => x.CreateUser(request));
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.RegisterUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -157,8 +167,6 @@ namespace WorkTracker.Test.Controllers
         {
             var request = new CreateUserRequest();
             _userService.Setup(x => x.CreateUser(request));
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.RegisterUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -178,10 +186,7 @@ namespace WorkTracker.Test.Controllers
                 Password = "pass",
                 RoleId = 0
             };
-            _userService.Setup(x => x.UpdateUser(request))
-                .ReturnsAsync(new Models.DTOs.User());
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
+            _userService.Setup(x => x.UpdateUser(request));
 
             var response = await _userController.UpdateUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -195,8 +200,6 @@ namespace WorkTracker.Test.Controllers
         {
             var request = new UpdateUserRequest();
             _userService.Setup(x => x.UpdateUser(request));
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.UpdateUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -216,11 +219,8 @@ namespace WorkTracker.Test.Controllers
                 Password = "pass",
                 RoleId = 0
             };
-            Models.DTOs.User serviceResponse = null;
-            _userService.Setup(x => x.UpdateUser(request)).ReturnsAsync(serviceResponse);
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
-
+            _userService.Setup(x => x.UpdateUser(request))
+                .Throws(new Exception());
             var response = await _userController.UpdateUser(request);
             Assert.IsInstanceOf<ActionResult>(response);
             Assert.IsInstanceOf<BadRequestObjectResult>(response);
@@ -232,8 +232,6 @@ namespace WorkTracker.Test.Controllers
         public async Task RemoveUser_Successful()
         {
             _userService.Setup(x => x.DeleteUser(0));
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.RemoveUser(0);
             Assert.IsInstanceOf<ActionResult>(response);
@@ -246,8 +244,6 @@ namespace WorkTracker.Test.Controllers
         public async Task RemoveUser_ServiceDeleteFail()
         {
             _userService.Setup(x => x.DeleteUser(0)).Throws(new Exception());
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
 
             var response = await _userController.RemoveUser(0);
             Assert.IsInstanceOf<ActionResult>(response);
