@@ -19,7 +19,7 @@ namespace WorkTracker.Services
 			};
 			foreach (var permission in permissions)
 			{
-				claims.Add(new Claim("UserRole", permission));
+				claims.Add(new Claim(ClaimTypes.Role, permission));
 			}
 
 			var tokenHandler = new JwtSecurityTokenHandler();

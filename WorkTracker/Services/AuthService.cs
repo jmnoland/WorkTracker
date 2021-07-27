@@ -13,7 +13,6 @@ using WorkTracker.Services.Interfaces;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Runtime.CompilerServices;
-using System.Collections.Generic;
 
 namespace WorkTracker.Services
 {
@@ -46,6 +45,8 @@ namespace WorkTracker.Services
         public async Task<string> CreateToken(int userId)
         {
             var role = await _roleRepository.GetUserRole(userId);
+            if (role == null) throw new Exception("User role is null");
+            if (role.Permissions == null) role.Permissions = "";
             var permissions = role.Permissions.Split(',');
             return Helper.GenerateToken(userId, permissions, _appSettings.Value.JwtSecret);
         }
@@ -55,7 +56,7 @@ namespace WorkTracker.Services
 			var handler = new JwtSecurityTokenHandler();
 			var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
 			var userId = decodedToken.Claims
-				.Where(w => w.Type == ClaimTypes.NameIdentifier)
+				.Where(w => w.Type == "nameid")
 				.Select(s => s.Value).FirstOrDefault();
 			return await CreateToken(int.Parse(userId));
 		}

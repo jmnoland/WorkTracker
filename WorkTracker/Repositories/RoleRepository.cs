@@ -30,11 +30,12 @@ namespace WorkTracker.Repositories
         public async Task<Models.ServiceModels.Role> GetUserRole(int userId)
         {
             var userRole = await (from user in _dbContext.Users
-                        join role in _dbContext.Roles 
+                        join role in _dbContext.Roles
                             on user.RoleId equals role.RoleId
                         where user.UserId == userId
-                        select Mapper.Map(role)).FirstOrDefaultAsync();
-            return userRole;
+                        select role).FirstOrDefaultAsync();
+            if (userRole == null) return null;
+            return Mapper.Map(userRole);
         }
     }
 }

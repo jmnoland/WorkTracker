@@ -29,7 +29,7 @@ namespace WorkTracker.Test.Controllers
                 "view_story",
                 "edit_story"
             };
-            _token = Services.Helper.GenerateToken(0, permissions, _appSettings.JwtSecret);
+            _token = WorkTracker.Services.Helper.GenerateToken(0, permissions, _appSettings.JwtSecret);
 
             _userService = new Mock<IUserService>();
             _userController = new UserController(_userService.Object);
