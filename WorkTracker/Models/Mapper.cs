@@ -182,6 +182,7 @@ namespace WorkTracker.Models.Mapper
         public static List<ServiceModels.Task> Map(CreateStoryRequest request, int storyId)
         {
             var taskList = new List<ServiceModels.Task>();
+            if (request.Tasks == null) return taskList;
             foreach (var task in request.Tasks)
             {
                 taskList.Add(new ServiceModels.Task

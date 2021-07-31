@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using WorkTracker.Models;
 using WorkTracker.Models.Requests;
@@ -61,36 +58,6 @@ namespace WorkTracker.Services
 			return await CreateToken(int.Parse(userId));
 		}
 
-		public bool ValidateCurrentToken(string token)
-		{
-			var secret = _appSettings.Value.JwtSecret;
-			var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
-
-			var tokenHandler = new JwtSecurityTokenHandler();
-			try
-			{
-				tokenHandler.ValidateToken(token, new TokenValidationParameters
-				{
-					ValidateIssuerSigningKey = true,
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					IssuerSigningKey = securityKey
-				}, out SecurityToken validatedToken);
-			}
-			catch
-			{
-				return false;
-			}
-			return true;
-		}
-
-		public bool PermissionAllowed(string token, string permission)
-        {
-			var handler = new JwtSecurityTokenHandler();
-			var decodedToken = handler.ReadToken(token) as JwtSecurityToken;
-			return decodedToken.Claims.Any(w => w.Type == ClaimTypes.Role && w.Value == permission);
-		}
-
 		public async Task<string> Login(UserLoginRequest request)
         {
 			var user = _userRepository.Find(w => w.Email == request.Email).FirstOrDefault();
@@ -119,20 +86,20 @@ namespace WorkTracker.Services
                 UserId = 0,
             };
             await _userRepository.Add(user);
-            var newTeam = new Models.DataModels.Team()
+            var newTeam = new Models.DataModels.Team
             {
                 OrganisationId = null,
                 TeamId = 0,
                 Name = Guid.NewGuid().ToString()
             };
-            var team = await _teamRepository.Add(newTeam);
-            await _teamRepository.AssignUser(user.UserId, team.TeamId);
-            await _stateRepository.CreateDefaultStates(team.TeamId);
+            await _teamRepository.Add(newTeam);
+            await _teamRepository.AssignUser(user.UserId, newTeam.TeamId);
+            await _stateRepository.CreateDefaultStates(newTeam.TeamId);
 
             await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
             {
                 UserId = user.UserId,
-                TeamId = team.TeamId,
+                TeamId = newTeam.TeamId,
                 FunctionName = "Register",
             });
         }

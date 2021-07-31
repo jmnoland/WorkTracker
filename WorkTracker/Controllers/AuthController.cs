@@ -39,7 +39,7 @@ namespace WorkTracker.Controllers
         {
             if (request.Validate().Count != 0) return BadRequest("Request data is invalid");
             await _authService.Register(request);
-            return Ok();
+            return Ok("User registered successfully");
         }
 
         [AllowAnonymous]

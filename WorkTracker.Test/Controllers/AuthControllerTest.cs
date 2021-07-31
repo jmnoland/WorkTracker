@@ -88,7 +88,9 @@ namespace WorkTracker.Test.Controllers
                 Password = "password"
             };
             var result = await _authController.Register(request);
-            Assert.IsInstanceOf<ActionResult>(result);
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            var response = (OkObjectResult)result;
+            Assert.AreEqual("User registered successfully", response.Value);
         }
 
         [Test]

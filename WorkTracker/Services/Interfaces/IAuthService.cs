@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WorkTracker.Models.Requests;
 
 namespace WorkTracker.Services.Interfaces
@@ -10,8 +7,6 @@ namespace WorkTracker.Services.Interfaces
     {
         Task<string> CreateToken(int userId);
         Task<string> RefreshToken(string token);
-        bool ValidateCurrentToken(string token);
-        bool PermissionAllowed(string token, string permission);
         Task<string> Login(UserLoginRequest request);
         Task Register(UserRegisterRequest request);
         Task<string> DemoLogin();

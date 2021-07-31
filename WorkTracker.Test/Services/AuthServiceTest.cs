@@ -2,8 +2,8 @@
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Threading.Tasks;
 using WorkTracker.Models;
+using WorkTracker.Models.Requests;
 using WorkTracker.Models.ServiceModels;
 using WorkTracker.Repositories.Interfaces;
 using WorkTracker.Services;
@@ -109,7 +109,8 @@ namespace WorkTracker.Test.Services
                 Name = "test_role",
                 Permissions = "create_story,view_story,edit_story,create_user",
                 RoleId = 1
-            }; _roleRepository.Setup(x => x.GetUserRole(0)).ReturnsAsync(repoResponse);
+            };
+            _roleRepository.Setup(x => x.GetUserRole(0)).ReturnsAsync(repoResponse);
 
             var permissions = new string[]
             {
@@ -123,6 +124,61 @@ namespace WorkTracker.Test.Services
             var result = await _authService.RefreshToken(expectedResult);
             Assert.IsInstanceOf<string>(result);
             Assert.AreEqual(expectedResult, result);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task Register_Successful()
+        {
+            var repoUserResponse = new Models.DataModels.User
+            {
+                Email = "",
+                Name = "",
+                Password = "",
+                RoleId = 1,
+                UserId = 1,
+            };
+            var newUser = new Models.DataModels.User
+            {
+                Email = "",
+                Name = "",
+                Password = "",
+                RoleId = 1,
+                UserId = 1,
+            };
+            _userRepository.Setup(x => x.Add(newUser)).ReturnsAsync(repoUserResponse);
+
+            var repoTeamResponse = new Models.DataModels.Team
+            {
+                OrganisationId = 1,
+                TeamId = 1,
+                Name = Guid.NewGuid().ToString()
+            };
+            var newTeam = new Models.DataModels.Team
+            {
+                OrganisationId = 1,
+                TeamId = 1,
+                Name = Guid.NewGuid().ToString()
+            };
+            _teamRepository.Setup(x => x.Add(newTeam)).ReturnsAsync(repoTeamResponse);
+            _teamRepository.Setup(x => x.AssignUser(1, 1));
+            _stateRepository.Setup(x => x.CreateDefaultStates(1));
+            var request = new UserRegisterRequest
+            {
+                Email = "test@email.com",
+                Password = "password",
+                Name = "test",
+                TeamId = 1,
+                RoleId = 1
+            };
+            try
+            {
+                await _authService.Register(request);
+                Assert.IsTrue(true);
+            }
+            catch (Exception)
+            {
+                Assert.IsFalse(true);
+            }
         }
     }
 }

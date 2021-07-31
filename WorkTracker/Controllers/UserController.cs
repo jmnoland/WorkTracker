@@ -75,6 +75,7 @@ namespace WorkTracker.Controllers
             var currentUserId = Helper.GetRequestUserId(HttpContext);
             if (currentUserId == null) return BadRequest("UserId missing");
             if (request.Validate().Count() > 0) return BadRequest("Invalid request");
+            if (request.UserId != currentUserId) return BadRequest("UserId must match");
             try
             {
                 await _userService.UpdateUser(request);
