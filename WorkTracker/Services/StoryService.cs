@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkTracker.Models.Mapper;
 using WorkTracker.Models.Requests;
-using WorkTracker.Models.ServiceModels;
 using WorkTracker.Repositories.Interfaces;
 using WorkTracker.Services.Interfaces;
 
@@ -27,7 +24,7 @@ namespace WorkTracker.Services
 			return Mapper.Map(await _storyRepository.GetStoriesByStateId(userId, stateId, getArchived));
 		}
 
-		public async System.Threading.Tasks.Task CreateStory(int userId, CreateStoryRequest request)
+		public async Task CreateStory(int userId, CreateStoryRequest request)
         {
 			var story = Mapper.Map(request);
 			var storyId = await _storyRepository.CreateStory(userId, story);
@@ -44,7 +41,7 @@ namespace WorkTracker.Services
 			});
 		}
 
-		public async System.Threading.Tasks.Task UpdateStory(UpdateStoryRequest request, int userId)
+		public async Task UpdateStory(UpdateStoryRequest request, int userId)
         {
 			var (story, tasks) = Mapper.Map(request);
 			await _storyRepository.UpdateStory(story, userId);
@@ -57,7 +54,7 @@ namespace WorkTracker.Services
 			});
 		}
 
-		public async System.Threading.Tasks.Task DeleteStory(int storyId, int userId)
+		public async Task DeleteStory(int storyId, int userId)
         {
 			await _storyRepository.DeleteStory(storyId, userId);
 			await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
@@ -68,7 +65,7 @@ namespace WorkTracker.Services
 			});
 		}
 
-		public async System.Threading.Tasks.Task OrderUpdate(int userId, OrderUpdateRequest request)
+		public async Task OrderUpdate(int userId, OrderUpdateRequest request)
         {
 			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);
         }
@@ -79,7 +76,7 @@ namespace WorkTracker.Services
 			return Mapper.Map(tasks);
         }
 
-		public async System.Threading.Tasks.Task DeleteTask(int taskId, int userId)
+		public async Task DeleteTask(int taskId, int userId)
         {
 			await _storyRepository.DeleteTask(taskId, userId);
 			await _serviceLogRepository.Add(new Models.DataModels.ServiceLog
@@ -90,7 +87,7 @@ namespace WorkTracker.Services
 			});
 		}
 
-		public async System.Threading.Tasks.Task ChangeState(int userId, int storyId, OrderUpdateRequest request)
+		public async Task ChangeState(int userId, int storyId, OrderUpdateRequest request)
 		{
 			await _storyRepository.ChangeState(userId, storyId, request.StateId);
 			await _storyRepository.OrderUpdate(request.StateId, userId, request.Stories);

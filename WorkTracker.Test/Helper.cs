@@ -7,9 +7,9 @@ using WorkTracker.Models;
 
 namespace WorkTracker.Test
 {
-    public class Helper
+    public static class Helper
     {
-        public static AppSettings getAppSettings()
+        public static AppSettings GetAppSettings()
         {
             AppSettings appSettings = new AppSettings();
             

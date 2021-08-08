@@ -62,6 +62,7 @@ namespace WorkTracker.Repositories
                               join us in _dbContext.UserStory on s.StoryId equals us.StoryId
                               where s.StoryId == updatedStory.StoryId && us.UserId == userId
                               select s).FirstOrDefaultAsync();
+            if (story == null) throw new Exception("Update failed story not found");
             story.ProjectId = updatedStory.ProjectId ?? story.ProjectId;
             story.SprintId = updatedStory.SprintId ?? story.ProjectId;
             story.StateId = updatedStory.StateId;
@@ -77,8 +78,8 @@ namespace WorkTracker.Repositories
                                join us in _dbContext.UserStory on s.StoryId equals us.StoryId
                                where s.StoryId == storyId && us.UserId == userId
                                select s).AnyAsync();
-            if (!story) return;
-            string query = @"
+            if (!story) throw new Exception("Delete failed story not found");;
+            const string query = @"
                 DELETE FROM Story WHERE StoryId = @storyId
                 DELETE FROM UserStory WHERE StoryId = @storyId
                 DELETE FROM Task WHERE StoryId = @storyId
@@ -100,14 +101,21 @@ namespace WorkTracker.Repositories
                                  join ut in _dbContext.UserStory on s.StoryId equals ut.StoryId
                                  where ut.UserId == userId && s.StateId == stateId
                                  select s).ToListAsync();
-            foreach(var story in stories)
+            if (stories.Count() >= 0)
             {
-                if (updateList.TryGetValue(story.StoryId.ToString(), out int newOrderNum))
+                foreach(var story in stories)
                 {
-                    story.ListOrder = newOrderNum;
+                    if (updateList.TryGetValue(story.StoryId.ToString(), out var newOrderNum))
+                    {
+                        story.ListOrder = newOrderNum;
+                    }
                 }
+                await _dbContext.SaveChangesAsync();
             }
-            await _dbContext.SaveChangesAsync();
+            else
+            {
+                throw new Exception("Order update failed stories not found");
+            }
         }
 
         public async System.Threading.Tasks.Task ChangeState(int userId, int storyId, int stateId)
@@ -116,6 +124,7 @@ namespace WorkTracker.Repositories
                                  join ut in _dbContext.UserStory on s.StoryId equals ut.StoryId
                                  where ut.UserId == userId && s.StoryId == storyId
                                  select s).FirstOrDefaultAsync();
+            if (story == null) throw new Exception("Change state failed story not found");
             story.StateId = stateId;
             await _dbContext.SaveChangesAsync();
         }
@@ -126,7 +135,7 @@ namespace WorkTracker.Repositories
                                join us in _dbContext.UserStory on s.StoryId equals us.StoryId
                                where s.StoryId == storyId && us.UserId == userId
                                select s).AnyAsync();
-            if (!story) throw new Exception(string.Format("Task not found for user {0}", userId));
+            if (!story) throw new Exception($"Task not found for user {userId}");
 
             var tasks = await _dbContext.Task.Where(w => w.StoryId == storyId).ToListAsync();
             return Mapper.Map(tasks);
@@ -142,8 +151,7 @@ namespace WorkTracker.Repositories
         public async System.Threading.Tasks.Task UpdateTasks(List<Models.ServiceModels.Task> taskList)
         {
             var editList = Mapper.Map(taskList);
-            List<int> idList = new List<int>();
-            foreach (var item in editList) idList.Add(item.TaskId);
+            var idList = editList.Select(s => s.TaskId).ToList();
             var existingTasks = _dbContext.Task.Where(w => idList.Contains(w.TaskId));
             foreach(var task in existingTasks)
             {

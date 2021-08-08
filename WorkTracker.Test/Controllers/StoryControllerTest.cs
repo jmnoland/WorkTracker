@@ -25,7 +25,7 @@ namespace WorkTracker.Test.Controllers
             _storyInterface = new Mock<IStoryService>();
             _storyController = new StoryController(_storyInterface.Object);
 
-            _appSettings = Helper.getAppSettings();
+            _appSettings = Helper.GetAppSettings();
             var permissions = new string[]
             {
                 "create_story",

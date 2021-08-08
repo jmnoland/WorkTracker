@@ -208,15 +208,18 @@ namespace WorkTracker.Models.Mapper
                 StoryId = request.StoryId
             };
             var taskList = new List<ServiceModels.Task>();
-            foreach (var task in request.Tasks)
+            if (request.Tasks != null)
             {
-                taskList.Add(new ServiceModels.Task
+                foreach (var task in request.Tasks)
                 {
-                    Description = task.Description,
-                    Complete = task.Complete,
-                    StoryId = task.StoryId,
-                    TaskId = task.TaskId
-                });
+                    taskList.Add(new ServiceModels.Task
+                    {
+                        Description = task.Description,
+                        Complete = task.Complete,
+                        StoryId = task.StoryId,
+                        TaskId = task.TaskId
+                    });
+                }   
             }
             return (story, taskList);
         }

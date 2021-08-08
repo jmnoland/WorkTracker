@@ -21,7 +21,7 @@ namespace WorkTracker.Test.Controllers
         private readonly string _token;
         public UserControllerTest()
         {
-            _appSettings = Helper.getAppSettings();
+            _appSettings = Helper.GetAppSettings();
             var permissions = new string[]
             {
                 "create_story",
