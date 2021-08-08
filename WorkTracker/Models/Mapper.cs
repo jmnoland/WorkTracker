@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using WorkTracker.Models.Requests;
 
-namespace WorkTracker.Models.Mapper
+namespace WorkTracker.Models
 {
     public class Mapper
     {
@@ -27,26 +27,6 @@ namespace WorkTracker.Models.Mapper
                 temp.Add(Map(user));
             }
             return temp;
-        }
-
-        //  User request mapping
-        public static ServiceModels.User Map(CreateUserRequest request)
-        {
-            return new ServiceModels.User
-            {
-                Email = request.Email,
-                Name = request.Name,
-                Password = request.Password,
-                RoleId = (int)request.RoleId,
-                UserId = 0
-            };
-        }
-        public static ServiceModels.User Map(UpdateUserRequest request, ServiceModels.User user)
-        {
-            user.Email = request.Email == user.Email ? user.Email : request.Email;
-            user.Name = request.Name == user.Name ? user.Name : request.Name;
-            user.RoleId = request.RoleId == user.RoleId ? user.RoleId : (int)request.RoleId;
-            return user;
         }
         #endregion
 
@@ -163,11 +143,32 @@ namespace WorkTracker.Models.Mapper
             }
             return tempList;
         }
+        #endregion
 
+        #region Requests
+        //  User request mapping
+        public static ServiceModels.User Map(CreateUserRequest request)
+        {
+            return new ServiceModels.User
+            {
+                Email = request.Email,
+                Name = request.Name,
+                Password = request.Password,
+                RoleId = (int)request.RoleId,
+                UserId = 0
+            };
+        }
+        public static ServiceModels.User Map(UpdateUserRequest request, ServiceModels.User user)
+        {
+            user.Email = request.Email == user.Email ? user.Email : request.Email;
+            user.Name = request.Name == user.Name ? user.Name : request.Name;
+            user.RoleId = request.RoleId == user.RoleId ? user.RoleId : (int)request.RoleId;
+            return user;
+        }
         // Story create request mapping
         public static ServiceModels.Story Map(CreateStoryRequest request)
         {
-            var story = new ServiceModels.Story
+            return new ServiceModels.Story
             {
                 Description = request.Description,
                 Title = request.Title,
@@ -177,7 +178,6 @@ namespace WorkTracker.Models.Mapper
                 StateId = request.StateId,
                 StoryId = 0
             };
-            return story;
         }
         public static List<ServiceModels.Task> Map(CreateStoryRequest request, int storyId)
         {

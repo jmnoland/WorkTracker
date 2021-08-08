@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using WorkTracker.Models.Mapper;
+using WorkTracker.Models;
 using WorkTracker.Models.Requests;
 using WorkTracker.Repositories.Interfaces;
 using WorkTracker.Services.Interfaces;

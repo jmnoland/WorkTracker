@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WorkTracker.Repositories
 {
-    public class Mapper
+    public static class Mapper
     {
         #region UserMapping
         public static Models.ServiceModels.User MapUser(SqlDataReader rdr)

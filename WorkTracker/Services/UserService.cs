@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using WorkTracker.Repositories.Interfaces;
-using WorkTracker.Models.Mapper;
+using WorkTracker.Models;
 using WorkTracker.Models.ServiceModels;
 using WorkTracker.Services.Interfaces;
 using WorkTracker.Models.Requests;
