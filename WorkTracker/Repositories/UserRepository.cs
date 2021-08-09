@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,24 +19,24 @@ namespace WorkTracker.Repositories
 
         public async Task<List<Models.ServiceModels.User>> GetAllUsers(int teamId)
         {
-            var team = _dbContext.Teams.Where(w => w.TeamId == teamId).FirstOrDefault();
+            var team = _dbContext.Teams.FirstOrDefault(w => w.TeamId == teamId);
             var userList = new List<User>();
-            if (team != null)
+            if (team == null) return Mapper.Map(userList);
+            if (team.OrganisationId != null)
             {
-                if (team.OrganisationId != null)
-                {
-                    userList = await (from users in _dbContext.Users
-                                      join ut in _dbContext.UserTeams on users.UserId equals ut.UserId
-                                      join teams in _dbContext.Teams on ut.TeamId equals teams.TeamId
-                                      where teams.OrganisationId == team.OrganisationId
-                                      select users).ToListAsync();
-                }
                 userList = await (from users in _dbContext.Users
                                   join ut in _dbContext.UserTeams on users.UserId equals ut.UserId
-                                  where ut.TeamId == team.TeamId
+                                  join teams in _dbContext.Teams on ut.TeamId equals teams.TeamId
+                                  where teams.OrganisationId == team.OrganisationId
                                   select users).ToListAsync();
             }
-
+            else
+            {
+                userList = await (from users in _dbContext.Users
+                              join ut in _dbContext.UserTeams on users.UserId equals ut.UserId
+                              where ut.TeamId == team.TeamId
+                              select users).ToListAsync();
+            }
             return Mapper.Map(userList);
         }
 
@@ -58,12 +57,8 @@ namespace WorkTracker.Repositories
 
         public async Task<Models.ServiceModels.User> GetUser(int userId)
         {
-            var user = await _dbContext.Users.Where(w => w.UserId == userId).FirstOrDefaultAsync();
-            if (user != null)
-            {
-                return Mapper.Map(user);
-            }
-            return null;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(w => w.UserId == userId);
+            return user == null ? null : Mapper.Map(user);
         }
 
         public async Task<int> CreateUser(Models.ServiceModels.User user)
@@ -81,7 +76,7 @@ namespace WorkTracker.Repositories
 
         public async System.Threading.Tasks.Task DeleteUser(int userId)
         {
-            string query = @"DELETE FROM UserStory WHERE UserId = @userId
+            const string query = @"DELETE FROM UserStory WHERE UserId = @userId
                              DELETE FROM UserTeams WHERE UserId = @userId
                              DELETE FROM Users WHERE UserId = @userId";
 
@@ -94,6 +89,5 @@ namespace WorkTracker.Repositories
                 await conn.CloseAsync();
             }
         }
-
     }
 }

@@ -21,13 +21,13 @@ namespace WorkTracker.Controllers
         }
 
         [Authorize(Roles = "view_user")]
-        [HttpGet("{teamId}")]
+        [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
             var currentUserId = Helper.GetRequestUserId(HttpContext);
             if (currentUserId == null) return BadRequest("UserId missing");
             var userList = await _userService.GetUsersByTeamId((int)currentUserId);
-            if (userList == null) return NoContent();
+            if (!userList.Any()) return NoContent();
             return Ok(userList);
         }
 
@@ -38,7 +38,7 @@ namespace WorkTracker.Controllers
             var currentUserId = Helper.GetRequestUserId(HttpContext);
             if (currentUserId == null) return BadRequest("UserId missing");
             var response = await _userService.GetUserDetail((int)currentUserId);
-            if (response == null) return NoContent();
+            if (!response.Users.Any()) return NoContent();
             return Ok(response);
         }
 
@@ -46,7 +46,7 @@ namespace WorkTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
-            if (request.Validate().Count() > 0) return BadRequest("Invalid request");
+            if (request.Validate().Any()) return BadRequest("Invalid request");
             try
             {
                 await _userService.CreateUser(request);
@@ -62,7 +62,7 @@ namespace WorkTracker.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] CreateUserRequest request)
         {
-            if (request.Validate().Count() > 0) return BadRequest("Invalid request");
+            if (request.Validate().Any()) return BadRequest("Invalid request");
 
             await _userService.RegisterUser(request);
             return Ok("User registered successfully");
@@ -74,7 +74,7 @@ namespace WorkTracker.Controllers
         {
             var currentUserId = Helper.GetRequestUserId(HttpContext);
             if (currentUserId == null) return BadRequest("UserId missing");
-            if (request.Validate().Count() > 0) return BadRequest("Invalid request");
+            if (request.Validate().Any()) return BadRequest("Invalid request");
             if (request.UserId != currentUserId) return BadRequest("UserId must match");
             try
             {

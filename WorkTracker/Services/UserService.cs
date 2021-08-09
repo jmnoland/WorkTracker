@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using WorkTracker.Repositories.Interfaces;
 using WorkTracker.Models;
-using WorkTracker.Models.ServiceModels;
 using WorkTracker.Services.Interfaces;
 using WorkTracker.Models.Requests;
 using System.Threading.Tasks;
@@ -34,44 +32,33 @@ namespace WorkTracker.Services
         public async Task<List<Models.DTOs.User>> GetAllUsers(int teamId)
         {
             var result = await _userRepository.GetAllUsers(teamId);
-            if (result != null)
-            {
-                return Mapper.Map(result);
-            }
-            return null;
+            return Mapper.Map(result);
         }
 
         public async Task<List<Models.DTOs.User>> GetUsersByTeamId(int currentUserId)
         {
-            var teams = _teamRepository.GetByUserId(currentUserId);
+            var teams = await _teamRepository.GetByUserId(currentUserId);
             var result = await _userRepository.GetUsersByTeamId(teams.Select(s => s.TeamId));
-            if (result != null)
-            {
-                return Mapper.Map(result);
-            }
-            return null;
+            return Mapper.Map(result);
         }
 
         public async Task<Models.DTOs.UserDetail> GetUserDetail(int userId)
         {
-            var teams = _teamRepository.GetByUserId(userId);
-            if (teams.Count() > 0)
+            var teams = await _teamRepository.GetByUserId(userId);
+            var details = new Models.DTOs.UserDetail()
             {
-                var details = new Models.DTOs.UserDetail()
-                {
-                    States = new List<Models.DTOs.State>(),
-                    Teams = new List<Models.DTOs.Team>(),
-                    Users = new List<Models.DTOs.User>()
-                };
-                details.Users.AddRange(Mapper.Map(await _userRepository.GetAllUsers(teams[0].TeamId)));
-                foreach (var team in teams)
-                {
-                    details.States.AddRange(Mapper.Map(await _stateRepository.GetByTeamId(team.TeamId)));
-                    details.Teams.Add(Mapper.Map(team));
-                }
-                return details;
+                States = new List<Models.DTOs.State>(),
+                Teams = new List<Models.DTOs.Team>(),
+                Users = new List<Models.DTOs.User>()
+            };
+            if (!teams.Any()) return details;
+            details.Users.AddRange(Mapper.Map(await _userRepository.GetAllUsers(teams[0].TeamId)));
+            foreach (var team in teams)
+            {
+                details.States.AddRange(Mapper.Map(await _stateRepository.GetByTeamId(team.TeamId)));
+                details.Teams.Add(Mapper.Map(team));
             }
-            return null;
+            return details;
         }
 
         public async System.Threading.Tasks.Task CreateUser(CreateUserRequest request)

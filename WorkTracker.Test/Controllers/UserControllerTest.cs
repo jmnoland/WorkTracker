@@ -51,18 +51,27 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task GetUsers_Successful()
         {
-            var result = new List<Models.DTOs.User>();
+            var result = new List<Models.DTOs.User>
+            {
+                new Models.DTOs.User
+                {
+                    Email = "test@email.com",
+                    Name = "test",
+                    RoleId = 1,
+                    UserId = 2
+                }
+            };
             _userService.Setup(x => x.GetUsersByTeamId(0)).ReturnsAsync(result);
 
             var response = await _userController.GetUsers();
-            Assert.IsInstanceOf<ActionResult>(response);
+            Assert.IsInstanceOf<OkObjectResult>(response);
             var responseValue = ((OkObjectResult)response).Value;
             Assert.IsInstanceOf<List<Models.DTOs.User>>(responseValue);
         }
         [Test]
         public async Task GetUsers_NoResponse()
         {
-            List<Models.DTOs.User> result = null;
+            var result = new List<Models.DTOs.User>();
             _userService.Setup(x => x.GetUsersByTeamId(0)).ReturnsAsync(result);
 
             var response = await _userController.GetUsers();
@@ -72,7 +81,21 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task GetUserDetails_Successful()
         {
-            var result = new Models.DTOs.UserDetail();
+            var result = new Models.DTOs.UserDetail()
+            {
+                States = new List<Models.DTOs.State>(),
+                Teams = new List<Models.DTOs.Team>(),
+                Users = new List<Models.DTOs.User>
+                {
+                    new Models.DTOs.User
+                    {
+                        Email = "test@email.com",
+                        Name = "test",
+                        RoleId = 1,
+                        UserId = 2
+                    }
+                }
+            };
             _userService.Setup(x => x.GetUserDetail(0)).ReturnsAsync(result);
 
             var response = await _userController.GetUserDetails();
@@ -84,7 +107,12 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task GetUserDetails_NoResponse()
         {
-            Models.DTOs.UserDetail result = null;
+            var result = new Models.DTOs.UserDetail()
+            {
+                States = new List<Models.DTOs.State>(),
+                Teams = new List<Models.DTOs.Team>(),
+                Users = new List<Models.DTOs.User>()
+            };
             _userService.Setup(x => x.GetUserDetail(0)).ReturnsAsync(result);
 
             var response = await _userController.GetUserDetails();

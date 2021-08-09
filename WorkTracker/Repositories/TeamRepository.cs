@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 
@@ -20,7 +21,7 @@ namespace WorkTracker.Repositories
 
         public async System.Threading.Tasks.Task AssignUser(int userId, int teamId)
         {
-            string query = @"INSERT INTO UserTeams VALUES (@userId, @teamId)";
+            const string query = @"INSERT INTO UserTeams VALUES (@userId, @teamId)";
 
             var conn = (SqlConnection)_dbContext.Database.GetDbConnection();
             using (var cmd = new SqlCommand(query, conn))
@@ -33,11 +34,11 @@ namespace WorkTracker.Repositories
             }
         }
 
-        public List<Models.ServiceModels.Team> GetByUserId(int userId)
+        public async Task<List<Models.ServiceModels.Team>> GetByUserId(int userId)
         {
-            var userTeams = _dbContext.UserTeams
+            var userTeams = await _dbContext.UserTeams
                 .Where(w => w.UserId == userId)
-                .Select(s => s.TeamId).ToList();
+                .Select(s => s.TeamId).ToListAsync();
             return Mapper.Map(_dbContext.Teams.Where(w => userTeams.Contains(w.TeamId)).ToList());
         }
     }

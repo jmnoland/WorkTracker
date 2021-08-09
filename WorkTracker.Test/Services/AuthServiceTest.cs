@@ -27,7 +27,7 @@ namespace WorkTracker.Test.Services
             _stateRepository = new Mock<IStateRepository>();
             _serviceLogRepository = new Mock<IServiceLogRepository>();
             _appSettings = Helper.GetAppSettings();
-            IOptions<AppSettings> optionParameter = Options.Create(_appSettings);
+            var optionParameter = Options.Create(_appSettings);
             _authService = new AuthService(
                 _roleRepository.Object,
                 _userRepository.Object,

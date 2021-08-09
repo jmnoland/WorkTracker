@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WorkTracker.Models.DTOs;
 using WorkTracker.Models.Requests;
@@ -44,7 +44,7 @@ namespace WorkTracker.Controllers
         {
             var userId = Helper.GetRequestUserId(HttpContext);
             if (userId == null) return BadRequest("User id missing");
-            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
+            if (request.Validate().Any()) return BadRequest("Request validation failed");
 
             await _storyService.CreateStory((int)userId, request);
             return Ok();
@@ -56,7 +56,7 @@ namespace WorkTracker.Controllers
         {
             var userId = Helper.GetRequestUserId(HttpContext);
             if (userId == null) return BadRequest("User id missing");
-            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
+            if (request.Validate().Any()) return BadRequest("Request validation failed");
 
             await _storyService.UpdateStory(request, (int)userId);
             return Ok();
@@ -100,7 +100,7 @@ namespace WorkTracker.Controllers
         {
             var userId = Helper.GetRequestUserId(HttpContext);
             if (userId == null) return BadRequest("User id missing");
-            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
+            if (request.Validate().Any()) return BadRequest("Request validation failed");
 
             await _storyService.ChangeState((int)userId, storyId, request);
             return Ok();
@@ -112,7 +112,7 @@ namespace WorkTracker.Controllers
         {
             var userId = Helper.GetRequestUserId(HttpContext);
             if (userId == null) return BadRequest("User id missing");
-            if (request.Validate().Count > 0) return BadRequest("Request validation failed");
+            if (request.Validate().Any()) return BadRequest("Request validation failed");
 
             await _storyService.OrderUpdate((int)userId, request);
             return Ok();
