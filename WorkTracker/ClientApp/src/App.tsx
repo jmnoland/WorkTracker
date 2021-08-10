@@ -4,12 +4,12 @@ import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import Login from "./pages/login/login";
 import Report from "./pages/report/report";
 import Board from "./pages/board/board";
-import { theme } from "./constants/theme";
+import { Theme, theme } from "./constants/theme";
 import NavMenu from "./components/layout/NavMenu";
 import { UserDetailProvider, UserDetailContext } from "./context/userDetails";
 import { NotificationProvider } from "./context/notification";
 
-const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle<{theme: Theme}>`
     body
     {
         background: ${(props) => props.theme.colors.background};
@@ -32,7 +32,7 @@ const ContentContainer = styled.div`
   width: 100%;
 `;
 
-function Content({ children }) {
+function Content({ children } : { children: React.ReactNode }) {
   const { isLoggedIn } = useContext(UserDetailContext);
   if (isLoggedIn) {
     return <ContentContainer>{children}</ContentContainer>;
