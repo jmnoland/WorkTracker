@@ -1,12 +1,39 @@
 import React, { createContext, useState, useEffect } from "react";
+import { UserDetail } from '../types';
 import { decodeJwtToken } from "../helper";
 import { GetDetails } from "../services/user";
 
-export const UserDetailContext = createContext();
+interface UserDetailContext {
+    userDetail: UserDetail | null;
+    user: string | null;
+    permissions: string[];
+    isLoggedIn: boolean;
+    setUser: (user: string | null) => void;
+    setIsLoggedIn: (isLoggedIn: boolean) => void;
+    setTokenDetails: (token: string) => void;
+    logout: () => void;
+};
 
-export const UserDetailProvider = ({ children }) => {
+export const UserDetailContext = createContext<UserDetailContext>({
+    userDetail: null,
+    user: null,
+    permissions: [],
+    isLoggedIn: false,
+    setUser: () => {},
+    setIsLoggedIn: () => {},
+    setTokenDetails: () => {},
+    logout: () => {},
+});
+
+export const UserDetailProvider = ({ children }: { children: React.ReactNode }) => {
+  const initialUserDetail: UserDetail = {
+    organisation: null,
+    states: [],
+    teams: [],
+    users: [],
+  };
   const token = localStorage.getItem("X-User-Token");
-  const [userDetail, setUserDetail] = useState({});
+  const [userDetail, setUserDetail] = useState(initialUserDetail);
   const [decodedToken, setDecodedToken] = useState(
     token ? decodeJwtToken(token) : null
   );
@@ -30,12 +57,12 @@ export const UserDetailProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setPermissions([]);
-    setUserDetail({});
+    setUserDetail(initialUserDetail);
     setIsLoggedIn(false);
     localStorage.removeItem("X-User-Token");
   };
 
-  const setTokenDetails = (token) => {
+  const setTokenDetails = (token: string) => {
     const decodedToken = decodeJwtToken(token);
     setDecodedToken(decodedToken);
     if (decodedToken) {
