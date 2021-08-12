@@ -5,6 +5,6 @@ const SubText = styled.div`
   font-size: 12px;
 `;
 
-export default function BaseSubText({ children }) {
+export default function BaseSubText({ children }: { children: React.ReactNode }) {
   return <SubText>{children}</SubText>;
 }

@@ -2,14 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import Loading from "./loading";
 
-const Container = styled.div`
+const Container = styled.div<{ center?: boolean, small?: boolean }>`
   width: max-content;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
   padding: ${(props) => (props.small ? "0px" : props.theme.padding.default)};
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ primary?: boolean }>`
   background: ${(props) =>
     props.primary ? props.theme.colors.orange : props.theme.colors.light};
   color: ${(props) => props.theme.colors.white};
@@ -42,7 +42,7 @@ const Button = styled.button`
   }
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled.button<{ primary?: boolean }>`
   background: ${(props) =>
     props.primary ? props.theme.colors.orange : props.theme.colors.light};
   color: ${(props) => (props.primary ? props.theme.colors.white : "inherit")};
@@ -99,7 +99,7 @@ const DeleteButton = styled.button`
   }
 `;
 
-const SmallButton = styled.button`
+const SmallButton = styled.button<{ primary?: boolean }>`
   background: ${(props) =>
     props.primary ? props.theme.colors.orange : props.theme.colors.light};
   color: ${(props) => props.theme.colors.white};
@@ -155,8 +155,19 @@ const InactivePrimary = styled.button`
   }
 `;
 
+interface BaseButtonProps {
+    onClick: () => void;
+    center?: boolean;
+    loading: boolean;
+    primary?: boolean;
+    children: React.ReactNode;
+    isLoginButton?: boolean;
+    isSmallButton?: boolean;
+    isDeleteButton?: boolean;
+    isInactivePrimary?: boolean;
+}
+
 export default function BaseButton({
-  value,
   onClick,
   center,
   loading,
@@ -166,11 +177,11 @@ export default function BaseButton({
   isSmallButton,
   isDeleteButton,
   isInactivePrimary,
-}) {
+}: BaseButtonProps) {
   if (isLoginButton) {
     return (
       <Container center={center}>
-        <LoginButton value={value} primary={primary} onClick={onClick}>
+        <LoginButton primary={primary} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </LoginButton>
       </Container>
@@ -179,7 +190,7 @@ export default function BaseButton({
   if (isDeleteButton) {
     return (
       <Container center={center}>
-        <DeleteButton value={value} onClick={onClick}>
+        <DeleteButton onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </DeleteButton>
       </Container>
@@ -188,7 +199,7 @@ export default function BaseButton({
   if (isSmallButton) {
     return (
       <Container small center={center}>
-        <SmallButton value={value} primary={primary} onClick={onClick}>
+        <SmallButton primary={primary} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </SmallButton>
       </Container>
@@ -197,7 +208,7 @@ export default function BaseButton({
   if (isInactivePrimary) {
     return (
       <Container small center={center}>
-        <InactivePrimary value={value} onClick={onClick}>
+        <InactivePrimary onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </InactivePrimary>
       </Container>
@@ -205,7 +216,7 @@ export default function BaseButton({
   }
   return (
     <Container center={center}>
-      <Button value={value} primary={primary} onClick={onClick}>
+      <Button primary={primary} onClick={onClick}>
         {loading ? <Loading small primary={primary} /> : children}
       </Button>
     </Container>

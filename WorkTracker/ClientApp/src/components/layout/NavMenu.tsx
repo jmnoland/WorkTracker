@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { UserDetailContext } from "../../context/userDetails";
-import { MainTitle } from "../";
+import { MainTitle } from "..";
 
 const Navbar = styled.div`
   box-shadow: ${(props) => props.theme.border.shadow};
@@ -44,7 +44,7 @@ const ProfileContainer = styled.div`
 `;
 
 export default function NavMenu() {
-  const { isLoggedIn, logout } = useContext(UserDetailContext);
+  const { isLoggedIn, logout }: { isLoggedIn: boolean, logout: () => void } = useContext(UserDetailContext);
 
   if (!isLoggedIn) {
     return null;

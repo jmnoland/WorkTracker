@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { Error } from '../types';
 
-const Container = styled.div`
+const Container = styled.div<{ center?: boolean }>`
   position: relative;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
@@ -9,7 +10,7 @@ const Container = styled.div`
   padding: ${(props) => props.theme.padding.default};
 `;
 
-const TextAreaInput = styled.textarea`
+const TextAreaInput = styled.textarea<{ height: string | null, valid: boolean }>`
   width: 100%;
   height: ${(props) => (props.height ? props.height : "auto")};
   background: ${(props) => props.theme.colors.dark};
@@ -50,6 +51,18 @@ const ValidationLabel = styled.span`
   bottom: -12px;
 `;
 
+interface TextAreaProps {
+    value: string | number;
+    onChange: (val: string) => void;
+    onBlur: () => void;
+    validation: { errors: Error[] };
+    placeholder?: string;
+    center?: boolean;
+    height: string | null;
+    useRef: React.RefObject<HTMLTextAreaElement> | null | undefined;
+    type: string | null;
+}
+
 export function TextArea({
   value,
   onChange,
@@ -59,8 +72,7 @@ export function TextArea({
   center,
   height,
   useRef,
-  type,
-}) {
+}: TextAreaProps) {
   const valid = validation ? validation.errors.length === 0 : true;
 
   const errors =
@@ -69,7 +81,7 @@ export function TextArea({
       return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
     });
 
-  const valueChange = (e) => {
+  const valueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
   };
   return (
@@ -81,7 +93,6 @@ export function TextArea({
         placeholder={placeholder}
         value={value}
         valid={valid}
-        type={type}
         onChange={valueChange}
         onBlur={onBlur}
       />

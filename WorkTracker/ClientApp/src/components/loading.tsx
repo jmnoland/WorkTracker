@@ -8,8 +8,8 @@ const Container = styled.div`
   margin-right: auto;
 `;
 
-function getSize(small) {
-  const size = {};
+function getSize(small: boolean) {
+  const size = { width: "", height: "" };
   if (small) {
     size.width = "20px";
     size.height = "20px";
@@ -20,19 +20,16 @@ function getSize(small) {
   return size;
 }
 
-export default function Loading({ small, primary }) {
+export default function Loading({ small, primary }: { small: boolean, primary?: boolean }) {
   const size = getSize(small);
   return (
     <Container>
       <svg
-        svg="http://www.w3.org/2000/svg"
         xmlns="http://www.w3.org/2000/svg"
-        xlink="http://www.w3.org/1999/xlink"
         version="1.0"
         width={size.width}
         height={size.height}
         viewBox="0 0 128 128"
-        space="preserve"
       >
         <g>
           <path

@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { Error } from '../types';
 
-const Container = styled.div`
+const Container = styled.div<{ center?: boolean, isLogin?: boolean }>`
   position: relative;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
@@ -9,7 +10,7 @@ const Container = styled.div`
   padding: ${(props) => props.theme.padding.default};
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ isLogin?: boolean, valid?: boolean }>`
   width: ${(props) => (props.isLogin ? "190px" : "100%")};
   background: ${(props) => props.theme.colors.white};
   border: 2px solid
@@ -23,7 +24,7 @@ const Input = styled.input`
   }
 `;
 
-const TextAreaInput = styled.input`
+const TextAreaInput = styled.input<{ valid?: boolean, height?: string }>`
   width: 100%;
   height: ${(props) => (props.height ? props.height : "auto")};
   text-overflow: ellipsis;
@@ -56,6 +57,17 @@ const ValidationLabel = styled.span`
   bottom: -12px;
 `;
 
+interface BaseInputProps {
+    value: string | number;
+    onChange: (val: string | number) => void;
+    validation: { errors: Error[] };
+    label?: string;
+    position?: string;
+    isLogin?: boolean;
+    center?: boolean;
+    type?: string;
+}
+
 export default function BaseInput({
   value,
   onChange,
@@ -64,7 +76,7 @@ export default function BaseInput({
   position,
   center,
   type,
-}) {
+}: BaseInputProps) {
   const inputLabel =
     position === "above" ? (
       <LabelAbove>{label}</LabelAbove>
@@ -78,7 +90,7 @@ export default function BaseInput({
     return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
   });
 
-  const valueChange = (e) => {
+  const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
   return (
@@ -90,14 +102,14 @@ export default function BaseInput({
   );
 }
 
-export function LoginInput({ value, onChange, validation, label, type }) {
+export function LoginInput({ value, onChange, validation, label, type }: BaseInputProps) {
   const valid = validation.errors.length === 0;
 
   const errors = validation.errors.map((err) => {
     return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
   });
 
-  const valueChange = (e) => {
+  const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
   return (
@@ -109,6 +121,17 @@ export function LoginInput({ value, onChange, validation, label, type }) {
   );
 }
 
+interface TextFieldInputProps {
+    value: string | number;
+    height: string;
+    useRef: React.RefObject<HTMLInputElement> | null | undefined;
+    onBlur: () => void;
+    onChange: (val: string | number) => void;
+    validation: { errors: Error[] };
+    placeholder?: string;
+    center?: boolean;
+}
+
 export function TextFieldInput({
   value,
   height,
@@ -118,7 +141,7 @@ export function TextFieldInput({
   validation,
   placeholder,
   center,
-}) {
+}: TextFieldInputProps) {
   const valid = validation ? validation.errors.length === 0 : true;
 
   const errors =
@@ -127,7 +150,7 @@ export function TextFieldInput({
       return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
     });
 
-  const valueChange = (e) => {
+  const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
   return (
