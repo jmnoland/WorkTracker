@@ -4,7 +4,7 @@ import { TextFieldInput, TextArea } from "./index";
 
 const Container = styled.div``;
 
-const TextContainer = styled.div`
+const TextContainer = styled.div<{ height?: string, margin?: string, useBackground?: boolean }>`
   word-break: break-word;
   text-overflow: ellipsis;
   height: ${(props) => (props.height ? props.height : "auto")};
@@ -39,7 +39,19 @@ const TextContainer = styled.div`
   }
 `;
 
-export function Text({ value, height, margin, useBackground, onClick }) {
+export function Text({
+    value,
+    height,
+    margin,
+    useBackground,
+    onClick
+}: {
+    value: string,
+    height?: string,
+    margin?: string,
+    useBackground?: boolean,
+    onClick: () => void,
+}): JSX.Element {
   return (
     <Container>
       <TextContainer
@@ -62,12 +74,24 @@ export function EditableText({
   useBackground,
   onChange,
   edit,
-}) {
+}: {
+  value: string,
+  type?: string,
+  height?: string,
+  margin?: string,
+  useBackground?: boolean,
+  onChange: (val: string) => void,
+  edit?: boolean,
+}): JSX.Element {
   const [canEdit, setCanEdit] = useState(!!edit);
-  const inputRef = useRef();
+  const inputRef = type !== "area" ? useRef<HTMLInputElement | null>(null): null;
+  const areaRef = type === "area" ? useRef<HTMLTextAreaElement | null>(null): null;
 
   useEffect(() => {
-    if (canEdit) inputRef.current.focus();
+    if (canEdit) {
+      if (type === "area") areaRef?.current?.focus();
+      else inputRef?.current?.focus();
+    }
   }, [canEdit]);
 
   const onClickHandler = () => {
@@ -77,7 +101,7 @@ export function EditableText({
   const editableElement =
     type === "area" ? (
       <TextArea
-        useRef={inputRef}
+        useRef={areaRef}
         height={height}
         onChange={onChange}
         value={value}

@@ -19,7 +19,7 @@ const TitleEnd = styled.span`
   color: ${(props) => props.theme.colors.white};
 `;
 
-export function LoginTitle() {
+export function LoginTitle(): JSX.Element {
   return (
     <LoginTitleContainer>
       <TitleStart>Work</TitleStart>
@@ -28,7 +28,7 @@ export function LoginTitle() {
   );
 }
 
-export function MainTitle() {
+export function MainTitle(): JSX.Element {
   return (
     <MainTitleContainer>
       <TitleStart>Work</TitleStart>

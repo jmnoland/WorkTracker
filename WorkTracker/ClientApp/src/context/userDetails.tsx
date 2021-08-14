@@ -19,13 +19,13 @@ export const UserDetailContext = createContext<UserDetailContext>({
     user: null,
     permissions: [],
     isLoggedIn: false,
-    setUser: () => {},
-    setIsLoggedIn: () => {},
-    setTokenDetails: () => {},
-    logout: () => {},
+    setUser: () => null,
+    setIsLoggedIn: () => null,
+    setTokenDetails: () => null,
+    logout: () => null,
 });
 
-export const UserDetailProvider = ({ children }: { children: React.ReactNode }) => {
+export const UserDetailProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const initialUserDetail: UserDetail = {
     organisation: null,
     states: [],

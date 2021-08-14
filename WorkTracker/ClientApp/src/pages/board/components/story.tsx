@@ -24,7 +24,17 @@ const Row = styled.div`
 
 const Col = styled.div``;
 
-export function Story({ title, createdBy, updatedAt }) {
+interface StoryProps {
+  title?: string;
+  createdBy: string;
+  updatedAt: string | null;
+}
+
+export function Story({
+  title,
+  createdBy,
+  updatedAt
+}: StoryProps): JSX.Element {
   return (
     <StoryContainer>
       <div>{title}</div>

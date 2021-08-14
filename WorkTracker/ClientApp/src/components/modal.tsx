@@ -78,7 +78,7 @@ interface ModalProps {
     title: React.ReactNode;
     visible: boolean;
     footer: React.ReactNode;
-    footerLeft: React.ReactNode;
+    footerLeft?: React.ReactNode;
     onClose: () => void;
     children: React.ReactNode;
 }
@@ -90,9 +90,9 @@ export function Modal({
   footerLeft,
   onClose,
   children,
-}: ModalProps) {
+}: ModalProps): JSX.Element {
   if (!visible) {
-    return null;
+    return <></>;
   }
 
   return (

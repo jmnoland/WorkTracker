@@ -8,6 +8,7 @@ import {
   ScrollableContainer,
 } from "../../../components";
 import { GetStoryTasks, DeleteTask } from "../../../services/story";
+import { State, Task, Story } from "../../../types";
 
 const Content = styled.div``;
 
@@ -43,6 +44,22 @@ const TaskHeader = styled.div`
   display: flex;
 `;
 
+interface ViewStoryModalProps {
+  initialValues: Story;
+  userStates?: State[];
+  openModal: boolean;
+  deleteStory: (storyId: number, stateId: number) => void;
+  onCancel: () => void;
+  onSave: (
+      storyId: number,
+      listOrder: number,
+      title: string,
+      description: string,
+      stateId: number,
+      tasks: Task[]
+  ) => void;
+}
+
 export function ViewStoryModal({
   initialValues,
   userStates,
@@ -50,7 +67,7 @@ export function ViewStoryModal({
   deleteStory,
   onCancel,
   onSave,
-}) {
+}: ViewStoryModalProps): JSX.Element {
   const [tasks, setTasks] = useState(
     (initialValues && initialValues.tasks) || []
   );
@@ -60,8 +77,10 @@ export function ViewStoryModal({
 
   useEffect(() => {
     async function fetchData() {
-      const data = await GetStoryTasks(initialValues.storyId);
-      setTasks(data);
+      if (initialValues.storyId !== undefined) {
+          const data = await GetStoryTasks(initialValues.storyId);
+          setTasks(data);
+      }
     }
     fetchData();
   }, []);
@@ -74,7 +93,7 @@ export function ViewStoryModal({
         validation: {
           rules: [
             {
-              validate: (value) => {
+              validate: (value: string) => {
                 return value !== "" && value;
               },
               message: "Please enter a title",
@@ -122,19 +141,19 @@ export function ViewStoryModal({
     }
   };
 
-  const removeTask = async (taskId) => {
+  const removeTask = async (taskId: number) => {
     const taskToRemove = tasks.filter((task) => task.taskId === taskId)[0];
     if (taskToRemove && !taskToRemove.new) await DeleteTask(taskId);
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
 
-  const handleChange = (taskId, value) => {
+  const handleChange = (taskId: number, value: string) => {
     const temp = tasks.find((task) => task.taskId === taskId);
     const items = tasks.reduce((total, task) => {
       if (task.taskId !== taskId) total.push(task);
-      else total.push({ ...temp, description: value });
+      else total.push({ ...temp, description: value } as Task);
       return total;
-    }, []);
+    }, [] as Task[]);
     setTasks(items);
   };
 
@@ -146,7 +165,7 @@ export function ViewStoryModal({
         const desc = task.description && task.description.trim();
         if (desc) total.push(task);
         return total;
-      }, []);
+      }, [] as Task[]);
     try {
       await onSave(
         storyId.value,
@@ -165,7 +184,7 @@ export function ViewStoryModal({
 
   const footerContent = (
     <Footer>
-      <Button secondary onClick={onCancel}>
+      <Button onClick={onCancel}>
         Cancel
       </Button>
       <Button primary onClick={handleSubmit} loading={loading}>
@@ -207,7 +226,7 @@ export function ViewStoryModal({
                 edit={task.new}
                 height={"30px"}
                 margin={"10px"}
-                onChange={(e) => handleChange(task.taskId, e)}
+                onChange={(e: string) => handleChange(task.taskId, e)}
                 value={task.description}
               />
             </TaskInputContainer>

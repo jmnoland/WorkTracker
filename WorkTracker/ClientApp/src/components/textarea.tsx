@@ -10,7 +10,7 @@ const Container = styled.div<{ center?: boolean }>`
   padding: ${(props) => props.theme.padding.default};
 `;
 
-const TextAreaInput = styled.textarea<{ height: string | null, valid: boolean }>`
+const TextAreaInput = styled.textarea<{ height?: string, valid: boolean }>`
   width: 100%;
   height: ${(props) => (props.height ? props.height : "auto")};
   background: ${(props) => props.theme.colors.dark};
@@ -55,12 +55,12 @@ interface TextAreaProps {
     value: string | number;
     onChange: (val: string) => void;
     onBlur: () => void;
-    validation: { errors: Error[] };
+    validation?: { errors: Error[] };
     placeholder?: string;
     center?: boolean;
-    height: string | null;
+    height?: string;
     useRef: React.RefObject<HTMLTextAreaElement> | null | undefined;
-    type: string | null;
+    type?: string;
 }
 
 export function TextArea({
@@ -72,7 +72,7 @@ export function TextArea({
   center,
   height,
   useRef,
-}: TextAreaProps) {
+}: TextAreaProps): JSX.Element {
   const valid = validation ? validation.errors.length === 0 : true;
 
   const errors =

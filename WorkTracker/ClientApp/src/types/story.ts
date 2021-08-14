@@ -1,11 +1,14 @@
 import { Task } from './task';
 
 export interface Story {
-    stateId: number;
-    projectId: number | null;
-    sprintId: number | null;
-    title: string;
-    description: string;
-    listOrder: number;
-    tasks: Task[];
+  storyId?: number;
+  stateId?: number;
+  projectId?: number;
+  sprintId?: number;
+  title?: string;
+  description?: string;
+  listOrder?: number;
+  createdBy?: string,
+  modifiedAt?: string,
+  tasks?: Task[];
 };

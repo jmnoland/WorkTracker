@@ -76,7 +76,7 @@ export default function BaseInput({
   position,
   center,
   type,
-}: BaseInputProps) {
+}: BaseInputProps): JSX.Element {
   const inputLabel =
     position === "above" ? (
       <LabelAbove>{label}</LabelAbove>
@@ -102,7 +102,13 @@ export default function BaseInput({
   );
 }
 
-export function LoginInput({ value, onChange, validation, label, type }: BaseInputProps) {
+export function LoginInput({
+    value,
+    onChange,
+    validation,
+    label,
+    type
+}: BaseInputProps): JSX.Element {
   const valid = validation.errors.length === 0;
 
   const errors = validation.errors.map((err) => {
@@ -122,14 +128,14 @@ export function LoginInput({ value, onChange, validation, label, type }: BaseInp
 }
 
 interface TextFieldInputProps {
-    value: string | number;
-    height: string;
-    useRef: React.RefObject<HTMLInputElement> | null | undefined;
-    onBlur: () => void;
-    onChange: (val: string | number) => void;
-    validation: { errors: Error[] };
-    placeholder?: string;
-    center?: boolean;
+  value: string;
+  height?: string;
+  useRef?: React.RefObject<HTMLInputElement> | null | undefined;
+  onBlur?: () => void;
+  onChange: (val: string) => void;
+  validation?: { errors: Error[] };
+  placeholder?: string;
+  center?: boolean;
 }
 
 export function TextFieldInput({
@@ -141,7 +147,7 @@ export function TextFieldInput({
   validation,
   placeholder,
   center,
-}: TextFieldInputProps) {
+}: TextFieldInputProps): JSX.Element {
   const valid = validation ? validation.errors.length === 0 : true;
 
   const errors =

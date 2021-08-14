@@ -158,7 +158,7 @@ const InactivePrimary = styled.button`
 interface BaseButtonProps {
     onClick: () => void;
     center?: boolean;
-    loading: boolean;
+    loading?: boolean;
     primary?: boolean;
     children: React.ReactNode;
     isLoginButton?: boolean;
@@ -177,7 +177,7 @@ export default function BaseButton({
   isSmallButton,
   isDeleteButton,
   isInactivePrimary,
-}: BaseButtonProps) {
+}: BaseButtonProps): JSX.Element {
   if (isLoginButton) {
     return (
       <Container center={center}>

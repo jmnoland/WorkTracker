@@ -31,7 +31,7 @@ const VersionNumber = styled.div`
 
 const Content = styled.div``;
 
-export default function Login() {
+export default function Login(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
   const [register, setRegister] = useState(false);
@@ -48,7 +48,7 @@ export default function Login() {
         validation: {
           rules: [
             {
-              validate: (value) => {
+              validate: (value: string) => {
                 return value !== "" && value;
               },
               message: "Please enter an email",
@@ -62,7 +62,7 @@ export default function Login() {
         validation: {
           rules: [
             {
-              validate: (value) => {
+              validate: (value: string) => {
                 return value !== "" && value;
               },
               message: "Please enter a password",
@@ -104,7 +104,7 @@ export default function Login() {
   };
 
   if (isLoggedIn) {
-    return null;
+    return <></>;
   }
 
   if (register) {

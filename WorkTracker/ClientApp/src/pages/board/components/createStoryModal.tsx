@@ -8,6 +8,7 @@ import {
   TextArea,
   ScrollableContainer,
 } from "../../../components";
+import { State, Task } from "../../../types";
 
 const Content = styled.div``;
 
@@ -42,6 +43,21 @@ const TaskHeader = styled.div`
   display: flex;
 `;
 
+interface CreateStoryModalProps {
+  defaultState?: number;
+  storyPosition?: number;
+  userStates?: State[];
+  openModal: boolean;
+  onCancel: () => void;
+  onSave: (
+    title: string,
+    description: string,
+    state: number,
+    tasks: Task[],
+    storyPosition: number,
+  ) => Promise<void>;
+}
+
 export function CreateStoryModal({
   defaultState,
   storyPosition,
@@ -49,7 +65,7 @@ export function CreateStoryModal({
   openModal,
   onCancel,
   onSave,
-}) {
+}: CreateStoryModalProps): JSX.Element {
   const [tasks, setTasks] = useState([
     { taskId: 1, storyId: 0, description: "", complete: false },
   ]);
@@ -64,7 +80,7 @@ export function CreateStoryModal({
         validation: {
           rules: [
             {
-              validate: (value) => {
+              validate: (value: string) => {
                 return value !== "" && value;
               },
               message: "Please enter a title",
@@ -96,16 +112,16 @@ export function CreateStoryModal({
     ]);
     setTaskCount(taskCount + 1);
   };
-  const removeTask = (taskId) => {
+  const removeTask = (taskId: number) => {
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
-  const handleChange = (taskId, value) => {
+  const handleChange = (taskId: number, value: string) => {
     const temp = tasks.find((task) => task.taskId === taskId);
     const items = tasks.reduce((total, task) => {
       if (task.taskId !== taskId) total.push(task);
-      else total.push({ ...temp, description: value });
+      else total.push({ ...temp, description: value } as Task);
       return total;
-    }, []);
+    }, [] as Task[]);
     setTasks(items);
   };
 
@@ -117,14 +133,14 @@ export function CreateStoryModal({
         const desc = task.description && task.description.trim();
         if (desc) total.push(task);
         return total;
-      }, []);
+      }, [] as Task[]);
     try {
       await onSave(
         title.value,
         description.value,
-        defaultState,
+        defaultState ?? 0,
         finalTasks,
-        storyPosition
+        storyPosition ?? 0,
       );
       fields.reset();
       onCancel();
@@ -135,7 +151,7 @@ export function CreateStoryModal({
 
   const footerContent = (
     <Footer>
-      <Button secondary onClick={onCancel}>
+      <Button onClick={onCancel}>
         Cancel
       </Button>
       <Button primary onClick={handleSubmit} loading={loading}>

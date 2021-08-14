@@ -20,13 +20,18 @@ const InLineLinkContainer = styled.span`
   }
 `;
 
-interface LinkProps {
+interface NavLinkProps {
     to: string;
     children: React.ReactNode;
     onClick: () => void;
 }
 
-export function NavLink({ to, children }: LinkProps) {
+interface LinkProps {
+    children: React.ReactNode;
+    onClick: () => void;
+}
+
+export function NavLink({ to, children }: NavLinkProps): JSX.Element {
   return (
     <LinkContainer>
       <Link to={to}>{children}</Link>
@@ -34,7 +39,7 @@ export function NavLink({ to, children }: LinkProps) {
   );
 }
 
-export function InLineLink({ onClick, children }: LinkProps) {
+export function InLineLink({ onClick, children }: LinkProps): JSX.Element {
   return (
     <InLineLinkContainer>
       <span onClick={onClick}>{children}</span>
@@ -42,7 +47,7 @@ export function InLineLink({ onClick, children }: LinkProps) {
   );
 }
 
-export function BaseLink({ onClick, children }: LinkProps) {
+export function BaseLink({ onClick, children }: LinkProps): JSX.Element {
   return (
     <LinkContainer>
       <span onClick={onClick}>{children}</span>

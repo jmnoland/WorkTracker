@@ -43,11 +43,11 @@ const ProfileContainer = styled.div`
   }
 `;
 
-export default function NavMenu() {
+export default function NavMenu(): JSX.Element {
   const { isLoggedIn, logout }: { isLoggedIn: boolean, logout: () => void } = useContext(UserDetailContext);
 
   if (!isLoggedIn) {
-    return null;
+    return <></>;
   }
 
   return (

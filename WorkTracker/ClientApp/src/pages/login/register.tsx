@@ -21,7 +21,9 @@ const ButtonContainer = styled.div`
 
 const Content = styled.div``;
 
-export default function Register({ setRegister }) {
+export default function Register({ setRegister }
+  : { setRegister: (val: boolean) => void }
+): JSX.Element {
   const [loading, setLoading] = useState(false);
   const initialValues = {
     email: "",
@@ -37,7 +39,7 @@ export default function Register({ setRegister }) {
         validation: {
           rules: [
             {
-              validate: (value) => {
+              validate: (value: string) => {
                 return value !== "" && value;
               },
               message: "Please enter an email",
@@ -55,7 +57,7 @@ export default function Register({ setRegister }) {
         validation: {
           rules: [
             {
-              validate: (value) => {
+              validate: (value: string) => {
                 return value !== "" && value;
               },
               message: "Please enter a password",
@@ -69,13 +71,13 @@ export default function Register({ setRegister }) {
         validation: {
           rules: [
             {
-              validate: (value) => {
+              validate: (value: string) => {
                 return value !== "" && value;
               },
               message: "Please retype your password",
             },
             {
-              validate: (value, data) => {
+              validate: (value: string, data: { password: { value: string } }) => {
                 return value === data.password.value;
               },
               message: "Passwords must match",

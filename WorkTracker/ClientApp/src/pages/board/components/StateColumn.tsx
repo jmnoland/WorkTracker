@@ -5,6 +5,7 @@ import { Story } from "./story";
 import { UserDetailContext } from "../../../context/userDetails";
 import { Button } from "../../../components";
 import { getUserMapping, parseDateTime } from "../../../helper";
+import { State, Story as StoryType } from "../../../types";
 
 const StateContainer = styled.div`
   box-shadow: 0px 0px 5px 2px ${(props) => props.theme.colors.dark};
@@ -49,7 +50,11 @@ const StateButton = styled.div`
   float: right;
 `;
 
-function getMaxHeight(container, header, footer) {
+function getMaxHeight(
+  container: HTMLDivElement,
+  header: HTMLDivElement,
+  footer: HTMLDivElement,
+): string {
   const hh = header.getBoundingClientRect().height;
   const ch = container.getBoundingClientRect().height;
   const fh = footer.getBoundingClientRect().height;
@@ -57,16 +62,31 @@ function getMaxHeight(container, header, footer) {
   return `${ch - hh - fh - 22 - 20}px`;
 }
 
-export function StateColumn({ state, stories, viewEdit, createNew }) {
+interface StateColumnProps {
+  state: State;
+  stories?: StoryType[];
+  viewEdit: (story: StoryType) => void;
+  createNew: (stateId: number) => void;
+  onDragEnd: (result: any) => Promise<void>
+}
+
+export function StateColumn({
+  state,
+  stories,
+  viewEdit,
+  createNew,
+}: StateColumnProps): JSX.Element {
   const {
-    userDetail: { users },
+    userDetail,
   } = useContext(UserDetailContext);
-  const headerRef = useRef();
-  const contentRef = useRef();
-  const containerRef = useRef();
-  const footerRef = useRef();
-  const [height, setHeight] = useState(-1);
-  const droppableStyling = height !== -1 ? { minHeight: height } : {};
+  const users = userDetail?.users;
+
+  const headerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState("");
+  const droppableStyling = height !== "" ? { minHeight: height } : {};
 
   useEffect(() => {
     if (!stories) return;
@@ -121,7 +141,7 @@ export function StateColumn({ state, stories, viewEdit, createNew }) {
                       >
                         <Story
                           title={story.title}
-                          createdBy={userMapping[story.createdBy]}
+                          createdBy={story.createdBy ? userMapping[story.createdBy]: ""}
                           updatedAt={
                             story.modifiedAt
                               ? parseDateTime(story.modifiedAt)

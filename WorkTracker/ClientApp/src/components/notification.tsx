@@ -14,10 +14,10 @@ const Message = styled.div`
   color: ${(props) => props.theme.colors.success};
 `;
 
-export default function Notification() {
+export default function Notification(): JSX.Element {
   const { content, visible } = useContext(NotificationContext);
 
-  if (!visible) return null;
+  if (!visible) return <></>;
   return (
     <Container>
       <Message>{content}</Message>

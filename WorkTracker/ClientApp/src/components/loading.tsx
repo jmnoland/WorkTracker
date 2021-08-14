@@ -8,7 +8,7 @@ const Container = styled.div`
   margin-right: auto;
 `;
 
-function getSize(small: boolean) {
+function getSize(small: boolean): { width: string, height: string } {
   const size = { width: "", height: "" };
   if (small) {
     size.width = "20px";
@@ -20,7 +20,10 @@ function getSize(small: boolean) {
   return size;
 }
 
-export default function Loading({ small, primary }: { small: boolean, primary?: boolean }) {
+export default function Loading({
+    small,
+    primary
+}: { small: boolean, primary?: boolean }): JSX.Element {
   const size = getSize(small);
   return (
     <Container>

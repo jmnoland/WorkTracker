@@ -40,7 +40,7 @@ function Content({ children } : { children: React.ReactNode }) {
   return null;
 }
 
-export default function App() {
+export default function App(): JSX.Element {
   return (
     <ThemeProvider theme={theme}>
       <UserDetailProvider>

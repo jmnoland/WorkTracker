@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
 
-const Container = styled.div`
+const Container = styled.div<{ height: number }>`
   min-height: ${(props) => props.height}px;
   width: 100%;
   display: flex;
@@ -12,7 +12,7 @@ const Header = styled.div``;
 
 const Footer = styled.div``;
 
-const Content = styled.div`
+const Content = styled.div<{ topMargin: number }>`
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 7px;
@@ -32,12 +32,25 @@ const Content = styled.div`
   }
 `;
 
-function getMaxHeight(container, header, footer, contentMargin) {
+function getMaxHeight(
+  container: HTMLDivElement,
+  header: HTMLDivElement,
+  footer: HTMLDivElement,
+  contentMargin: number
+): string {
   const hh = header.getBoundingClientRect().height;
   const ch = container.getBoundingClientRect().height;
   const fh = footer.getBoundingClientRect().height;
   const margin = contentMargin >= 0 ? contentMargin : 0;
   return `${ch - hh - fh - margin}px`;
+}
+
+interface ScrollableContainerProps {
+  header: React.ReactNode;
+  footer?: React.ReactNode;
+  height: number;
+  contentTopMargin: number;
+  children: React.ReactNode;
 }
 
 export default function ScrollableContainer({
@@ -46,11 +59,11 @@ export default function ScrollableContainer({
   height,
   contentTopMargin,
   children,
-}) {
-  const headerRef = useRef();
-  const contentRef = useRef();
-  const containerRef = useRef();
-  const footerRef = useRef();
+}: ScrollableContainerProps): JSX.Element {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (headerRef.current && containerRef.current && footerRef.current) {

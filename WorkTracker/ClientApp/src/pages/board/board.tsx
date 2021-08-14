@@ -14,7 +14,13 @@ import {
   ChangeState,
 } from "../../services/story";
 import { StateColumn } from "./components/StateColumn";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import {
+  Dictionary,
+  Story,
+  Task,
+  DroppableType,
+} from "../../types";
 
 const BoardContainer = styled.div`
   height: 88vh;
@@ -29,26 +35,26 @@ const BoardContainer = styled.div`
   }
 `;
 
-export default function Board() {
+export default function Board(): JSX.Element {
   const { userDetail } = useContext(UserDetailContext);
   const { setContent } = useContext(NotificationContext);
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
-  const [viewStory, setViewStory] = useState({});
-  const [storyState, setStoryState] = useState(null);
-  const [stories, setStories] = useState();
+  const [viewStory, setViewStory] = useState<Story>({});
+  const [storyState, setStoryState] = useState<number | undefined>(undefined);
+  const [stories, setStories] = useState<Dictionary<Story[]>>();
 
-  async function getStateStories(stories, stateId, save) {
+  async function getStateStories(stories: Dictionary<Story[]>, stateId: number, save: boolean) {
     stories[stateId] = await GetStories(stateId);
     if (save) setStories(stories);
   }
 
   useEffect(() => {
     async function fetchData() {
-      const temp = {};
+      const temp: Dictionary<Story[]> = {};
       let count = 0;
-      userDetail.states.forEach(async (state) => {
+      userDetail?.states.forEach(async (state) => {
         temp[state.stateId] = await GetStories(state.stateId);
         count += 1;
         if (count === userDetail.states.length) {
@@ -56,31 +62,36 @@ export default function Board() {
         }
       });
     }
-    if (userDetail.states) {
+    if (userDetail?.states) {
       fetchData();
     }
-  }, [userDetail.states]);
+  }, [userDetail?.states]);
 
-  if (!userDetail.states) {
-    return null;
+  if (!userDetail?.states) {
+    return <></>;
   }
 
-  const reorder = (list, startIndex, endIndex) => {
+  const reorder = (list: Story[], startIndex: number, endIndex: number) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
     return result;
   };
 
-  const createPayload = (stateId, storyList) => {
+  const createPayload = (stateId: string | number, storyList: Story[]) => {
     const temp = storyList.reduce((total, story, index) => {
-      total[story.storyId] = index;
+      if (story.storyId !== undefined) total[story.storyId] = index;
       return total;
-    }, {});
+    }, {} as Dictionary<number>);
     return { stateId: Number(stateId), stories: temp };
   };
 
-  const move = (source, destination, droppableSource, droppableDestination) => {
+  const move = (
+    source: Story[],
+    destination: Story[],
+    droppableSource: DroppableType,
+    droppableDestination: DroppableType
+  ) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
     const [removed] = sourceClone.splice(droppableSource.index, 1);
@@ -88,16 +99,15 @@ export default function Board() {
 
     destClone.splice(droppableDestination.index, 0, removed);
 
-    const result = {};
+    const result = {} as Dictionary<Story[]>;
     result[droppableSource.droppableId] = sourceClone;
     result[droppableDestination.droppableId] = destClone;
-
     return result;
   };
 
-  const onDragEnd = async (result) => {
+  const onDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
-    if (!destination) {
+    if (!destination || stories === undefined) {
       return;
     }
     if (source.droppableId === destination.droppableId) {
@@ -125,45 +135,45 @@ export default function Board() {
   };
 
   const onCreateSave = async (
-    title,
-    description,
-    state,
-    tasks,
-    storyPosition
+    title: string,
+    description: string,
+    state: number,
+    tasks: Task[],
+    storyPosition: number,
   ) => {
     await CreateStory(title, description, storyPosition, state, tasks);
-    await getStateStories(stories, state, true);
-    setStoryState(null);
+    if (stories) await getStateStories(stories, state, true);
+    setStoryState(undefined);
     setContent("New story created");
   };
 
   const onEditSave = async (
-    storyId,
-    listOrder,
-    title,
-    description,
-    state,
-    tasks
+    storyId: number,
+    listOrder: number,
+    title: string,
+    description: string,
+    state: number,
+    tasks: Task[],
   ) => {
     await UpdateStory(storyId, listOrder, title, description, state, tasks);
-    await getStateStories(stories, state, true);
+    if (stories) await getStateStories(stories, state, true);
     setViewStory({});
     setContent("Story updated");
   };
 
-  const onDelete = async (deleteFunc, id, state) => {
+  const onDelete = async (deleteFunc: (id: number) => void, id: number, state: number) => {
     await deleteFunc(id);
-    await getStateStories(stories, state, true);
+    if (stories) await getStateStories(stories, state, true);
     setViewStory({});
     setContent("Story deleted");
   };
 
-  const createNew = (stateId) => {
+  const createNew = (stateId: number) => {
     setStoryState(stateId);
     setOpenCreateModal(true);
   };
 
-  const setViewValues = (story) => {
+  const setViewValues = (story: Story) => {
     setViewStory(story);
     setOpenViewModal(true);
   };
@@ -172,7 +182,7 @@ export default function Board() {
     <>
       <BoardContainer>
         <Notification />
-        <DragDropContext onDragEnd={(r) => onDragEnd(r)}>
+        <DragDropContext onDragEnd={(r: DropResult) => onDragEnd(r)}>
           {userDetail.states.map((state) => (
             <StateColumn
               key={state.stateId}
@@ -189,7 +199,7 @@ export default function Board() {
         <ViewStoryModal
           initialValues={viewStory}
           openModal={openViewModal}
-          deleteStory={(id, state) => onDelete(DeleteStory, id, state)}
+          deleteStory={(id: number, state: number) => onDelete(DeleteStory, id, state)}
           onSave={onEditSave}
           onCancel={() => setOpenViewModal(false)}
         />
@@ -200,7 +210,7 @@ export default function Board() {
           userStates={userDetail.states}
           openModal={openCreateModal}
           storyPosition={
-            stories && stories[storyState] && stories[storyState].length
+            stories && storyState ? stories[storyState] && stories[storyState].length : undefined
           }
           onSave={onCreateSave}
           onCancel={() => setOpenCreateModal(false)}

@@ -10,11 +10,11 @@ interface NotificationContext {
 export const NotificationContext = createContext<NotificationContext>({
     content: null,
     visible: false,
-    setTime: () => {},
-    setContent: () => {},
+    setTime: () => null,
+    setContent: () => null,
 });
 
-export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
+export const NotificationProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [content, setContent] = useState<string | null>(null);
   const [time, setTime] = useState<number | null>(null);
   const [visible, setVisible] = useState<boolean>(false);

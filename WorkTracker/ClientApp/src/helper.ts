@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import { DecodedToken, Dictionary } from "./types";
 import { User } from "./types/user";
 
-export function verifyTokenExpiry(decodedToken : DecodedToken) {
+export function verifyTokenExpiry(decodedToken : DecodedToken): boolean {
     // Adding miliseconds to timestamp
     const unix = decodedToken.exp * 1000;
     if (unix > Date.now()) {
@@ -34,7 +34,7 @@ export function decodeJwtToken(token : string) : DecodedToken | null {
 }
 
 export function parseDateTime(value : string) : string | null {
-    if (typeof value === "string") return null;
+    if (typeof value !== "string") return null;
     const date : Date = new Date(value);
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -48,8 +48,9 @@ export function parseDateTime(value : string) : string | null {
     }`;
 }
 
-export function getUserMapping(users : User[]) : Dictionary<string> {
+export function getUserMapping(users?: User[]) : Dictionary<string> {
     const userMap : Dictionary<string> = {};
+    if (!users) return userMap;
     users.reduce((total, user) => {
         total[user.userId] = user.name;
         return total;
