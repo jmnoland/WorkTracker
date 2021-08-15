@@ -145,7 +145,7 @@ export default function Login(): JSX.Element {
           </div>
         </Content>
       </LoginContainer>
-      <VersionNumber>Version 1.0.3</VersionNumber>
+      <VersionNumber>Version 1.0.4</VersionNumber>
     </>
   );
 }
