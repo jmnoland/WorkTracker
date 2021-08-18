@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useObject } from "../../../helper";
+import { useForm } from "../../../helper";
 import {
   Modal,
   Button,
@@ -9,6 +9,7 @@ import {
   ScrollableContainer,
 } from "../../../components";
 import { State, Task } from "../../../types";
+import fields from "../fields";
 
 const Content = styled.div``;
 
@@ -72,33 +73,11 @@ export function CreateStoryModal({
   const [loading, setLoading] = useState(false);
   const [taskCount, setTaskCount] = useState(1);
   const initialValues = { title: "", description: "" };
-  const fields = useObject(
-    {
-      title: {
-        name: "title",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter a title",
-            },
-          ],
-        },
-      },
-      description: {
-        name: "description",
-        value: "",
-        validation: {
-          rules: [],
-        },
-      },
-    },
+  const obj = useForm(
+    fields,
     initialValues
   );
-  const { title, description } = fields.data;
+  const { title, description } = obj.form;
 
   const addTask = () => {
     setTasks([
@@ -142,7 +121,7 @@ export function CreateStoryModal({
         finalTasks,
         storyPosition ?? 0,
       );
-      fields.reset();
+      obj.reset();
       onCancel();
     } catch {
       setLoading(false);

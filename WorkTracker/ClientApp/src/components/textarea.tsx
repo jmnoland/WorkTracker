@@ -54,12 +54,12 @@ const ValidationLabel = styled.span`
 interface TextAreaProps {
     value: string | number;
     onChange: (val: string) => void;
-    onBlur: () => void;
-    validation?: { errors: Error[] };
+    onBlur?: () => void;
+    errors?: Error[];
     placeholder?: string;
     center?: boolean;
     height?: string;
-    useRef: React.RefObject<HTMLTextAreaElement> | null | undefined;
+    useRef?: React.RefObject<HTMLTextAreaElement>;
     type?: string;
 }
 
@@ -67,17 +67,15 @@ export function TextArea({
   value,
   onChange,
   onBlur,
-  validation,
+  errors,
   placeholder,
   center,
   height,
   useRef,
 }: TextAreaProps): JSX.Element {
-  const valid = validation ? validation.errors.length === 0 : true;
+  const valid = errors?.length === 0;
 
-  const errors =
-    validation &&
-    validation.errors.map((err) => {
+  const errorText = errors?.map((err) => {
       return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
     });
 
@@ -86,7 +84,7 @@ export function TextArea({
   };
   return (
     <Container center={center}>
-      {!valid ? errors : null}
+      {!valid ? errorText : null}
       <TextAreaInput
         ref={useRef}
         height={height}

@@ -5,7 +5,7 @@ import { LoginInput, Button, LoginTitle, InLineLink } from "../../components";
 import { UserLogin, DemoLogin } from "../../services/auth";
 import { UserDetailContext } from "../../context/userDetails";
 import Register from "./register";
-import fields from './fields';
+import { loginFields } from './fields';
 
 const LoginContainer = styled.div`
   width: 400px;
@@ -42,7 +42,7 @@ export default function Login(): JSX.Element {
 
   const initialValues = { email: "", password: "" };
   const obj = useForm(
-    fields,
+    loginFields,
     initialValues
   );
 
