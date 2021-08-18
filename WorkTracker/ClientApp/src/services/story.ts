@@ -1,6 +1,4 @@
-import { Dictionary } from "../types";
-import { Story } from "../types/story";
-import { Task } from "../types/task";
+import { Dictionary, Story, Task } from "../types";
 import api from "./api";
 
 const controller = "story";
