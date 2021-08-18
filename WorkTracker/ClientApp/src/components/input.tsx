@@ -59,10 +59,10 @@ const ValidationLabel = styled.span`
 
 interface BaseInputProps {
     value: string | number;
-    onChange: (val: string | number) => void;
-    validation: { errors: Error[] };
+    onChange: (val: any) => void;
     label?: string;
     position?: string;
+    errors?: Error[];
     isLogin?: boolean;
     center?: boolean;
     type?: string;
@@ -71,7 +71,7 @@ interface BaseInputProps {
 export default function BaseInput({
   value,
   onChange,
-  validation,
+  errors,
   label,
   position,
   center,
@@ -84,9 +84,9 @@ export default function BaseInput({
       <Label>{label}</Label>
     );
 
-  const valid = validation.errors.length === 0;
+  const valid = errors?.length === 0;
 
-  const errors = validation.errors.map((err) => {
+  const errorText = errors?.map((err) => {
     return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
   });
 
@@ -96,7 +96,7 @@ export default function BaseInput({
   return (
     <Container center={center}>
       {inputLabel}
-      {!valid ? errors : null}
+      {!valid ? errorText : null}
       <Input value={value} valid={valid} type={type} onChange={valueChange} />
     </Container>
   );
@@ -105,13 +105,13 @@ export default function BaseInput({
 export function LoginInput({
     value,
     onChange,
-    validation,
+    errors,
     label,
     type
 }: BaseInputProps): JSX.Element {
-  const valid = validation.errors.length === 0;
+  const valid = errors?.length === 0;
 
-  const errors = validation.errors.map((err) => {
+  const errorText = errors?.map((err) => {
     return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
   });
 
@@ -121,7 +121,7 @@ export function LoginInput({
   return (
     <Container center isLogin>
       {<LabelAbove>{label}</LabelAbove>}
-      {!valid ? errors : null}
+      {!valid ? errorText : null}
       <Input value={value} valid={valid} type={type} onChange={valueChange} />
     </Container>
   );
@@ -131,9 +131,9 @@ interface TextFieldInputProps {
   value: string;
   height?: string;
   useRef?: React.RefObject<HTMLInputElement> | null | undefined;
+  errors?: Error[];
   onBlur?: () => void;
   onChange: (val: string) => void;
-  validation?: { errors: Error[] };
   placeholder?: string;
   center?: boolean;
 }
@@ -144,15 +144,13 @@ export function TextFieldInput({
   useRef,
   onBlur,
   onChange,
-  validation,
+  errors,
   placeholder,
   center,
 }: TextFieldInputProps): JSX.Element {
-  const valid = validation ? validation.errors.length === 0 : true;
+  const valid = errors?.length === 0;
 
-  const errors =
-    validation &&
-    validation.errors.map((err) => {
+  const errorText = errors?.map((err) => {
       return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
     });
 
@@ -161,7 +159,7 @@ export function TextFieldInput({
   };
   return (
     <Container center={center}>
-      {!valid ? errors : null}
+      {!valid ? errorText : null}
       <TextAreaInput
         ref={useRef}
         height={height}
