@@ -10,6 +10,7 @@ import { UserDetail } from "./userDetail";
 import { DroppableType } from "./droppableType";
 import { ValidationRule } from "./validationRule";
 import { FormField } from "./formField";
+import { InitialFormField } from "./initialField";
 import { Form } from "./form";
 
 export type {
@@ -26,4 +27,5 @@ export type {
   FormField,
   DroppableType,
   ValidationRule,
+  InitialFormField,
 };

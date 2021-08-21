@@ -1,6 +1,6 @@
 import { useState } from "react";
 import jwtDecode from "jwt-decode";
-import { DecodedToken, Dictionary, User, Error, FormField, ValidationRule, Form } from "./types";
+import { DecodedToken, Dictionary, User, Error, FormField, InitialFormField, ValidationRule, Form } from "./types";
 
 export function verifyTokenExpiry(decodedToken : DecodedToken): boolean {
     // Adding miliseconds to timestamp
@@ -57,70 +57,89 @@ export function getUserMapping(users?: User[]) : Dictionary<string> {
     return userMap;
 }
 
-export function useForm(initialFields: Dictionary<any>, initialValues: Dictionary<any>): Form {
-    const objectKeys = Object.keys(initialValues);
-    const [values, setValues] = useState(initialValues);
-    const [modified, setModified] = useState([] as string[]);
-    const [errors, setErrors] = useState<Dictionary<Error[]>>(objectKeys.reduce(
+function getInitialErrors(objectKeys: string[]) {
+    const temp = objectKeys.reduce(
         (total: Dictionary<Error[]>, val: string) => {
             total[val] = [];
             return total;
         },
-    {}));
+    {});
+    return temp;
+}
 
-    function onChange(value: any, name: string) {
+function getInitialModified(objectKeys: string[], fields: Dictionary<InitialFormField<unknown>>): string[] {
+    const temp: string[] = [];
+    objectKeys.forEach((name) => {
+        if (fields[name] !== undefined) {
+            if (fields[name].required !== undefined) temp.push(name);
+        }
+    });
+    return temp;
+}
+
+export function useForm(initialFields: unknown, initialValues: unknown): Form {
+    const fields = initialFields as Dictionary<InitialFormField<unknown>>;
+    const objectKeys = Object.keys(initialValues as Dictionary<unknown>);
+    const [values, setValues] = useState(initialValues as Dictionary<unknown>);
+    const [modified, setModified] = useState(getInitialModified(objectKeys, fields));
+    const [errors, setErrors] = useState<Dictionary<Error[]>>(getInitialErrors(objectKeys));
+
+    function onChange(value: unknown, name: string) {
         setValues({ ...values, [name]: value });
         if (!modified.includes(name)) setModified([ ...modified, name ]);
     }
 
-    function checkRules(rules: ValidationRule<any>[], name: string): boolean {
-        let allValid = true;
+    function checkRules(rules: ValidationRule<unknown>[], name: string): Error[] {
         const temp: Error[] = [];
-        if (initialFields[name].required) {
+        if (fields[name].required !== undefined) {
             if (values[name] === undefined || values[name] === null || values[name] === "") {
-                temp.push({ id: "R", message: initialFields[name].required });
-                allValid = false;
+                const reqMessage: string = fields[name].required ?? "";
+                temp.push({ id: "R", message: reqMessage });
             }
         }
         let count = 0;
         rules.forEach(rule => {
             if (!rule.validate(values[name])) {
                 temp.push({ id: `V${count}`, message: rule.message });
-                allValid = false;
             };
             count ++;
         });
-        if (!allValid) setErrors({ ...errors, [name]: temp });
-        return allValid;
+        return temp;
     }
 
     function validate(): boolean {
         let valid = true;
+        const temp: Dictionary<Error[]> = {};
         modified.forEach((name) => {
-            const rules = initialFields[name].rules;
+            const rules = fields[name].rules;
             if (rules) {
-                if (!checkRules(rules, name)) valid = false;
+                const result = checkRules(rules, name);
+                if (result.length !== 0) {
+                    temp[name] = result;
+                    valid = false;
+                }
             }
         });
+        if (!valid) setErrors({ ...errors, ...temp });
         return valid;
     }
 
     function reset() {
-        setValues(initialValues);
-        setModified([] as string[]);
-        setErrors(initialValues.map((val: any) => ({ [val]: [] })));
+        setValues(initialValues as Dictionary<unknown>);
+        setModified(getInitialModified(objectKeys, fields));
+        setErrors(getInitialErrors(objectKeys));
     }
 
     return {
-        form: objectKeys.reduce((total: Dictionary<any>, name: string) => {
+        form: objectKeys.reduce((total: Dictionary<FormField<unknown>>, name: string) => {
             total[name] = {
-                ...initialFields[name],
+                ...fields[name],
                 errors: errors[name],
                 value: values[name],
-                onChange: (val: any) => onChange(val, name),
+                onChange: (val: unknown) => onChange(val, name),
             }
             return total;
-        }, {} as Dictionary<FormField<any>>),
+        }, {} as Dictionary<FormField<unknown>>),
         modified: modified,
         validate: validate,
         reset: reset,

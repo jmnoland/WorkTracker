@@ -84,8 +84,8 @@ export function EditableText({
   edit?: boolean,
 }): JSX.Element {
   const [canEdit, setCanEdit] = useState(!!edit);
-  const inputRef = type !== "area" ? useRef<HTMLInputElement | null>(null): null;
-  const areaRef = type === "area" ? useRef<HTMLTextAreaElement | null>(null): null;
+  const inputRef = type !== "area" ? useRef<HTMLInputElement | null>(null): undefined;
+  const areaRef = type === "area" ? useRef<HTMLTextAreaElement | null>(null): undefined;
 
   useEffect(() => {
     if (canEdit) {

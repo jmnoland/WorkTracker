@@ -2,16 +2,12 @@ export const loginFields = {
   email: {
     name: "email",
     required: "Please enter an email",
-    validation: {
-      rules: [],
-    },
+    rules: [],
   },
   password: {
     name: "password",
     required: "Please enter a password",
-    validation: {
-      rules: [],
-    },
+    rules: [],
   }
 };
 
@@ -19,9 +15,7 @@ export const registerFields = {
   email: {
     name: "email",
     required: "Please enter an email",
-    validation: {
-      rules: [],
-    },
+    rules: [],
   },
   name: {
     name: "name",
@@ -29,22 +23,18 @@ export const registerFields = {
   password: {
     name: "password",
     required: "Please enter a password",
-    validation: {
-      rules: [],
-    },
+    rules: [],
   },
   confirmPassword: {
     name: "confirmPassword",
     required: "Please retype your password",
-    validation: {
-      rules: [
-        {
-          validate: (value: string, data: { password: { value: string } }) => {
+    rules: [
+      {
+        validate: (value: string, data: { password: { value: string } }): boolean => {
             return value === data.password.value;
-          },
-          message: "Passwords must match",
         },
-      ],
-    },
+        message: "Passwords must match",
+      },
+    ],
   },
 };

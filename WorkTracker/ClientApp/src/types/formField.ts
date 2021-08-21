@@ -6,6 +6,6 @@ export interface FormField<T> {
   value: T;
   errors: Error[];
   required?: string;
-  validation: { rules: ValidationRule<T>[] };
+  rules: ValidationRule<T>[];
   onChange: (val: T) => void;
 }

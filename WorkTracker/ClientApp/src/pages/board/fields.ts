@@ -2,16 +2,12 @@ export default {
   title: {
     name: "title",
     required: "Please enter a title",
-    validation: {
-      rules: [],
-    },
+    rules: [],
   },
   description: {
     name: "description",
     value: "",
-    validation: {
-      rules: [],
-    },
+    rules: [],
   },
   storyId: {},
   listOrder: {},

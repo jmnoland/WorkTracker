@@ -63,7 +63,6 @@ interface ViewStoryModalProps {
 
 export function ViewStoryModal({
   initialValues,
-  userStates,
   openModal,
   deleteStory,
   onCancel,

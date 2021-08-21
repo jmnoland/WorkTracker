@@ -62,7 +62,6 @@ interface CreateStoryModalProps {
 export function CreateStoryModal({
   defaultState,
   storyPosition,
-  userStates,
   openModal,
   onCancel,
   onSave,
@@ -105,6 +104,7 @@ export function CreateStoryModal({
   };
 
   const handleSubmit = async () => {
+    if (!obj.validate()) return;
     setLoading(true);
     const finalTasks =
       tasks &&

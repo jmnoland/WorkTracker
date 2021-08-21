@@ -59,7 +59,7 @@ interface TextAreaProps {
     placeholder?: string;
     center?: boolean;
     height?: string;
-    useRef?: React.RefObject<HTMLTextAreaElement>;
+    useRef?: React.RefObject<HTMLTextAreaElement> | null;
     type?: string;
 }
 
@@ -76,8 +76,8 @@ export function TextArea({
   const valid = errors?.length === 0;
 
   const errorText = errors?.map((err) => {
-      return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
-    });
+    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+  });
 
   const valueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);

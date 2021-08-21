@@ -59,7 +59,7 @@ const ValidationLabel = styled.span`
 
 interface BaseInputProps {
     value: string | number;
-    onChange: (val: any) => void;
+    onChange: (val: unknown) => void;
     label?: string;
     position?: string;
     errors?: Error[];
@@ -148,12 +148,12 @@ export function TextFieldInput({
   placeholder,
   center,
 }: TextFieldInputProps): JSX.Element {
-  const valid = errors?.length === 0;
+  const valid = errors !== undefined ? errors.length === 0 : true;
 
   const errorText = errors?.map((err) => {
-      return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
-    });
-
+    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+  });
+  
   const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
