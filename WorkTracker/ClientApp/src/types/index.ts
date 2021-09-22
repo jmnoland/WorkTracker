@@ -5,9 +5,13 @@ import { Team } from "./team";
 import { Task } from "./task";
 import { State } from "./state";
 import { Story } from "./story";
-import { UserDetail } from "./userDetail";
 import { Error } from "./error";
+import { UserDetail } from "./userDetail";
 import { DroppableType } from "./droppableType";
+import { ValidationRule } from "./validationRule";
+import { FormField } from "./formField";
+import { InitialFormField } from "./initialField";
+import { Form } from "./form";
 
 export type {
   Dictionary,
@@ -19,5 +23,9 @@ export type {
   Story,
   UserDetail,
   Error,
+  Form,
+  FormField,
   DroppableType,
+  ValidationRule,
+  InitialFormField,
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useObject } from "../../../helper";
+import { useForm } from "../../../helper";
 import {
   Modal,
   Button,
@@ -9,6 +9,7 @@ import {
 } from "../../../components";
 import { GetStoryTasks, DeleteTask } from "../../../services/story";
 import { State, Task, Story } from "../../../types";
+import fields from "../fields";
 
 const Content = styled.div``;
 
@@ -62,7 +63,6 @@ interface ViewStoryModalProps {
 
 export function ViewStoryModal({
   initialValues,
-  userStates,
   openModal,
   deleteStory,
   onCancel,
@@ -85,36 +85,11 @@ export function ViewStoryModal({
     fetchData();
   }, []);
 
-  const fields = useObject(
-    {
-      title: {
-        name: "title",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter a title",
-            },
-          ],
-        },
-      },
-      description: {
-        name: "description",
-        value: "",
-        validation: {
-          rules: [],
-        },
-      },
-      storyId: {},
-      listOrder: {},
-      stateId: {},
-    },
+  const obj = useForm(
+    fields,
     initialValues
   );
-  const { title, description, storyId, listOrder, stateId } = fields.data;
+  const { title, description, storyId, listOrder, stateId } = obj.form;
 
   const addTask = () => {
     setTasks([
@@ -134,7 +109,7 @@ export function ViewStoryModal({
     setDeleteLoading(true);
     try {
       await deleteStory(storyId.value, stateId.value);
-      fields.reset();
+      obj.reset();
       onCancel();
     } catch {
       setDeleteLoading(false);
@@ -175,7 +150,7 @@ export function ViewStoryModal({
         stateId.value,
         finalTasks
       );
-      fields.reset();
+      obj.reset();
       onCancel();
     } catch {
       setLoading(false);

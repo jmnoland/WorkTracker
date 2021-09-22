@@ -207,7 +207,6 @@ export default function Board(): JSX.Element {
       {openCreateModal && (
         <CreateStoryModal
           defaultState={storyState}
-          userStates={userDetail.states}
           openModal={openCreateModal}
           storyPosition={
             stories && storyState ? stories[storyState] && stories[storyState].length : undefined

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Input, Button, LoginTitle, InLineLink } from "../../components";
-import { useObject } from "../../helper";
+import { useForm } from "../../helper";
 import { UserRegister } from "../../services/auth";
+import { registerFields } from "./fields";
 
 const LoginContainer = styled.div`
   width: 400px;
@@ -31,68 +32,15 @@ export default function Register({ setRegister }
     password: "",
     confirmPassword: "",
   };
-  const fields = useObject(
-    {
-      email: {
-        name: "email",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter an email",
-            },
-          ],
-        },
-      },
-      name: {
-        name: "name",
-        value: "",
-      },
-      password: {
-        name: "password",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter a password",
-            },
-          ],
-        },
-      },
-      confirmPassword: {
-        name: "confirmPassword",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please retype your password",
-            },
-            {
-              validate: (value: string, data: { password: { value: string } }) => {
-                return value === data.password.value;
-              },
-              message: "Passwords must match",
-            },
-          ],
-        },
-      },
-    },
+  const obj = useForm(
+    registerFields,
     initialValues
   );
 
-  const { email, name, password, confirmPassword } = fields.data;
+  const { email, name, password, confirmPassword } = obj.form;
 
   const handleRegister = async () => {
-    if (fields.validate()) {
+    if (obj.validate()) {
       setLoading(true);
       await UserRegister(email.value, name.value, password.value);
       setLoading(false);

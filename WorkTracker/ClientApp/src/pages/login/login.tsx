@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { useObject } from "../../helper";
+import { useForm } from "../../helper";
 import { LoginInput, Button, LoginTitle, InLineLink } from "../../components";
 import { UserLogin, DemoLogin } from "../../services/auth";
 import { UserDetailContext } from "../../context/userDetails";
 import Register from "./register";
+import { loginFields } from './fields';
 
 const LoginContainer = styled.div`
   width: 400px;
@@ -40,49 +41,20 @@ export default function Login(): JSX.Element {
   );
 
   const initialValues = { email: "", password: "" };
-  const fields = useObject(
-    {
-      email: {
-        name: "email",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter an email",
-            },
-          ],
-        },
-      },
-      password: {
-        name: "password",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter a password",
-            },
-          ],
-        },
-      },
-    },
+  const obj = useForm(
+    loginFields,
     initialValues
   );
 
-  const { email, password } = fields.data;
+  const { email, password } = obj.form;
 
   const handleSubmit = async () => {
-    const isValid = fields.validate();
+    const isValid = obj.validate();
     if (isValid) {
       setLoading(true);
       try {
         setTokenDetails(await UserLogin(email.value, password.value));
-        fields.reset();
+        obj.reset();
         setIsLoggedIn(true);
         setLoading(false);
       } catch {
@@ -95,7 +67,7 @@ export default function Login(): JSX.Element {
     setDemoLoading(true);
     try {
       setTokenDetails(await DemoLogin());
-      fields.reset();
+      obj.reset();
       setIsLoggedIn(true);
       setDemoLoading(false);
     } catch {

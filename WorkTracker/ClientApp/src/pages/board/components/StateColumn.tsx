@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { Story } from "./story";
 import { UserDetailContext } from "../../../context/userDetails";
 import { Button } from "../../../components";
@@ -67,7 +67,7 @@ interface StateColumnProps {
   stories?: StoryType[];
   viewEdit: (story: StoryType) => void;
   createNew: (stateId: number) => void;
-  onDragEnd: (result: any) => Promise<void>
+  onDragEnd: (result: DropResult) => Promise<void>
 }
 
 export function StateColumn({
