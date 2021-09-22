@@ -1,7 +1,7 @@
 import Input, { TextFieldInput, LoginInput } from "./input";
 import Button from "./button";
-import { LoginTitle, MainTitle } from "./title";
-import { NavLink, InLineLink, BaseLink as Link } from "./link";
+import { LoginTitle, MainTitle } from "./title/title";
+import { NavLink, InLineLink, BaseLink as Link } from "./link/link";
 import { Modal } from "./modal";
 import { TextArea } from "./textarea";
 import { EditableText, Text } from "./text";

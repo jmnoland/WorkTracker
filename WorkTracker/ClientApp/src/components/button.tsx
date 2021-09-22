@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Loading from "./loading";
+import Loading from "./loading/loading";
 
 const Container = styled.div<{ center?: boolean, small?: boolean }>`
   width: max-content;

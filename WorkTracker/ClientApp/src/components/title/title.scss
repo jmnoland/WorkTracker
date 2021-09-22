@@ -1,0 +1,20 @@
+@import "../../constants/variables.scss";
+
+.main-title-container {
+  font-size: 30px;
+  padding: 10px 10px 10px 30px;
+}
+
+.login-title-container {
+  font-size: 50px;
+  text-align: center;
+  margin-bottom: $margin-large;
+}
+
+.title-start {
+  color: $orange-color;
+}
+
+.title-end {
+  color: $white-color;
+}
