@@ -1,0 +1,75 @@
+@import "../../constants/variables.scss";
+
+.modal-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  // background-color: $dark-color;
+}
+
+.modal-window {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  width: 600px;
+  min-height: 600px;
+  height: fit-content;
+  background: $background-color;
+  padding: $padding-large;
+  box-shadow: $border-shadow;
+  border-radius: $border-radius-default;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+
+.modal-heading {
+  padding-bottom: $padding-large;
+  font-size: $font-size-large;
+  display: flex;
+}
+
+.modal-content {
+  padding-top: $padding-large;
+  font-size: $font-size-default;
+}
+
+.modal-footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding-right: $padding-large;
+  padding-top: $padding-large;
+  padding-bottom: $padding-large;
+}
+
+.modal-footer-left {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding-left: $padding-large;
+  padding-top: $padding-large;
+  padding-bottom: $padding-large;
+}
+
+.modal-title {
+  flex: 1;
+}
+
+.modal-close-button {
+  cursor: pointer;
+  float: right;
+}
+
+.modal-svg {
+  width: 40px;
+  fill: $white-color;
+
+  &:hover {
+    fill: $orange-color;
+  }
+}

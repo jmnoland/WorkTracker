@@ -1,11 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
+import "./scrollableContainer.scss";
 
 const Container = styled.div<{ height: number }>`
   min-height: ${(props) => props.height}px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Header = styled.div``;
@@ -13,23 +11,7 @@ const Header = styled.div``;
 const Footer = styled.div``;
 
 const Content = styled.div<{ topMargin: number }>`
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 7px;
   margin-top: ${(props) => props.topMargin}px;
-
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: ${(props) => props.theme.colors.lighter};
-  }
-  ::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.colors.light};
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #4c4c4c;
-  }
 `;
 
 function getMaxHeight(
@@ -80,9 +62,9 @@ export default function ScrollableContainer({
   }, [headerRef.current && containerRef.current && footerRef.current]);
 
   return (
-    <Container height={height} ref={containerRef}>
+    <Container className="scrollable-container" height={height} ref={containerRef}>
       <Header ref={headerRef}>{header}</Header>
-      <Content ref={contentRef} topMargin={contentTopMargin}>
+      <Content className="scrollable-content" ref={contentRef} topMargin={contentTopMargin}>
         {children}
       </Content>
       <Footer ref={footerRef}>{footer}</Footer>

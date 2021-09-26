@@ -1,0 +1,13 @@
+@import "../../constants/variables.scss";
+
+.notification-container {
+  position: fixed;
+  top: 72px;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.notification-message {
+  color: $success-color;
+}

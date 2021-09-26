@@ -1,14 +1,14 @@
-import Input, { TextFieldInput, LoginInput } from "./input";
-import Button from "./button";
+import Input, { TextFieldInput, LoginInput } from "./input/input";
+import Button from "./button/button";
 import { LoginTitle, MainTitle } from "./title/title";
 import { NavLink, InLineLink, BaseLink as Link } from "./link/link";
-import { Modal } from "./modal";
-import { TextArea } from "./textarea";
-import { EditableText, Text } from "./text";
-import Icon from "./icon";
-import SubText from "./subtext";
-import Notification from "./notification";
-import ScrollableContainer from "./scrollableContainer";
+import { Modal } from "./modal/modal";
+import { TextArea } from "./textarea/textarea";
+import { EditableText, Text } from "./text/text";
+import Icon from "./icon/icon";
+import SubText from "./subtext/subtext";
+import Notification from "./notification/notification";
+import ScrollableContainer from "./scrollableContainer/scrollableContainer";
 
 export {
   Input,

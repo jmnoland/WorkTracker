@@ -1,61 +1,20 @@
 import React from "react";
 import styled from "styled-components";
-import { Error } from '../types';
+import { Error } from "../../types";
+import "./input.scss";
 
 const Container = styled.div<{ center?: boolean, isLogin?: boolean }>`
-  position: relative;
   margin-left: ${(props) => props.center && "auto"};
   margin-right: ${(props) => props.center && "auto"};
-  margin-bottom: 12px;
-  padding: ${(props) => props.theme.padding.default};
 `;
 
-const Input = styled.input<{ isLogin?: boolean, valid?: boolean }>`
-  width: ${(props) => (props.isLogin ? "190px" : "100%")};
-  background: ${(props) => props.theme.colors.white};
-  border: 2px solid
-    ${(props) =>
-      props.valid ? props.theme.colors.white : props.theme.colors.danger};
-  border-radius: ${(props) => props.theme.border.radius.button};
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: none;
-  }
-`;
-
-const TextAreaInput = styled.input<{ valid?: boolean, height?: string }>`
-  width: 100%;
+const TextAreaInput = styled.input<{ height?: string }>`
   height: ${(props) => (props.height ? props.height : "auto")};
-  text-overflow: ellipsis;
-  background: ${(props) => props.theme.colors.dark};
-  border: 1px solid
-    ${(props) =>
-      props.valid ? props.theme.colors.light : props.theme.colors.danger};
-  border-radius: ${(props) => props.theme.border.radius.button};
-  color: ${(props) => props.theme.colors.white};
-  padding: ${(props) => props.theme.padding.medium};
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: none;
-  }
 `;
 
 const Label = styled.span``;
 
 const LabelAbove = styled.div``;
-
-const ValidationLabel = styled.span`
-  font-size: 11px;
-  margin-top: 7px;
-  margin-left: 2px;
-  color: ${(props) => props.theme.colors.danger};
-  display: flex;
-  justify-content: flex-end;
-  position: absolute;
-  bottom: -12px;
-`;
 
 interface BaseInputProps {
     value: string | number;
@@ -87,17 +46,17 @@ export default function BaseInput({
   const valid = errors?.length === 0;
 
   const errorText = errors?.map((err) => {
-    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+    return <span className="label-validation" key={err.id}>{err.message}</span>;
   });
 
   const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
   return (
-    <Container center={center}>
+    <Container className="input-container" center={center}>
       {inputLabel}
       {!valid ? errorText : null}
-      <Input value={value} valid={valid} type={type} onChange={valueChange} />
+      <input className={valid ? "input-base valid-border" : "input-base invalid-border"} value={value} type={type} onChange={valueChange} />
     </Container>
   );
 }
@@ -112,17 +71,17 @@ export function LoginInput({
   const valid = errors?.length === 0;
 
   const errorText = errors?.map((err) => {
-    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+    return <span className="label-validation" key={err.id}>{err.message}</span>;
   });
 
   const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
   return (
-    <Container center isLogin>
+    <Container className="input-container" center isLogin>
       {<LabelAbove>{label}</LabelAbove>}
       {!valid ? errorText : null}
-      <Input value={value} valid={valid} type={type} onChange={valueChange} />
+      <input className={valid ? "input-base valid-border" : "input-base invalid-border"} value={value} type={type} onChange={valueChange} />
     </Container>
   );
 }
@@ -151,21 +110,22 @@ export function TextFieldInput({
   const valid = errors !== undefined ? errors.length === 0 : true;
 
   const errorText = errors?.map((err) => {
-    return <ValidationLabel key={err.id}>{err.message}</ValidationLabel>;
+    return <span className="label-validation" key={err.id}>{err.message}</span>;
   });
   
   const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
+  const classes = `input-text-area ${valid ? "valid-border" : "invalid-border"}`
   return (
-    <Container center={center}>
+    <Container className="input-container" center={center}>
       {!valid ? errorText : null}
       <TextAreaInput
         ref={useRef}
+        className={classes}
         height={height}
         placeholder={placeholder}
         value={value}
-        valid={valid}
         onBlur={onBlur}
         onChange={valueChange}
       />
