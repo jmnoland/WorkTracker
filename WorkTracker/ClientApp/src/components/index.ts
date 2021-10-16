@@ -1,4 +1,5 @@
 import Input, { TextFieldInput, LoginInput } from "./input/input";
+import GenericContainer from "./container/genericContainer";
 import Button from "./button/button";
 import { LoginTitle, MainTitle } from "./title/title";
 import { NavLink, InLineLink, BaseLink as Link } from "./link/link";
@@ -11,6 +12,7 @@ import Notification from "./notification/notification";
 import ScrollableContainer from "./scrollableContainer/scrollableContainer";
 
 export {
+  GenericContainer,
   Input,
   TextFieldInput,
   LoginInput,
