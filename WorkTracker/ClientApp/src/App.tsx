@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
 import { Route, Switch } from "react-router";
-import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import Login from "./pages/login/login";
 import Report from "./pages/report/report";
 import Board from "./pages/board/board";
 import { Theme, theme } from "./constants/theme";
 import NavMenu from "./components/layout/NavMenu";
+import { GenericContainer } from "./components";
 import { UserDetailProvider, UserDetailContext } from "./context/userDetails";
 import { NotificationProvider } from "./context/notification";
+import './App.scss';
 
 const GlobalStyle = createGlobalStyle<{theme: Theme}>`
     body
@@ -23,14 +25,8 @@ const GlobalStyle = createGlobalStyle<{theme: Theme}>`
     }
 `;
 
-const AppContainer = styled.div`
-  background: ${(props) => props.theme.colors.background};
-  color: ${(props) => props.theme.colors.white};
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-`;
+const AppContainer = GenericContainer("app-container");
+const ContentContainer = GenericContainer("app-content-container");
 
 function Content({ children } : { children: React.ReactNode }) {
   const { isLoggedIn } = useContext(UserDetailContext);

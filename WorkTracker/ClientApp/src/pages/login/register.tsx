@@ -1,26 +1,15 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import { Input, Button, LoginTitle, InLineLink } from "../../components";
+import { Input, Button, LoginTitle, InLineLink, GenericContainer } from "../../components";
 import { useForm } from "../../helper";
 import { UserRegister } from "../../services/auth";
 import { registerFields } from "./fields";
+import "./login.scss";
 
-const LoginContainer = styled.div`
-  width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10%;
-  padding: ${(props) => props.theme.padding.large};
-  box-shadow: ${(props) => props.theme.border.shadow};
-  border-radius: ${(props) => props.theme.border.radius.default};
-`;
+const LoginContainer = GenericContainer("login-container");
 
-const ButtonContainer = styled.div`
-  margin-top: ${(props) => props.theme.margin.medium};
-  margin-bottom: ${(props) => props.theme.margin.medium};
-`;
+const ButtonContainer = GenericContainer("button-container");
 
-const Content = styled.div``;
+const Content = GenericContainer();
 
 export default function Register({ setRegister }
   : { setRegister: (val: boolean) => void }

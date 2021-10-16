@@ -1,48 +1,34 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { useForm } from "../../../helper";
 import {
   Modal,
   Button,
-  TextFieldInput,
   TextArea,
+  TextFieldInput,
+  GenericContainer,
   ScrollableContainer,
 } from "../../../components";
 import { State, Task } from "../../../types";
 import fields from "../fields";
+import "./components.scss";
 
-const Content = styled.div``;
+const Content = GenericContainer();
 
-const Description = styled.div`
-  flex: 1;
-`;
+const Description = GenericContainer("flex-1");
 
-const Footer = styled.div`
-  display: flex;
-`;
+const Footer = GenericContainer("display-flex");
 
-const TaskInputContainer = styled.div`
-  flex: 1;
-`;
+const TaskInputContainer = GenericContainer("flex-1");
 
-const Row = styled.div`
-  display: flex;
-  height: 40px;
-`;
+const Row = GenericContainer("display-flex height-40");
 
-const SVG = styled.svg`
-  width: 40px;
-  fill: ${(props) => props.theme.colors.white};
-  cursor: pointer;
-  margin-top: 4px;
-  &:hover {
-    fill: ${(props) => props.theme.colors.danger};
-  }
-`;
+const SVG = ({
+    children,
+    onClick,
+} : { children: React.ReactNode, onClick: React.MouseEventHandler<SVGSVGElement> }
+) => (<svg onClick={onClick} className="delete-svg">{children}</svg>);
 
-const TaskHeader = styled.div`
-  display: flex;
-`;
+const TaskHeader = GenericContainer("display-flex");
 
 interface CreateStoryModalProps {
   defaultState?: number;

@@ -1,54 +1,21 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import styled from "styled-components";
 import { Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { Story } from "./story";
 import { UserDetailContext } from "../../../context/userDetails";
-import { Button } from "../../../components";
+import { Button, GenericContainer } from "../../../components";
 import { getUserMapping, parseDateTime } from "../../../helper";
 import { State, Story as StoryType } from "../../../types";
+import "./components.scss";
 
-const StateContainer = styled.div`
-  box-shadow: 0px 0px 5px 2px ${(props) => props.theme.colors.dark};
-  border-top: 2px solid ${(props) => props.theme.colors.dark};
-  padding: ${(props) => props.theme.padding.medium};
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
+const StateButton = GenericContainer("float-right");
 
-const StateHeader = styled.div`
-  margin-bottom: ${(props) => props.theme.padding.large};
-`;
+const StateFooter = GenericContainer("state-column-header");
 
-const StateFooter = styled.div``;
+const StateContainer = GenericContainer("state-column-container");
 
-const Content = styled.div`
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 7px;
+const StateHeader = GenericContainer("state-column-header");
 
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: ${(props) => props.theme.colors.lighter};
-  }
-  ::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.colors.light};
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #4c4c4c;
-  }
-`;
-
-const DropContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StateButton = styled.div`
-  float: right;
-`;
+const Content = GenericContainer("state-column-content");
 
 function getMaxHeight(
   container: HTMLDivElement,
@@ -119,7 +86,7 @@ export function StateColumn({
       <Content ref={contentRef}>
         <Droppable droppableId={stateId.toString()}>
           {(provided) => (
-            <DropContainer
+            <div className="display-flex flex-column"
               style={droppableStyling}
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -152,7 +119,7 @@ export function StateColumn({
                     )}
                   </Draggable>
                 ))}
-            </DropContainer>
+            </div>
           )}
         </Droppable>
       </Content>

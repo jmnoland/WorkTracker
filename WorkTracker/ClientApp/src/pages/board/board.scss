@@ -1,0 +1,12 @@
+.board-container {
+  height: 88vh;
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-around;
+
+  @media (max-width: 768px) {
+    margin-top: 0px;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

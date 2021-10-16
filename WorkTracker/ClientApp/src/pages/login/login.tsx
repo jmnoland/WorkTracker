@@ -1,36 +1,19 @@
 import React, { useState, useContext } from "react";
-import styled from "styled-components";
 import { useForm } from "../../helper";
-import { LoginInput, Button, LoginTitle, InLineLink } from "../../components";
+import { LoginInput, Button, LoginTitle, InLineLink, GenericContainer } from "../../components";
 import { UserLogin, DemoLogin } from "../../services/auth";
 import { UserDetailContext } from "../../context/userDetails";
 import Register from "./register";
 import { loginFields } from './fields';
+import "./login.scss";
 
-const LoginContainer = styled.div`
-  width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10%;
-  padding: ${(props) => props.theme.padding.large};
-  box-shadow: ${(props) => props.theme.border.shadow};
-  border-radius: ${(props) => props.theme.border.radius.default};
-`;
+const LoginContainer = GenericContainer("login-container");
 
-const ButtonContainer = styled.div`
-  margin-top: ${(props) => props.theme.margin.medium};
-  margin-bottom: ${(props) => props.theme.margin.medium};
-`;
+const ButtonContainer = GenericContainer("button-container");
 
-const VersionNumber = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  padding: ${(props) => props.theme.padding.medium};
-  text-align: center;
-  font-size: ${(props) => props.theme.font.size.small};
-`;
+const VersionNumber = GenericContainer("version-number");
 
-const Content = styled.div``;
+const Content = GenericContainer();
 
 export default function Login(): JSX.Element {
   const [loading, setLoading] = useState(false);

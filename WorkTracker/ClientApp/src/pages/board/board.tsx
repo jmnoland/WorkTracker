@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
 import { UserDetailContext } from "../../context/userDetails";
 import { NotificationContext } from "../../context/notification";
-import { Notification } from "../../components";
+import { Notification, GenericContainer } from "../../components";
 import { CreateStoryModal } from "./components/createStoryModal";
 import { ViewStoryModal } from "./components/viewStoryModal";
 import {
@@ -21,19 +20,9 @@ import {
   Task,
   DroppableType,
 } from "../../types";
+import "./board.scss";
 
-const BoardContainer = styled.div`
-  height: 88vh;
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-around;
-
-  @media (max-width: 768px) {
-    margin-top: 0px;
-    flex-direction: column;
-    justify-content: center;
-  }
-`;
+const BoardContainer = GenericContainer("board-container");
 
 export default function Board(): JSX.Element {
   const { userDetail } = useContext(UserDetailContext);
