@@ -3,9 +3,7 @@ import { SubText, GenericContainer } from "../../../components";
 import "./components.scss";
 
 const StoryContainer = GenericContainer("story-container");
-
 const Row = GenericContainer("display-flex story-row");
-
 const Col = GenericContainer();
 
 interface StoryProps {

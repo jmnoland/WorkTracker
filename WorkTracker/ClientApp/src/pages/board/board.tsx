@@ -20,6 +20,7 @@ import {
   Task,
   DroppableType,
 } from "../../types";
+import { createPayload, reorder } from "./functions";
 import "./board.scss";
 
 const BoardContainer = GenericContainer("board-container");
@@ -59,21 +60,6 @@ export default function Board(): JSX.Element {
   if (!userDetail?.states) {
     return <></>;
   }
-
-  const reorder = (list: Story[], startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
-
-  const createPayload = (stateId: string | number, storyList: Story[]) => {
-    const temp = storyList.reduce((total, story, index) => {
-      if (story.storyId !== undefined) total[story.storyId] = index;
-      return total;
-    }, {} as Dictionary<number>);
-    return { stateId: Number(stateId), stories: temp };
-  };
 
   const move = (
     source: Story[],

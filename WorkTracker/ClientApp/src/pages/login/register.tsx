@@ -6,9 +6,7 @@ import { registerFields } from "./fields";
 import "./login.scss";
 
 const LoginContainer = GenericContainer("login-container");
-
 const ButtonContainer = GenericContainer("button-container");
-
 const Content = GenericContainer();
 
 export default function Register({ setRegister }

@@ -5,29 +5,14 @@ import { UserDetailContext } from "../../../context/userDetails";
 import { Button, GenericContainer } from "../../../components";
 import { getUserMapping, parseDateTime } from "../../../helper";
 import { State, Story as StoryType } from "../../../types";
+import { getMaxHeight } from "../functions";
 import "./components.scss";
 
 const StateButton = GenericContainer("float-right");
-
 const StateFooter = GenericContainer("state-column-header");
-
 const StateContainer = GenericContainer("state-column-container");
-
 const StateHeader = GenericContainer("state-column-header");
-
 const Content = GenericContainer("state-column-content");
-
-function getMaxHeight(
-  container: HTMLDivElement,
-  header: HTMLDivElement,
-  footer: HTMLDivElement,
-): string {
-  const hh = header.getBoundingClientRect().height;
-  const ch = container.getBoundingClientRect().height;
-  const fh = footer.getBoundingClientRect().height;
-  // element heights - 22 padding 20 margin
-  return `${ch - hh - fh - 22 - 20}px`;
-}
 
 interface StateColumnProps {
   state: State;

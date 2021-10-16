@@ -9,26 +9,21 @@ import {
   ScrollableContainer,
 } from "../../../components";
 import { State, Task } from "../../../types";
+import { createNewTask, handleTaskChange, removeTaskById, parseTasks } from "../functions";
 import fields from "../fields";
 import "./components.scss";
 
 const Content = GenericContainer();
-
 const Description = GenericContainer("flex-1");
-
+const TaskHeader = GenericContainer("display-flex");
 const Footer = GenericContainer("display-flex");
-
 const TaskInputContainer = GenericContainer("flex-1");
-
 const Row = GenericContainer("display-flex height-40");
-
 const SVG = ({
-    children,
-    onClick,
+  children,
+  onClick,
 } : { children: React.ReactNode, onClick: React.MouseEventHandler<SVGSVGElement> }
 ) => (<svg onClick={onClick} className="delete-svg">{children}</svg>);
-
-const TaskHeader = GenericContainer("display-flex");
 
 interface CreateStoryModalProps {
   defaultState?: number;
@@ -67,38 +62,23 @@ export function CreateStoryModal({
   const addTask = () => {
     setTasks([
       ...tasks,
-      {
-        taskId: taskCount + 1,
-        storyId: 0,
-        description: "",
-        complete: false,
-      },
+      createNewTask(taskCount),
     ]);
     setTaskCount(taskCount + 1);
   };
-  const removeTask = (taskId: number) => {
-    setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
+  const removeTask = async (taskId: number) => {
+    const temp = await removeTaskById(tasks, taskId);
+    setTasks(temp);
   };
   const handleChange = (taskId: number, value: string) => {
-    const temp = tasks.find((task) => task.taskId === taskId);
-    const items = tasks.reduce((total, task) => {
-      if (task.taskId !== taskId) total.push(task);
-      else total.push({ ...temp, description: value } as Task);
-      return total;
-    }, [] as Task[]);
+    const items = handleTaskChange(tasks, taskId, value);
     setTasks(items);
   };
 
   const handleSubmit = async () => {
     if (!obj.validate()) return;
     setLoading(true);
-    const finalTasks =
-      tasks &&
-      tasks.reduce((total, task) => {
-        const desc = task.description && task.description.trim();
-        if (desc) total.push(task);
-        return total;
-      }, [] as Task[]);
+    const finalTasks = parseTasks(tasks);
     try {
       await onSave(
         title.value,

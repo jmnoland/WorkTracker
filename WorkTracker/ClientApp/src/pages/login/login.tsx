@@ -8,11 +8,8 @@ import { loginFields } from './fields';
 import "./login.scss";
 
 const LoginContainer = GenericContainer("login-container");
-
 const ButtonContainer = GenericContainer("button-container");
-
 const VersionNumber = GenericContainer("version-number");
-
 const Content = GenericContainer();
 
 export default function Login(): JSX.Element {

@@ -1,6 +1,6 @@
 export interface State {
-    stateId: number;
-    teamId: number;
-    name: string;
-    type: string;
+  stateId: number;
+  teamId: number;
+  name: string;
+  type: string;
 };
