@@ -99,6 +99,7 @@ export function CreateStoryModal({
       <Button onClick={onCancel}>
         Cancel
       </Button>
+      <div style={{ marginRight: "10px" }}></div>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>
