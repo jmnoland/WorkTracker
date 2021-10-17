@@ -1,19 +1,13 @@
 import React from 'react';
 
-interface ElementProps {
-    children?: React.ReactNode,
-    key?: string | number,
-    ref?: React.RefObject<HTMLDivElement> | null,
+type DivProps = React.HTMLProps<HTMLDivElement>
+
+function CreateGenericContainer(classes?: string | null) {
+    const GenericContainer = React.forwardRef<HTMLDivElement, DivProps>((props, ref?) => {
+        return (<div className={classes ?? undefined} {...props} ref={ref}>{props.children}</div>)
+    });
+    GenericContainer.displayName = `Container${classes}`;
+    return GenericContainer;
 }
 
-export default function GenericContainer(classes?: string | null): ({children, key, ref}: ElementProps) => JSX.Element {
-    const tempClasses = classes ?? undefined;
-    const temp = ({
-        children,
-        key,
-        ref,
-    } : ElementProps) =>
-    (<div key={key} ref={ref} className={tempClasses}>{children}</div>);
-    temp.displayName = "GenericContainer";
-    return temp;
-}
+export default CreateGenericContainer;
