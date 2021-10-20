@@ -5,12 +5,13 @@ export function getMaxHeight(
   container: HTMLDivElement,
   header: HTMLDivElement,
   footer: HTMLDivElement,
+  additional = 0,
 ): string {
   const hh = header.getBoundingClientRect().height;
   const ch = container.getBoundingClientRect().height;
   const fh = footer.getBoundingClientRect().height;
   // element heights - 22 padding 20 margin
-  return `${ch - hh - fh - 22 - 20}px`;
+  return `${ch - hh - fh - 22 - 20 - additional}px`;
 }
 
 export function createNewTask(taskCount: number, storyId?: number | null): Task {

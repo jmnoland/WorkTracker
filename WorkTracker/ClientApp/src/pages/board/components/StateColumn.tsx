@@ -47,7 +47,8 @@ export function StateColumn({
         const heightVal = getMaxHeight(
           containerRef.current,
           headerRef.current,
-          footerRef.current
+          footerRef.current,
+          20
         );
         contentRef.current.style.maxHeight = heightVal;
         setHeight(heightVal);
