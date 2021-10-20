@@ -1,24 +1,6 @@
 import React from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
-
-const LinkContainer = styled.div`
-  > * {
-    color: white;
-    text-decoration: none;
-  }
-`;
-
-const InLineLinkContainer = styled.span`
-  cursor: pointer;
-  > * {
-    color: white;
-    text-decoration: none;
-  }
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+import './link.scss';
 
 interface NavLinkProps {
     to: string;
@@ -33,24 +15,24 @@ interface LinkProps {
 
 export function NavLink({ to, children }: NavLinkProps): JSX.Element {
   return (
-    <LinkContainer>
+    <div className="link-container">
       <Link to={to}>{children}</Link>
-    </LinkContainer>
+    </div>
   );
 }
 
 export function InLineLink({ onClick, children }: LinkProps): JSX.Element {
   return (
-    <InLineLinkContainer>
+    <div className="inline-link-container">
       <span onClick={onClick}>{children}</span>
-    </InLineLinkContainer>
+    </div>
   );
 }
 
 export function BaseLink({ onClick, children }: LinkProps): JSX.Element {
   return (
-    <LinkContainer>
+    <div className="link-container">
       <span onClick={onClick}>{children}</span>
-    </LinkContainer>
+    </div>
   );
 }

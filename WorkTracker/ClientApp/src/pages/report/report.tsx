@@ -1,7 +1,8 @@
 import React from "react";
-import styled from "styled-components";
+import { GenericContainer } from "../../components";
+import "./report.scss";
 
-const ReportContainer = styled.div``;
+const ReportContainer = GenericContainer();
 
 export default function Report(): JSX.Element {
   return <ReportContainer>Coming soon</ReportContainer>;

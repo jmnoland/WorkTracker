@@ -1,49 +1,29 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import { useForm } from "../../../helper";
 import {
   Modal,
   Button,
   EditableText,
+  GenericContainer,
   ScrollableContainer,
 } from "../../../components";
-import { GetStoryTasks, DeleteTask } from "../../../services/story";
+import { GetStoryTasks } from "../../../services/story";
 import { State, Task, Story } from "../../../types";
 import fields from "../fields";
+import { createNewTask, handleTaskChange, removeTaskById, parseTasks } from "../functions";
+import "./components.scss";
 
-const Content = styled.div``;
-
-const Description = styled.div`
-  flex: 1;
-`;
-
-const Footer = styled.div`
-  display: flex;
-`;
-
-const TaskInputContainer = styled.div`
-  overflow: hidden;
-  flex: 1;
-`;
-
-const Row = styled.div`
-  display: flex;
-  height: 40px;
-`;
-
-const SVG = styled.svg`
-  width: 40px;
-  fill: ${(props) => props.theme.colors.white};
-  cursor: pointer;
-  margin-top: 4px;
-  &:hover {
-    fill: ${(props) => props.theme.colors.danger};
-  }
-`;
-
-const TaskHeader = styled.div`
-  display: flex;
-`;
+const Content = GenericContainer();
+const Description = GenericContainer("flex-1");
+const Footer = GenericContainer("display-flex");
+const TaskInputContainer = GenericContainer("hide-overflow flex-1");
+const Row = GenericContainer("display-flex height-40");
+const TaskHeader = GenericContainer("display-flex");
+const SVG = ({
+  children,
+  onClick,
+} : { children: React.ReactNode, onClick: React.MouseEventHandler<SVGSVGElement> }
+) => (<svg onClick={onClick} className="delete-svg">{children}</svg>);
 
 interface ViewStoryModalProps {
   initialValues: Story;
@@ -52,12 +32,12 @@ interface ViewStoryModalProps {
   deleteStory: (storyId: number, stateId: number) => void;
   onCancel: () => void;
   onSave: (
-      storyId: number,
-      listOrder: number,
-      title: string,
-      description: string,
-      stateId: number,
-      tasks: Task[]
+    storyId: number,
+    listOrder: number,
+    title: string,
+    description: string,
+    stateId: number,
+    tasks: Task[]
   ) => void;
 }
 
@@ -78,8 +58,8 @@ export function ViewStoryModal({
   useEffect(() => {
     async function fetchData() {
       if (initialValues.storyId !== undefined) {
-          const data = await GetStoryTasks(initialValues.storyId);
-          setTasks(data);
+        const data = await GetStoryTasks(initialValues.storyId);
+        setTasks(data);
       }
     }
     fetchData();
@@ -94,13 +74,7 @@ export function ViewStoryModal({
   const addTask = () => {
     setTasks([
       ...tasks,
-      {
-        taskId: taskCount + 1,
-        storyId: storyId.value,
-        description: "",
-        complete: false,
-        new: true,
-      },
+      createNewTask(taskCount, storyId.value),
     ]);
     setTaskCount(taskCount + 1);
   };
@@ -117,30 +91,18 @@ export function ViewStoryModal({
   };
 
   const removeTask = async (taskId: number) => {
-    const taskToRemove = tasks.filter((task) => task.taskId === taskId)[0];
-    if (taskToRemove && !taskToRemove.new) await DeleteTask(taskId);
-    setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
+    const temp = await removeTaskById(tasks, taskId);
+    setTasks(temp);
   };
 
   const handleChange = (taskId: number, value: string) => {
-    const temp = tasks.find((task) => task.taskId === taskId);
-    const items = tasks.reduce((total, task) => {
-      if (task.taskId !== taskId) total.push(task);
-      else total.push({ ...temp, description: value } as Task);
-      return total;
-    }, [] as Task[]);
+    const items = handleTaskChange(tasks, taskId, value);
     setTasks(items);
   };
 
   const handleSubmit = async () => {
     setLoading(true);
-    const finalTasks =
-      tasks &&
-      tasks.reduce((total, task) => {
-        const desc = task.description && task.description.trim();
-        if (desc) total.push(task);
-        return total;
-      }, [] as Task[]);
+    const finalTasks = parseTasks(tasks);
     try {
       await onSave(
         storyId.value,
@@ -162,6 +124,7 @@ export function ViewStoryModal({
       <Button onClick={onCancel}>
         Cancel
       </Button>
+      <div style={{ marginRight: "10px" }}></div>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>

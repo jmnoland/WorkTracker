@@ -1,0 +1,55 @@
+@import "../../constants/variables.scss";
+
+.input-container {
+  position: relative;
+  margin-bottom: 12px;
+  padding: $padding-default;
+}
+
+.input-base {
+  width: 100%;
+  background: $white-color;
+  border-radius: $border-radius-button;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.valid-border {
+  border: 2px solid $white-color;
+}
+
+.invalid-border {
+  border: 2px solid $danger-color;
+}
+
+.input-login {
+  width: 190px;
+}
+
+.input-text-area {
+  width: 100%;
+  text-overflow: ellipsis;
+  background: $dark-color;
+  border-radius: $border-radius-button;
+  color: $white-color;
+  padding: $padding-medium;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.label-validation {
+  font-size: 11px;
+  margin-top: 7px;
+  margin-left: 2px;
+  color: $danger-color;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: -12px;
+}

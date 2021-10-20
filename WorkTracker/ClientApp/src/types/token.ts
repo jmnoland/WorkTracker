@@ -1,7 +1,7 @@
 export interface DecodedToken {
-    nameid: string;
-    exp: number;
-    iat: number;
-    nbf: number;
-    role: string[];
+  nameid: string;
+  exp: number;
+  iat: number;
+  nbf: number;
+  role: string[];
 };

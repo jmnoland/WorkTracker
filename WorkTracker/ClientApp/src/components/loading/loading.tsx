@@ -1,12 +1,6 @@
 import React from "react";
-import styled from "styled-components";
-import { theme } from "../constants/theme";
-
-const Container = styled.div`
-  width: max-content;
-  margin-left: auto;
-  margin-right: auto;
-`;
+import { theme } from "../../constants/theme";
+import "./loading.scss";
 
 function getSize(small: boolean): { width: string, height: string } {
   const size = { width: "", height: "" };
@@ -26,7 +20,7 @@ export default function Loading({
 }: { small: boolean, primary?: boolean }): JSX.Element {
   const size = getSize(small);
   return (
-    <Container>
+    <div className="loading-container">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         version="1.0"
@@ -49,6 +43,6 @@ export default function Loading({
           ></animateTransform>
         </g>
       </svg>
-    </Container>
+    </div>
   );
 }
