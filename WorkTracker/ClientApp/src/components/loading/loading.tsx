@@ -2,7 +2,7 @@ import React from "react";
 import { theme } from "../../constants/theme";
 import "./loading.scss";
 
-function getSize(small: boolean): { width: string, height: string } {
+export function getSize(small: boolean): { width: string, height: string } {
   const size = { width: "", height: "" };
   if (small) {
     size.width = "20px";

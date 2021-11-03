@@ -3,6 +3,7 @@ import Loading from "../loading/loading";
 import "./button.scss";
 
 interface BaseButtonProps {
+    id?: string;
     onClick: () => void;
     center?: boolean;
     loading?: boolean;
@@ -15,6 +16,7 @@ interface BaseButtonProps {
 }
 
 export default function BaseButton({
+  id,
   onClick,
   center,
   loading,
@@ -28,7 +30,7 @@ export default function BaseButton({
   if (isLoginButton) {
     return (
       <div className={center ? "center" : ""}>
-        <button className={primary ? "button-login-primary" : "button-login"} onClick={onClick}>
+        <button id={id} className={primary ? "button-login-primary" : "button-login"} disabled={loading} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </button>
       </div>
@@ -37,7 +39,7 @@ export default function BaseButton({
   if (isDeleteButton) {
     return (
       <div className={center ? "center" : ""}>
-        <button className="button-delete" onClick={onClick}>
+        <button id={id} className="button-delete" disabled={loading} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </button>
       </div>
@@ -46,7 +48,7 @@ export default function BaseButton({
   if (isSmallButton) {
     return (
       <div className={`${center ? "center" : ""} small`}>
-        <button className={primary ? "button-small-primary" : "button-small"} onClick={onClick}>
+        <button id={id} className={primary ? "button-small-primary" : "button-small"} disabled={loading} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </button>
       </div>
@@ -55,7 +57,7 @@ export default function BaseButton({
   if (isInactivePrimary) {
     return (
       <div className={`${center ? "center" : ""} small`}>
-        <button className="button-inactive-primary" onClick={onClick}>
+        <button id={id} className="button-inactive-primary" disabled={loading} onClick={onClick}>
           {loading ? <Loading small primary={primary} /> : children}
         </button>
       </div>
@@ -63,7 +65,7 @@ export default function BaseButton({
   }
   return (
     <div className={center ? "center" : ""}>
-      <button className={primary ? "button-primary" : "button"} onClick={onClick}>
+      <button id={id} className={primary ? "button-primary" : "button"} disabled={loading} onClick={onClick}>
         {loading ? <Loading small primary={primary} /> : children}
       </button>
     </div>

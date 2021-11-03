@@ -7,13 +7,14 @@ const Container = styled.div<{ width?: string }>`
 
 const Img = styled.img``;
 
-export default function Icon({ onClick, width, src }: {
+export default function Icon({ id, onClick, width, src }: {
+    id?: string,
     onClick: () => void,
     width?: string,
     src: string,
 }): JSX.Element {
   return (
-    <Container width={width} onClick={onClick}>
+    <Container id={id} width={width} onClick={onClick}>
       <Img src={src} />
     </Container>
   );

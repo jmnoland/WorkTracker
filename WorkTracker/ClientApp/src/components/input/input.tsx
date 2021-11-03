@@ -17,17 +17,19 @@ const Label = styled.span``;
 const LabelAbove = styled.div``;
 
 interface BaseInputProps {
-    value: string | number;
-    onChange: (val: unknown) => void;
-    label?: string;
-    position?: string;
-    errors?: Error[];
-    isLogin?: boolean;
-    center?: boolean;
-    type?: string;
+  id?: string,
+  value: string | number;
+  onChange: (val: unknown) => void;
+  label?: string;
+  position?: string;
+  errors?: Error[];
+  isLogin?: boolean;
+  center?: boolean;
+  type?: string;
 }
 
 export default function BaseInput({
+  id,
   value,
   onChange,
   errors,
@@ -53,7 +55,7 @@ export default function BaseInput({
     onChange(e.target.value);
   };
   return (
-    <Container className="input-container" center={center}>
+    <Container id={id} className="input-container" center={center}>
       {inputLabel}
       {!valid ? errorText : null}
       <input className={valid ? "input-base valid-border" : "input-base invalid-border"} value={value} type={type} onChange={valueChange} />
@@ -62,11 +64,12 @@ export default function BaseInput({
 }
 
 export function LoginInput({
-    value,
-    onChange,
-    errors,
-    label,
-    type
+  id,
+  value,
+  onChange,
+  errors,
+  label,
+  type
 }: BaseInputProps): JSX.Element {
   const valid = errors?.length === 0;
 
@@ -78,7 +81,7 @@ export function LoginInput({
     onChange(e.target.value);
   };
   return (
-    <Container className="input-container" center isLogin>
+    <Container id={id} className="input-container" center isLogin>
       {<LabelAbove>{label}</LabelAbove>}
       {!valid ? errorText : null}
       <input className={valid ? "input-base valid-border" : "input-base invalid-border"} value={value} type={type} onChange={valueChange} />
@@ -87,6 +90,7 @@ export function LoginInput({
 }
 
 interface TextFieldInputProps {
+  id?: string,
   value: string;
   height?: string;
   useRef?: React.RefObject<HTMLInputElement> | null | undefined;
@@ -98,6 +102,7 @@ interface TextFieldInputProps {
 }
 
 export function TextFieldInput({
+  id,
   value,
   height,
   useRef,
@@ -118,7 +123,7 @@ export function TextFieldInput({
   };
   const classes = `input-text-area ${valid ? "valid-border" : "invalid-border"}`
   return (
-    <Container className="input-container" center={center}>
+    <Container id={id} className="input-container" center={center}>
       {!valid ? errorText : null}
       <TextAreaInput
         ref={useRef}
