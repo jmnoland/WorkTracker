@@ -19,6 +19,7 @@ module.exports = {
   extends: [
     "plugin:react/recommended",
     "standard",
+    "plugin:cypress/recommended",
     "plugin:prettier/recommended",
   ],
   globals: {
