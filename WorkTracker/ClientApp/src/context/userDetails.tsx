@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { UserDetail } from '../types';
+import { UserDetail } from "../types";
 import { decodeJwtToken } from "../helper";
 import { GetDetails } from "../services/user";
 
@@ -12,7 +12,7 @@ interface UserDetailContext {
     setIsLoggedIn: (isLoggedIn: boolean) => void;
     setTokenDetails: (token: string) => void;
     logout: () => void;
-};
+}
 
 export const UserDetailContext = createContext<UserDetailContext>({
     userDetail: null,

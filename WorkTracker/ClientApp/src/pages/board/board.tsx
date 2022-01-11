@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserDetailContext } from "../../context/userDetails";
 import { NotificationContext } from "../../context/notification";
 import { Notification, GenericContainer } from "../../components";
 import { CreateStoryModal } from "./components/createStoryModal";
@@ -21,12 +20,13 @@ import {
   DroppableType,
 } from "../../types";
 import { createPayload, reorder } from "./functions";
+import { useAppSelector } from "../../redux/hooks";
 import "./board.scss";
 
 const BoardContainer = GenericContainer("board-container");
 
 export default function Board(): JSX.Element {
-  const { userDetail } = useContext(UserDetailContext);
+  const userDetail = useAppSelector((state) => state.userDetail);
   const { setContent } = useContext(NotificationContext);
 
   const [openCreateModal, setOpenCreateModal] = useState(false);

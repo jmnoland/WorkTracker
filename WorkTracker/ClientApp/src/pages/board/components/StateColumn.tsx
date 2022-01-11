@@ -1,12 +1,12 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { Story } from "./story";
-import { UserDetailContext } from "../../../context/userDetails";
 import { Button, GenericContainer } from "../../../components";
 import { getUserMapping, parseDateTime } from "../../../helper";
 import { State, Story as StoryType } from "../../../types";
 import { getMaxHeight } from "../functions";
 import "./components.scss";
+import { useAppSelector } from "../../../redux/hooks";
 
 const StateButton = GenericContainer("float-right");
 const StateFooter = GenericContainer("state-column-header");
@@ -28,9 +28,7 @@ export function StateColumn({
   viewEdit,
   createNew,
 }: StateColumnProps): JSX.Element {
-  const {
-    userDetail,
-  } = useContext(UserDetailContext);
+  const userDetail = useAppSelector((state) => state.userDetail);
   const users = userDetail?.users;
 
   const headerRef = useRef<HTMLDivElement>(null);
