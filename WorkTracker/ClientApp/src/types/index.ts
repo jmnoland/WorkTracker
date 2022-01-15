@@ -1,4 +1,3 @@
-import { Dictionary } from "./dictionary";
 import { DecodedToken } from "./token";
 import { User } from "./user";
 import { Team } from "./team";
@@ -14,7 +13,6 @@ import { InitialFormField } from "./initialField";
 import { Form } from "./form";
 
 export type {
-  Dictionary,
   DecodedToken,
   User,
   Team,

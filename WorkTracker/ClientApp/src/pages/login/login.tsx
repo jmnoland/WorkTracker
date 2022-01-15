@@ -23,7 +23,7 @@ export default function Login(): JSX.Element {
   const [demoLoading, setDemoLoading] = useState(false);
   const [register, setRegister] = useState(false);
   const isLoggedIn = useAppSelector(
-    (state) => state.isLoggedIn);
+    (state) => state.user.isLoggedIn);
   const dispatch = useAppDispatch();
 
   const initialValues = { email: "", password: "" };

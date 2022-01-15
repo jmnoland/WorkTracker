@@ -1,9 +1,12 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { UserSlice } from "./slices";
+import { UserSlice, StorySlice } from "./slices";
 import loggerMiddleware from "./middleware";
 
 const store = configureStore({
-  reducer: UserSlice,
+  reducer: {
+    user: UserSlice,
+    story: StorySlice,
+  },
   middleware: [loggerMiddleware, ...getDefaultMiddleware()],
 });
 

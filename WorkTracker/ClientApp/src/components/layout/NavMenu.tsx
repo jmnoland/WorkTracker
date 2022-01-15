@@ -45,7 +45,7 @@ const ProfileContainer = styled.div`
 `;
 
 export default function NavMenu(): JSX.Element {
-  const isLoggedIn = useAppSelector((state) => state.isLoggedIn);
+  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
   const dispatch = useAppDispatch();
 
   if (!isLoggedIn) {

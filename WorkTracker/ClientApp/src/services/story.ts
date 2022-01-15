@@ -1,4 +1,4 @@
-import { Dictionary, Story, Task } from "../types";
+import { Story, Task } from "../types";
 import api from "./api";
 
 const controller = "story";
@@ -69,7 +69,10 @@ export async function DeleteTask(taskId: number): Promise<void> {
   await api.delete(`${controller}/task/${taskId}`);
 }
 
-export async function ChangeState(storyId: number, payload: { stateId: number, stories: Dictionary<number> }): Promise<void> {
+export async function ChangeState(
+  storyId: number,
+  payload: { stateId: number, stories: Record<string, number> }
+): Promise<void> {
   const { data } = await api.patch(
     `${controller}/update/state/${storyId}`,
     payload
@@ -77,7 +80,9 @@ export async function ChangeState(storyId: number, payload: { stateId: number, s
   return data;
 }
 
-export async function OrderUpdate(payload: { stateId: number, stories: Dictionary<number> }): Promise<void> {
+export async function OrderUpdate(
+  payload: { stateId: number, stories: Record<string, number> }
+): Promise<void> {
   const { data } = await api.patch(`${controller}/update/order`, payload);
   return data;
 }

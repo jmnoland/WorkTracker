@@ -1,14 +1,11 @@
 import { useState } from "react";
 import jwtDecode from "jwt-decode";
-import { DecodedToken, Dictionary, User, Error, FormField, InitialFormField, ValidationRule, Form } from "./types";
+import { DecodedToken, User, Error, FormField, InitialFormField, ValidationRule, Form } from "./types";
 
 export function verifyTokenExpiry(decodedToken : DecodedToken): boolean {
     // Adding miliseconds to timestamp
     const unix = decodedToken.exp * 1000;
-    if (unix > Date.now()) {
-        return true;
-    }
-    return false;
+    return unix > Date.now();
 }
 
 export function dateToUTCUnix(date: Date): number {
@@ -33,7 +30,6 @@ export function decodeJwtToken(token : string) : DecodedToken | null {
 }
 
 export function parseDateTime(value : string) : string | null {
-    if (typeof value !== "string") return null;
     const date : Date = new Date(value);
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -47,8 +43,8 @@ export function parseDateTime(value : string) : string | null {
     }`;
 }
 
-export function getUserMapping(users?: User[]) : Dictionary<string> {
-    const userMap : Dictionary<string> = {};
+export function getUserMapping(users?: User[]) : Record<string, string> {
+    const userMap : Record<string, string> = {};
     if (!users) return userMap;
     users.reduce((total, user) => {
         total[user.userId] = user.name;
@@ -58,16 +54,18 @@ export function getUserMapping(users?: User[]) : Dictionary<string> {
 }
 
 function getInitialErrors(objectKeys: string[]) {
-    const temp = objectKeys.reduce(
-        (total: Dictionary<Error[]>, val: string) => {
+    return objectKeys.reduce(
+        (total: Record<string, Error[]>, val: string) => {
             total[val] = [];
             return total;
         },
     {});
-    return temp;
 }
 
-function getInitialModified(objectKeys: string[], fields: Dictionary<InitialFormField<unknown>>): string[] {
+function getInitialModified(
+  objectKeys: string[],
+  fields: Record<string, InitialFormField<unknown>>
+): string[] {
     const temp: string[] = [];
     objectKeys.forEach((name) => {
         if (fields[name] !== undefined) {
@@ -78,11 +76,11 @@ function getInitialModified(objectKeys: string[], fields: Dictionary<InitialForm
 }
 
 export function useForm(initialFields: unknown, initialValues: unknown): Form {
-    const fields = initialFields as Dictionary<InitialFormField<unknown>>;
-    const objectKeys = Object.keys(initialValues as Dictionary<unknown>);
-    const [values, setValues] = useState(initialValues as Dictionary<unknown>);
+    const fields = initialFields as Record<string, InitialFormField<unknown>>;
+    const objectKeys = Object.keys(initialValues as Record<string, unknown>);
+    const [values, setValues] = useState(initialValues as Record<string, unknown>);
     const [modified, setModified] = useState(getInitialModified(objectKeys, fields));
-    const [errors, setErrors] = useState<Dictionary<Error[]>>(getInitialErrors(objectKeys));
+    const [errors, setErrors] = useState<Record<string, Error[]>>(getInitialErrors(objectKeys));
 
     function onChange(value: unknown, name: string) {
         setValues({ ...values, [name]: value });
@@ -101,7 +99,7 @@ export function useForm(initialFields: unknown, initialValues: unknown): Form {
         rules.forEach(rule => {
             if (!rule.validate(values[name])) {
                 temp.push({ id: `V${count}`, message: rule.message });
-            };
+            }
             count ++;
         });
         return temp;
@@ -109,7 +107,7 @@ export function useForm(initialFields: unknown, initialValues: unknown): Form {
 
     function validate(): boolean {
         let valid = true;
-        const temp: Dictionary<Error[]> = {};
+        const temp: Record<string, Error[]> = {};
         modified.forEach((name) => {
             const rules = fields[name].rules;
             if (rules) {
@@ -125,13 +123,13 @@ export function useForm(initialFields: unknown, initialValues: unknown): Form {
     }
 
     function reset() {
-        setValues(initialValues as Dictionary<unknown>);
+        setValues(initialValues as Record<string, unknown>);
         setModified(getInitialModified(objectKeys, fields));
         setErrors(getInitialErrors(objectKeys));
     }
 
     return {
-        form: objectKeys.reduce((total: Dictionary<FormField<unknown>>, name: string) => {
+        form: objectKeys.reduce((total: Record<string, FormField<unknown>>, name: string) => {
             total[name] = {
                 ...fields[name],
                 errors: errors[name],
@@ -139,7 +137,7 @@ export function useForm(initialFields: unknown, initialValues: unknown): Form {
                 onChange: (val: unknown) => onChange(val, name),
             }
             return total;
-        }, {} as Dictionary<FormField<unknown>>),
+        }, {} as Record<string, FormField<unknown>>),
         modified: modified,
         validate: validate,
         reset: reset,

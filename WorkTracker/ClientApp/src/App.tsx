@@ -31,7 +31,7 @@ const AppContainer = GenericContainer("app-container");
 const ContentContainer = GenericContainer("app-content-container");
 
 function Content({ children } : { children: React.ReactNode }) {
-  const isLoggedIn = useAppSelector((state) => state.isLoggedIn);
+  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
   if (isLoggedIn) {
     return <ContentContainer>{children}</ContentContainer>;
   }

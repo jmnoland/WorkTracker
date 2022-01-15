@@ -28,7 +28,7 @@ export function StateColumn({
   viewEdit,
   createNew,
 }: StateColumnProps): JSX.Element {
-  const userDetail = useAppSelector((state) => state.userDetail);
+  const userDetail = useAppSelector((state) => state.user.userDetail);
   const users = userDetail?.users;
 
   const headerRef = useRef<HTMLDivElement>(null);
