@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserDetail, DecodedToken } from "../../types";
 import { UserLogin, DemoLogin } from "../../services/auth";
 import { decodeJwtToken } from "../../helper";
+import { GetDetails } from "../../services/user";
 
 const initialUserDetail: UserDetail = {
   organisation: null,
@@ -27,14 +28,17 @@ const initialState: {
 const loginWithEmail = createAsyncThunk(
   "user/login",
   async ({ email, password }: { email: string, password: string }) => {
-    return await UserLogin(email, password);
+    const token = await UserLogin(email, password);
+    const userDetail = await GetDetails();
+    return { token, userDetail };
   }
 );
 const loginWithDemo = createAsyncThunk(
   "user/demoLogin",
   async () => {
-    console.log('action login');
-    return await DemoLogin();
+    const token = await DemoLogin();
+    const userDetail = await GetDetails();
+    return { token, userDetail };
   }
 );
 
@@ -52,7 +56,9 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loginWithEmail.fulfilled, (state, action) => {
-      const decodedToken = decodeJwtToken(action.payload);
+      const { token, userDetail } = action.payload;
+      const decodedToken = decodeJwtToken(token);
+      state.userDetail = userDetail;
       state.decodedToken = decodedToken;
       if (decodedToken) {
         state.user = decodedToken.nameid;
@@ -61,7 +67,9 @@ export const userSlice = createSlice({
       state.isLoggedIn = true;
     });
     builder.addCase(loginWithDemo.fulfilled, (state, action) => {
-      const decodedToken = decodeJwtToken(action.payload);
+      const { token, userDetail } = action.payload;
+      const decodedToken = decodeJwtToken(token);
+      state.userDetail = userDetail;
       state.decodedToken = decodedToken;
       if (decodedToken) {
         state.user = decodedToken.nameid;
