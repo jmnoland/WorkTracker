@@ -9,10 +9,10 @@ import {
 } from "../../../components";
 import { State, Task, Story } from "../../../types";
 import fields from "../fields";
-import { createNewTask, handleTaskChange, removeTaskById, parseTasks } from "../functions";
+import { createNewTask, handleTaskChange, parseTasks } from "../functions";
 import "./components.scss";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { getStoryTasks } from "../../../redux/actions";
+import { getStoryTasks, deleteTask } from "../../../redux/actions";
 
 const Content = GenericContainer();
 const Description = GenericContainer("flex-1");
@@ -59,14 +59,12 @@ export function ViewStoryModal({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    async function fetchData() {
-      if (initialValues.storyId !== undefined && !initialValues.tasks?.length) {
+    if (initialValues.storyId !== undefined) {
+      if (allTasks[initialValues.storyId]) setTasks(allTasks[initialValues.storyId]);
+      else if (!initialValues.tasks) {
         dispatch(getStoryTasks({ storyId: initialValues.storyId }) as any);
-      } else {
-        if (initialValues.storyId) setTasks(allTasks[initialValues.storyId]);
       }
     }
-    fetchData();
   }, [allTasks]);
 
   const obj = useForm(
@@ -95,8 +93,11 @@ export function ViewStoryModal({
   };
 
   const removeTask = async (taskId: number) => {
-    const temp = await removeTaskById(tasks, taskId);
-    setTasks(temp);
+    const { storyId } = initialValues;
+    const taskToRemove = tasks.filter((task) => task.taskId === taskId)[0];
+    if (taskToRemove && !taskToRemove.new && storyId)
+      dispatch(deleteTask({ storyId, taskId }) as any);
+    setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
 
   const handleChange = (taskId: number, value: string) => {

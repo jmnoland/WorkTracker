@@ -1,5 +1,4 @@
 import { Story, Task } from "../../types";
-import { DeleteTask } from "../../services/story";
 
 export function getMaxHeight(
   container: HTMLDivElement,
@@ -44,15 +43,6 @@ export function parseTasks(tasks: Task[]) : Task[] {
     if (desc) total.push(task);
     return total;
   }, [] as Task[]);
-}
-
-export async function removeTaskById(
-  tasks: Task[],
-  taskId: number,
-): Promise<Task[]> {
-  const taskToRemove = tasks.filter((task) => task.taskId === taskId)[0];
-  if (taskToRemove && !taskToRemove.new) await DeleteTask(taskId);
-  return [...tasks.filter((task) => task.taskId !== taskId)];
 }
 
 export function reorder(

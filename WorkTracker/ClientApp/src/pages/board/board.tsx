@@ -25,7 +25,7 @@ const BoardContainer = GenericContainer("board-container");
 
 export default function Board(): JSX.Element {
   const userDetail = useAppSelector((state) => state.user.userDetail);
-  const { stories, tasks } = useAppSelector((state) => state.story);
+  const { stories } = useAppSelector((state) => state.story);
   const dispatch = useAppDispatch();
   const { setContent } = useContext(NotificationContext);
 
@@ -150,9 +150,6 @@ export default function Board(): JSX.Element {
   };
 
   const setViewValues = (story: Story) => {
-    if (story.storyId) {
-      story.tasks = tasks[story.storyId] ? tasks[story.storyId] : [];
-    }
     setViewStory(story);
     setOpenViewModal(true);
   };

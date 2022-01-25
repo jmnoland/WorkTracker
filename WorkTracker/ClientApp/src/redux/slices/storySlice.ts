@@ -182,6 +182,10 @@ function SetNewStoryState(
   }: { stateId: number, stories: Story[] },
   state: any,
 ) {
+  if (Object.keys(state.stories).length === 0) {
+    state.stories[stateId] = stories;
+    return;
+  }
   Object.keys(state.stories).forEach((key) => {
     const stateIdKey = parseInt(key);
     if (stateId === stateIdKey) {
@@ -275,6 +279,7 @@ export {
   updateListById,
   getStories,
   getStoryTasks,
+  deleteTask,
   orderUpdate,
   changeState,
   createStory,

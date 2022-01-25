@@ -8,6 +8,7 @@ import {
   createStory,
   orderUpdate,
   getStoryTasks,
+  deleteTask,
   changeState,
 } from "../slices/storySlice";
 
@@ -23,5 +24,6 @@ export {
   createStory,
   orderUpdate,
   getStoryTasks,
+  deleteTask,
   changeState,
 };

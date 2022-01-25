@@ -9,7 +9,7 @@ import {
   ScrollableContainer,
 } from "../../../components";
 import { State, Task } from "../../../types";
-import { createNewTask, handleTaskChange, removeTaskById, parseTasks } from "../functions";
+import { createNewTask, handleTaskChange, parseTasks } from "../functions";
 import fields from "../fields";
 import "./components.scss";
 
@@ -67,8 +67,7 @@ export function CreateStoryModal({
     setTaskCount(taskCount + 1);
   };
   const removeTask = async (taskId: number) => {
-    const temp = await removeTaskById(tasks, taskId);
-    setTasks(temp);
+    setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
   const handleChange = (taskId: number, value: string) => {
     const items = handleTaskChange(tasks, taskId, value);
@@ -99,7 +98,7 @@ export function CreateStoryModal({
       <Button onClick={onCancel}>
         Cancel
       </Button>
-      <div style={{ marginRight: "10px" }}></div>
+      <div style={{ marginRight: "10px" }}> </div>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>

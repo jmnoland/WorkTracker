@@ -39,7 +39,6 @@ export function StateColumn({
   const droppableStyling = height !== "" ? { minHeight: height } : {};
 
   useEffect(() => {
-    if (!stories) return;
     if (headerRef.current && containerRef.current && footerRef.current) {
       if (contentRef.current) {
         const heightVal = getMaxHeight(
