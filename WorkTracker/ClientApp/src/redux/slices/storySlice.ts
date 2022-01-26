@@ -265,7 +265,7 @@ export const storySlice = createSlice({
     });
     builder.addCase(deleteStory.fulfilled, (state, action) => {
       const storyId = action.payload;
-      for(const stateId in Object.keys(state.stories)) {
+      for(const stateId in state.stories) {
         state.stories[stateId] = state.stories[stateId]
           .filter((val) => val.storyId !== storyId);
       }
