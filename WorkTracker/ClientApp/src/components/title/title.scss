@@ -1,11 +1,13 @@
 @import "../../constants/variables.scss";
 
 .main-title-container {
+  user-select: none;
   font-size: 30px;
   padding: 10px 10px 10px 30px;
 }
 
 .login-title-container {
+  user-select: none;
   font-size: 50px;
   text-align: center;
   margin-bottom: $margin-large;
