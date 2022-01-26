@@ -11,20 +11,37 @@ const initialUserDetail: UserDetail = {
   users: [],
 };
 
-const initialState: {
-  userDetail: UserDetail,
-  decodedToken: DecodedToken | null,
-  user: string | null,
-  permissions: string[],
-  isLoggedIn: boolean,
-} = {
-  userDetail: initialUserDetail,
-  decodedToken: null,
-  user: null,
-  permissions: [],
-  isLoggedIn: false,
-};
+function getInitialState() {
+  const initialState: {
+    userDetail: UserDetail,
+    decodedToken: DecodedToken | null,
+    user: string | undefined | null,
+    permissions: string[] | undefined,
+    isLoggedIn: boolean,
+  } = {
+    userDetail: initialUserDetail,
+    decodedToken: null,
+    user: null,
+    permissions: [],
+    isLoggedIn: false,
+  };
+  const token = localStorage.getItem("X-User-Token");
+  if (token === null || token === undefined) return initialState;
+  const decodedToken = decodeJwtToken(token);
+  initialState.decodedToken = decodedToken;
+  initialState.user = decodedToken?.nameid;
+  initialState.isLoggedIn = true;
+  initialState.permissions = decodedToken?.role;
+  return initialState;
+}
 
+const getUserDetails = createAsyncThunk(
+  "user/detail",
+  async () => {
+    const userDetail = await GetDetails();
+    return { userDetail };
+  }
+);
 const loginWithEmail = createAsyncThunk(
   "user/login",
   async ({ email, password }: { email: string, password: string }) => {
@@ -44,7 +61,7 @@ const loginWithDemo = createAsyncThunk(
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: initialState,
+  initialState: getInitialState(),
   reducers: {
     logout: (state) => {
       state.user = null;
@@ -77,9 +94,13 @@ export const userSlice = createSlice({
       }
       state.isLoggedIn = true;
     });
+    builder.addCase(getUserDetails.fulfilled, (state, action) => {
+      const { userDetail } = action.payload;
+      state.userDetail = userDetail;
+    });
   },
 });
 
 const { logout } = userSlice.actions;
-export { logout, loginWithEmail, loginWithDemo };
+export { logout, loginWithEmail, loginWithDemo, getUserDetails };
 export default userSlice.reducer;

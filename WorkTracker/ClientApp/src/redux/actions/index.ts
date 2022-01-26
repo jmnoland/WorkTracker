@@ -1,4 +1,9 @@
-import { logout, loginWithDemo, loginWithEmail } from "../slices/userSlice";
+import {
+  logout,
+  loginWithDemo,
+  loginWithEmail,
+  getUserDetails,
+} from "../slices/userSlice";
 import {
   updateList,
   updateListById,
@@ -16,6 +21,7 @@ export {
   logout,
   loginWithDemo,
   loginWithEmail,
+  getUserDetails,
   updateList,
   updateListById,
   getStories,

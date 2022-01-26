@@ -16,7 +16,9 @@ import "./board.scss";
 import {
   changeState,
   createStory,
-  deleteStory, getStories,
+  deleteStory,
+  getStories,
+  getUserDetails,
   orderUpdate,
   updateStory
 } from "../../redux/actions";
@@ -35,10 +37,12 @@ export default function Board(): JSX.Element {
   const [storyState, setStoryState] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    if (userDetail?.states) {
+    if (userDetail?.states.length !== 0) {
       userDetail?.states.forEach((state) => {
         dispatch(getStories({ stateId: state.stateId }) as any);
       });
+    } else if (userDetail?.states.length === 0) {
+      dispatch(getUserDetails() as any);
     }
   }, [userDetail?.states]);
 
