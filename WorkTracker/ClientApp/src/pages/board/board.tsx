@@ -57,9 +57,8 @@ export default function Board(): JSX.Element {
     droppableDestination: DroppableType
   ) => {
     const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
+    const destClone = destination ? Array.from(destination) : [];
     const [removed] = sourceClone.splice(droppableSource.index, 1);
-    removed.stateId = parseInt(droppableDestination.droppableId);
 
     destClone.splice(droppableDestination.index, 0, removed);
 

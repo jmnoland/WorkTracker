@@ -175,25 +175,6 @@ const changeState = createAsyncThunk(
   }
 );
 
-function SetNewStoryState(
-  {
-    stateId,
-    stories,
-  }: { stateId: number, stories: Story[] },
-  state: any,
-) {
-  if (Object.keys(state.stories).length === 0) {
-    state.stories[stateId] = stories;
-    return;
-  }
-  Object.keys(state.stories).forEach((key) => {
-    const stateIdKey = parseInt(key);
-    if (stateId === stateIdKey) {
-      state.stories[stateIdKey] = stories;
-    }
-  });
-}
-
 export const storySlice = createSlice({
   name: "story",
   initialState: initialState,
@@ -219,7 +200,8 @@ export const storySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getStories.fulfilled, (state, action) => {
-      SetNewStoryState(action.payload, state);
+      const { stateId, stories } = action.payload;
+      state.stories[stateId] = stories;
     });
     builder.addCase(getStoryTasks.fulfilled, (state, action) => {
       const { storyId, tasks } = action.payload;
@@ -246,12 +228,14 @@ export const storySlice = createSlice({
         }
       }
       if (storyToMove.storyId) {
-        state.stories[stateId].push(storyToMove);
+        if (state.stories[stateId]) state.stories[stateId].push(storyToMove);
+        else state.stories[stateId] = [storyToMove];
       }
       updateListById(action.payload);
     });
     builder.addCase(createStory.fulfilled, (state, action) => {
-      SetNewStoryState(action.payload, state);
+      const { stateId, stories } = action.payload;
+      state.stories[stateId] = stories;
     });
     builder.addCase(updateStory.fulfilled, (state, action) => {
       const payload = action.payload;
