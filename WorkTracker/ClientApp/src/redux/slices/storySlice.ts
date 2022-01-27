@@ -175,6 +175,23 @@ const changeState = createAsyncThunk(
   }
 );
 
+function getUpdatedList(
+  payload: { stateId: number, stories: Record<string, number> },
+  state: any,
+) {
+  const { stateId, stories } = payload;
+  const updatedStories: Story[] = [];
+  state.stories[stateId].forEach((story: Story) => {
+    if (story.storyId && stories[story.storyId] !== undefined) {
+      const place = stories[story.storyId];
+      if (updatedStories.length < place) updatedStories.push(story);
+      else updatedStories.splice(place, 0, story);
+    }
+  });
+  state.stories[stateId] = updatedStories;
+  return updatedStories;
+}
+
 export const storySlice = createSlice({
   name: "story",
   initialState: initialState,
@@ -187,15 +204,7 @@ export const storySlice = createSlice({
       state,
       action: PayloadAction<{ stateId: number, stories: Record<string, number>}>,
     ) => {
-      const { stateId, stories } = action.payload;
-      const updatedStories: Story[] = [];
-      state.stories[stateId].forEach(story => {
-        if (story.storyId && stories[story.storyId]) {
-          const place = stories[story.storyId];
-          if (updatedStories.length < place) updatedStories.push(story);
-          else updatedStories.splice(place, 0, story);
-        }
-      });
+      getUpdatedList(action.payload, state);
     },
   },
   extraReducers: (builder) => {
@@ -213,11 +222,10 @@ export const storySlice = createSlice({
         .filter(task => task.taskId !== taskId);
     });
     builder.addCase(orderUpdate.fulfilled, (state, action) => {
-      const result = action.payload;
-      updateListById(result);
+      getUpdatedList(action.payload, state);
     });
     builder.addCase(changeState.fulfilled, (state, action) => {
-      const { storyId, currentStateId, stateId } = action.payload;
+      const { storyId, currentStateId, stateId, stories } = action.payload;
       let storyToMove: Story = {};
       for(const index in state.stories[currentStateId]) {
         const story = state.stories[currentStateId][index];
@@ -231,7 +239,7 @@ export const storySlice = createSlice({
         if (state.stories[stateId]) state.stories[stateId].push(storyToMove);
         else state.stories[stateId] = [storyToMove];
       }
-      updateListById(action.payload);
+      getUpdatedList({ stateId, stories }, state);
     });
     builder.addCase(createStory.fulfilled, (state, action) => {
       const { stateId, stories } = action.payload;

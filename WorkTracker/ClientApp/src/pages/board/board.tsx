@@ -94,10 +94,7 @@ export default function Board(): JSX.Element {
           destination.droppableId,
           items[destination.droppableId]
         ),
-      }) as any)
-      dispatch(orderUpdate(
-          createPayload(source.droppableId, items[source.droppableId])
-      ) as any);
+      }) as any);
     }
   };
 
