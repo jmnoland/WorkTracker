@@ -1,0 +1,15 @@
+@import "../../constants/variables.scss";
+@import "../../constants/mixin.scss";
+
+.scrollable-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollable-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 7px;
+  @include scrollbar;
+}

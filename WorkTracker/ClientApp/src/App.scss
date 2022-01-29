@@ -1,0 +1,39 @@
+@import "./constants/variables.scss";
+@import "./constants/mixin";
+
+.app-container {
+  background: $background-color;
+  color: $white-color;
+}
+
+.app-content-container {
+  width: 100%;
+  overflow: auto;
+
+  @include scrollbar;
+}
+
+.version-number {
+  margin-left: auto;
+  margin-right: auto;
+  padding: $padding-medium;
+  text-align: center;
+  font-size: $font-size-small;
+}
+
+// shared classes
+.float-right {
+  float: right;
+}
+.display-flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-1 {
+  flex: 1;
+}
+.hide-overflow {
+  overflow: hidden;
+}

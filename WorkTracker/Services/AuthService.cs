@@ -74,7 +74,7 @@ namespace WorkTracker.Services
 			return token;
         }
 
-        // Register for user without exisiting team/organisation or invite
+        // Register for user without existing team/organisation or invite
         public async Task Register(UserRegisterRequest request)
         {
             var user = new Models.DataModels.User

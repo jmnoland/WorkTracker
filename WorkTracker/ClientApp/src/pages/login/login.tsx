@@ -1,89 +1,49 @@
-import React, { useState, useContext } from "react";
-import styled from "styled-components";
-import { useObject } from "../../helper";
-import { LoginInput, Button, LoginTitle, InLineLink } from "../../components";
-import { UserLogin, DemoLogin } from "../../services/auth";
-import { UserDetailContext } from "../../context/userDetails";
+import React, { useState } from "react";
+import { useForm } from "../../helper";
+import {
+  LoginInput,
+  Button,
+  LoginTitle,
+  InLineLink,
+  GenericContainer,
+} from "../../components";
+import { loginWithEmail, loginWithDemo } from "../../redux/actions";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import Register from "./register";
+import { loginFields } from './fields';
+import "./login.scss";
 
-const LoginContainer = styled.div`
-  width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10%;
-  padding: ${(props) => props.theme.padding.large};
-  box-shadow: ${(props) => props.theme.border.shadow};
-  border-radius: ${(props) => props.theme.border.radius.default};
-`;
-
-const ButtonContainer = styled.div`
-  margin-top: ${(props) => props.theme.margin.medium};
-  margin-bottom: ${(props) => props.theme.margin.medium};
-`;
-
-const VersionNumber = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  padding: ${(props) => props.theme.padding.medium};
-  text-align: center;
-  font-size: ${(props) => props.theme.font.size.small};
-`;
-
-const Content = styled.div``;
+const LoginContainer = GenericContainer("login-container");
+const ButtonContainer = GenericContainer("button-container");
+const VersionNumber = GenericContainer("version-number");
+const Content = GenericContainer();
 
 export default function Login(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
   const [register, setRegister] = useState(false);
-  const { isLoggedIn, setIsLoggedIn, setTokenDetails } = useContext(
-    UserDetailContext
-  );
+  const isLoggedIn = useAppSelector(
+    (state) => state.user.isLoggedIn);
+  const dispatch = useAppDispatch();
 
   const initialValues = { email: "", password: "" };
-  const fields = useObject(
-    {
-      email: {
-        name: "email",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter an email",
-            },
-          ],
-        },
-      },
-      password: {
-        name: "password",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter a password",
-            },
-          ],
-        },
-      },
-    },
+  const obj = useForm(
+    loginFields,
     initialValues
   );
 
-  const { email, password } = fields.data;
+  const { email, password } = obj.form;
 
   const handleSubmit = async () => {
-    const isValid = fields.validate();
+    const isValid = obj.validate();
     if (isValid) {
       setLoading(true);
       try {
-        setTokenDetails(await UserLogin(email.value, password.value));
-        fields.reset();
-        setIsLoggedIn(true);
+        dispatch(loginWithEmail({
+          email: email.value,
+          password: password.value,
+        }) as any);
+        obj.reset();
         setLoading(false);
       } catch {
         setLoading(false);
@@ -94,9 +54,8 @@ export default function Login(): JSX.Element {
   const handleDemoLogin = async () => {
     setDemoLoading(true);
     try {
-      setTokenDetails(await DemoLogin());
-      fields.reset();
-      setIsLoggedIn(true);
+      dispatch(loginWithDemo() as any);
+      obj.reset();
       setDemoLoading(false);
     } catch {
       setDemoLoading(false);

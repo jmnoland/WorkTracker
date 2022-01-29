@@ -1,13 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Route, Switch } from "react-router";
-import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import Login from "./pages/login/login";
 import Report from "./pages/report/report";
 import Board from "./pages/board/board";
 import { Theme, theme } from "./constants/theme";
 import NavMenu from "./components/layout/NavMenu";
-import { UserDetailProvider, UserDetailContext } from "./context/userDetails";
+import { GenericContainer } from "./components";
 import { NotificationProvider } from "./context/notification";
+import { Provider } from 'react-redux'
+import store from "./redux/store";
+import './App.scss';
+import { useAppSelector } from "./redux/hooks";
 
 const GlobalStyle = createGlobalStyle<{theme: Theme}>`
     body
@@ -23,17 +27,11 @@ const GlobalStyle = createGlobalStyle<{theme: Theme}>`
     }
 `;
 
-const AppContainer = styled.div`
-  background: ${(props) => props.theme.colors.background};
-  color: ${(props) => props.theme.colors.white};
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-`;
+const AppContainer = GenericContainer("app-container");
+const ContentContainer = GenericContainer("app-content-container");
 
 function Content({ children } : { children: React.ReactNode }) {
-  const { isLoggedIn } = useContext(UserDetailContext);
+  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
   if (isLoggedIn) {
     return <ContentContainer>{children}</ContentContainer>;
   }
@@ -42,8 +40,8 @@ function Content({ children } : { children: React.ReactNode }) {
 
 export default function App(): JSX.Element {
   return (
-    <ThemeProvider theme={theme}>
-      <UserDetailProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
         <NotificationProvider>
           <GlobalStyle />
           <AppContainer>
@@ -57,7 +55,7 @@ export default function App(): JSX.Element {
             <Login />
           </AppContainer>
         </NotificationProvider>
-      </UserDetailProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Provider>
   );
 }

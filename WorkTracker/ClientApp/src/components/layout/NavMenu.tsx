@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
-import { UserDetailContext } from "../../context/userDetails";
 import { MainTitle } from "..";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { logout } from "../../redux/actions";
 
 const Navbar = styled.div`
   box-shadow: ${(props) => props.theme.border.shadow};
@@ -44,7 +45,8 @@ const ProfileContainer = styled.div`
 `;
 
 export default function NavMenu(): JSX.Element {
-  const { isLoggedIn, logout }: { isLoggedIn: boolean, logout: () => void } = useContext(UserDetailContext);
+  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
+  const dispatch = useAppDispatch();
 
   if (!isLoggedIn) {
     return <></>;
@@ -69,7 +71,7 @@ export default function NavMenu(): JSX.Element {
               </NavLinkContainer>
             </NavItem>
           </LinkContainer> */}
-          <ProfileContainer onClick={logout}>Logout</ProfileContainer>
+          <ProfileContainer onClick={() => dispatch(logout())}>Logout</ProfileContainer>
         </Container>
       </Navbar>
     </header>

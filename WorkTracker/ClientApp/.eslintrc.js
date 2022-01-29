@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    "jest/globals": true,
   },
   overrides: [
     {
@@ -18,6 +19,7 @@ module.exports = {
   extends: [
     "plugin:react/recommended",
     "standard",
+    "plugin:cypress/recommended",
     "plugin:prettier/recommended",
   ],
   globals: {
@@ -31,7 +33,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react"],
+  plugins: ["react", "jest"],
   rules: {
     "prettier/prettier": 0,
     "react/prop-types": 0,

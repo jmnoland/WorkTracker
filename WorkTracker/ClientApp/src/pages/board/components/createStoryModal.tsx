@@ -1,47 +1,29 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import { useObject } from "../../../helper";
+import { useForm } from "../../../helper";
 import {
   Modal,
   Button,
-  TextFieldInput,
   TextArea,
+  TextFieldInput,
+  GenericContainer,
   ScrollableContainer,
 } from "../../../components";
 import { State, Task } from "../../../types";
+import { createNewTask, handleTaskChange, parseTasks } from "../functions";
+import fields from "../fields";
+import "./components.scss";
 
-const Content = styled.div``;
-
-const Description = styled.div`
-  flex: 1;
-`;
-
-const Footer = styled.div`
-  display: flex;
-`;
-
-const TaskInputContainer = styled.div`
-  flex: 1;
-`;
-
-const Row = styled.div`
-  display: flex;
-  height: 40px;
-`;
-
-const SVG = styled.svg`
-  width: 40px;
-  fill: ${(props) => props.theme.colors.white};
-  cursor: pointer;
-  margin-top: 4px;
-  &:hover {
-    fill: ${(props) => props.theme.colors.danger};
-  }
-`;
-
-const TaskHeader = styled.div`
-  display: flex;
-`;
+const Content = GenericContainer();
+const Description = GenericContainer("flex-1");
+const TaskHeader = GenericContainer("display-flex");
+const Footer = GenericContainer("display-flex");
+const TaskInputContainer = GenericContainer("flex-1");
+const Row = GenericContainer("display-flex height-40");
+const SVG = ({
+  children,
+  onClick,
+} : { children: React.ReactNode, onClick: React.MouseEventHandler<SVGSVGElement> }
+) => (<svg onClick={onClick} className="delete-svg">{children}</svg>);
 
 interface CreateStoryModalProps {
   defaultState?: number;
@@ -61,7 +43,6 @@ interface CreateStoryModalProps {
 export function CreateStoryModal({
   defaultState,
   storyPosition,
-  userStates,
   openModal,
   onCancel,
   onSave,
@@ -72,68 +53,31 @@ export function CreateStoryModal({
   const [loading, setLoading] = useState(false);
   const [taskCount, setTaskCount] = useState(1);
   const initialValues = { title: "", description: "" };
-  const fields = useObject(
-    {
-      title: {
-        name: "title",
-        value: "",
-        validation: {
-          rules: [
-            {
-              validate: (value: string) => {
-                return value !== "" && value;
-              },
-              message: "Please enter a title",
-            },
-          ],
-        },
-      },
-      description: {
-        name: "description",
-        value: "",
-        validation: {
-          rules: [],
-        },
-      },
-    },
+  const obj = useForm(
+    fields,
     initialValues
   );
-  const { title, description } = fields.data;
+  const { title, description } = obj.form;
 
   const addTask = () => {
     setTasks([
       ...tasks,
-      {
-        taskId: taskCount + 1,
-        storyId: 0,
-        description: "",
-        complete: false,
-      },
+      createNewTask(taskCount),
     ]);
     setTaskCount(taskCount + 1);
   };
-  const removeTask = (taskId: number) => {
+  const removeTask = async (taskId: number) => {
     setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
   const handleChange = (taskId: number, value: string) => {
-    const temp = tasks.find((task) => task.taskId === taskId);
-    const items = tasks.reduce((total, task) => {
-      if (task.taskId !== taskId) total.push(task);
-      else total.push({ ...temp, description: value } as Task);
-      return total;
-    }, [] as Task[]);
+    const items = handleTaskChange(tasks, taskId, value);
     setTasks(items);
   };
 
   const handleSubmit = async () => {
+    if (!obj.validate()) return;
     setLoading(true);
-    const finalTasks =
-      tasks &&
-      tasks.reduce((total, task) => {
-        const desc = task.description && task.description.trim();
-        if (desc) total.push(task);
-        return total;
-      }, [] as Task[]);
+    const finalTasks = parseTasks(tasks);
     try {
       await onSave(
         title.value,
@@ -142,7 +86,7 @@ export function CreateStoryModal({
         finalTasks,
         storyPosition ?? 0,
       );
-      fields.reset();
+      obj.reset();
       onCancel();
     } catch {
       setLoading(false);
@@ -154,6 +98,7 @@ export function CreateStoryModal({
       <Button onClick={onCancel}>
         Cancel
       </Button>
+      <div style={{ marginRight: "10px" }}> </div>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>

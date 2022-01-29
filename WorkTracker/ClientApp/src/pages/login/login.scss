@@ -1,0 +1,16 @@
+@import "../../constants/variables.scss";
+
+.login-container {
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  padding: $padding-large;
+  box-shadow: $border-shadow;
+  border-radius: $border-radius-default;
+}
+
+.button-container {
+  margin-top: $margin-medium;
+  margin-bottom: $margin-medium;
+}

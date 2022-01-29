@@ -1,0 +1,204 @@
+@import "../../constants/variables.scss";
+
+.center {
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: $padding-default;
+}
+
+.small {
+  padding: 0px;
+}
+
+.button {
+  background: $light-color;
+  color: $white-color;
+  border: 5px solid $light-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: $white-color;
+    border-color: $white-color;
+    color: $dark-color;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.button-primary {
+  background: $orange-color;
+  color: $white-color;
+  border: 5px solid $orange-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: $orange-dark-color;
+    border-color: $orange-dark-color;
+    color: inherit;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.button-login {
+  background: $light-color;
+  color: inherit;
+  border: 5px solid $light-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 180px;
+
+  &:hover {
+    background: $white-color;
+    border-color: $white-color;
+    color: $dark-color;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.button-login-primary {
+  background: $orange-color;
+  color: $white-color;
+  border: 5px solid $orange-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 180px;
+
+  &:hover {
+    background: $orange-dark-color;
+    border-color: $orange-dark-color;
+    color: inherit;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.button-delete {
+  background: $light-color;
+  color: $white-color;
+  border: 5px solid $light-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: $danger-color;
+    border-color: $danger-color;
+    color: $white-color;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.button-inactive-primary {
+  background: $light-color;
+  color: $white-color;
+  border: 5px solid $light-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: $orange-dark-color;
+    border-color: $orange-dark-color;
+    color: $white-color;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.button-small {
+  background: $light-color;
+  color: $white-color;
+  border: 1px solid $light-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: $white-color;
+    border-color: $white-color;
+    color: $dark-color;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.button-small-primary {
+  background: $orange-color;
+  color: $white-color;
+  border: 1px solid $orange-color;
+  border-radius: $border-radius-button;
+  font-size: $font-size-default;
+  font-weight: 600;
+  width: 100px;
+
+  &:hover {
+    background: $orange-dark-color;
+    border-color: $orange-dark-color;
+    color: inherit;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}

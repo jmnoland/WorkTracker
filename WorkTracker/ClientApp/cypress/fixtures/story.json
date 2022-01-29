@@ -1,0 +1,7 @@
+{
+  "title": "Test story title",
+  "description": "Test story description",
+  "tasks": [{
+    "description": "Test story task 1"
+  }]
+}

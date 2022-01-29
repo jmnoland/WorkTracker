@@ -1,0 +1,19 @@
+@import "../../constants/variables.scss";
+
+.link-container {
+  > * {
+    color: $white-color;
+    text-decoration: none;
+  }
+}
+
+.inline-link-container {
+  cursor: pointer;
+  > * {
+    color: $white-color;
+    text-decoration: none;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+}

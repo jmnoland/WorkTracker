@@ -1,90 +1,54 @@
 import React, { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
-import { UserDetailContext } from "../../context/userDetails";
 import { NotificationContext } from "../../context/notification";
-import { Notification } from "../../components";
+import { Notification, GenericContainer } from "../../components";
 import { CreateStoryModal } from "./components/createStoryModal";
 import { ViewStoryModal } from "./components/viewStoryModal";
-import {
-  CreateStory,
-  UpdateStory,
-  DeleteStory,
-  GetStories,
-  OrderUpdate,
-  ChangeState,
-} from "../../services/story";
 import { StateColumn } from "./components/StateColumn";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import {
-  Dictionary,
   Story,
   Task,
   DroppableType,
 } from "../../types";
+import { createPayload, reorder } from "./functions";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import "./board.scss";
+import {
+  changeState,
+  createStory,
+  deleteStory,
+  getStories,
+  getUserDetails,
+  orderUpdate,
+  updateStory
+} from "../../redux/actions";
 
-const BoardContainer = styled.div`
-  height: 88vh;
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-around;
-
-  @media (max-width: 768px) {
-    margin-top: 0px;
-    flex-direction: column;
-    justify-content: center;
-  }
-`;
+const BoardContainer = GenericContainer("board-container");
 
 export default function Board(): JSX.Element {
-  const { userDetail } = useContext(UserDetailContext);
+  const userDetail = useAppSelector((state) => state.user.userDetail);
+  const { stories } = useAppSelector((state) => state.story);
+  const dispatch = useAppDispatch();
   const { setContent } = useContext(NotificationContext);
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [viewStory, setViewStory] = useState<Story>({});
   const [storyState, setStoryState] = useState<number | undefined>(undefined);
-  const [stories, setStories] = useState<Dictionary<Story[]>>();
-
-  async function getStateStories(stories: Dictionary<Story[]>, stateId: number, save: boolean) {
-    stories[stateId] = await GetStories(stateId);
-    if (save) setStories(stories);
-  }
 
   useEffect(() => {
-    async function fetchData() {
-      const temp: Dictionary<Story[]> = {};
-      let count = 0;
-      userDetail?.states.forEach(async (state) => {
-        temp[state.stateId] = await GetStories(state.stateId);
-        count += 1;
-        if (count === userDetail.states.length) {
-          setStories(temp);
-        }
+    if (userDetail?.states.length !== 0) {
+      userDetail?.states.forEach((state) => {
+        dispatch(getStories({ stateId: state.stateId }) as any);
       });
-    }
-    if (userDetail?.states) {
-      fetchData();
+    } else if (userDetail?.states.length === 0) {
+      dispatch(getUserDetails() as any);
     }
   }, [userDetail?.states]);
 
   if (!userDetail?.states) {
     return <></>;
   }
-
-  const reorder = (list: Story[], startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
-
-  const createPayload = (stateId: string | number, storyList: Story[]) => {
-    const temp = storyList.reduce((total, story, index) => {
-      if (story.storyId !== undefined) total[story.storyId] = index;
-      return total;
-    }, {} as Dictionary<number>);
-    return { stateId: Number(stateId), stories: temp };
-  };
 
   const move = (
     source: Story[],
@@ -93,13 +57,12 @@ export default function Board(): JSX.Element {
     droppableDestination: DroppableType
   ) => {
     const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
+    const destClone = destination ? Array.from(destination) : [];
     const [removed] = sourceClone.splice(droppableSource.index, 1);
-    removed.stateId = parseInt(droppableDestination.droppableId);
 
     destClone.splice(droppableDestination.index, 0, removed);
 
-    const result = {} as Dictionary<Story[]>;
+    const result: Record<string, Story[]> = {};
     result[droppableSource.droppableId] = sourceClone;
     result[droppableDestination.droppableId] = destClone;
     return result;
@@ -113,24 +76,25 @@ export default function Board(): JSX.Element {
     if (source.droppableId === destination.droppableId) {
       const stateId = Number(source.droppableId);
       const items = reorder(stories[stateId], source.index, destination.index);
-      setStories({ ...stories, [stateId]: items });
-      await OrderUpdate(createPayload(stateId, items));
+      dispatch(orderUpdate(createPayload(stateId, items)) as any);
     } else {
-      const storyId = Number(stories[source.droppableId][source.index].storyId);
+      const sourceId = parseInt(source.droppableId);
+      const destinationId = parseInt(destination.droppableId);
+      const storyId = Number(stories[sourceId][source.index].storyId);
       const items = move(
-        stories[source.droppableId],
-        stories[destination.droppableId],
+        stories[sourceId],
+        stories[destinationId],
         source,
         destination
       );
-      setStories({ ...stories, ...items });
-      await ChangeState(
-        storyId,
-        createPayload(destination.droppableId, items[destination.droppableId])
-      );
-      await OrderUpdate(
-        createPayload(source.droppableId, items[source.droppableId])
-      );
+      dispatch(changeState({
+        currentStateId: sourceId,
+        storyId: storyId,
+        ...createPayload(
+          destination.droppableId,
+          items[destination.droppableId]
+        ),
+      }) as any);
     }
   };
 
@@ -141,8 +105,13 @@ export default function Board(): JSX.Element {
     tasks: Task[],
     storyPosition: number,
   ) => {
-    await CreateStory(title, description, storyPosition, state, tasks);
-    if (stories) await getStateStories(stories, state, true);
+    dispatch(createStory({
+      title,
+      description,
+      storyPosition,
+      state,
+      tasks,
+    }) as any);
     setStoryState(undefined);
     setContent("New story created");
   };
@@ -155,15 +124,22 @@ export default function Board(): JSX.Element {
     state: number,
     tasks: Task[],
   ) => {
-    await UpdateStory(storyId, listOrder, title, description, state, tasks);
-    if (stories) await getStateStories(stories, state, true);
+    dispatch(updateStory({
+      storyId,
+      listOrder,
+      title,
+      description,
+      state,
+      tasks,
+    }) as any);
     setViewStory({});
     setContent("Story updated");
   };
 
-  const onDelete = async (deleteFunc: (id: number) => void, id: number, state: number) => {
-    await deleteFunc(id);
-    if (stories) await getStateStories(stories, state, true);
+  const onDelete = (id: number) => {
+    dispatch(deleteStory({
+      storyId: id,
+    }) as any);
     setViewStory({});
     setContent("Story deleted");
   };
@@ -199,7 +175,7 @@ export default function Board(): JSX.Element {
         <ViewStoryModal
           initialValues={viewStory}
           openModal={openViewModal}
-          deleteStory={(id: number, state: number) => onDelete(DeleteStory, id, state)}
+          deleteStory={(id: number) => onDelete(id)}
           onSave={onEditSave}
           onCancel={() => setOpenViewModal(false)}
         />
@@ -207,7 +183,6 @@ export default function Board(): JSX.Element {
       {openCreateModal && (
         <CreateStoryModal
           defaultState={storyState}
-          userStates={userDetail.states}
           openModal={openCreateModal}
           storyPosition={
             stories && storyState ? stories[storyState] && stories[storyState].length : undefined

@@ -1,28 +1,10 @@
 import React from "react";
-import styled from "styled-components";
-import { SubText } from "../../../components";
+import { SubText, GenericContainer } from "../../../components";
+import "./components.scss";
 
-const StoryContainer = styled.div`
-  cursor: pointer;
-  width: 100%;
-  height: 70px;
-  padding: 10px 10px 10px 10px;
-  box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors.dark};
-  border-top: 2px solid ${(props) => props.theme.colors.dark};
-  background: ${(props) => props.theme.colors.background};
-
-  &:hover {
-    background: ${(props) => props.theme.colors.dark};
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 6px;
-`;
-
-const Col = styled.div``;
+const StoryContainer = GenericContainer("story-container");
+const Row = GenericContainer("display-flex story-row");
+const Col = GenericContainer();
 
 interface StoryProps {
   title?: string;

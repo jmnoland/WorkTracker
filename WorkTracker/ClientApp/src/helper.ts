@@ -1,15 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import jwtDecode from "jwt-decode";
-import { DecodedToken, Dictionary } from "./types";
-import { User } from "./types/user";
+import { DecodedToken, User, Error, FormField, InitialFormField, ValidationRule, Form } from "./types";
 
 export function verifyTokenExpiry(decodedToken : DecodedToken): boolean {
     // Adding miliseconds to timestamp
     const unix = decodedToken.exp * 1000;
-    if (unix > Date.now()) {
-        return true;
-    }
-    return false;
+    return unix > Date.now();
 }
 
 export function dateToUTCUnix(date: Date): number {
@@ -34,7 +30,6 @@ export function decodeJwtToken(token : string) : DecodedToken | null {
 }
 
 export function parseDateTime(value : string) : string | null {
-    if (typeof value !== "string") return null;
     const date : Date = new Date(value);
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -48,8 +43,8 @@ export function parseDateTime(value : string) : string | null {
     }`;
 }
 
-export function getUserMapping(users?: User[]) : Dictionary<string> {
-    const userMap : Dictionary<string> = {};
+export function getUserMapping(users?: User[]) : Record<string, string> {
+    const userMap : Record<string, string> = {};
     if (!users) return userMap;
     users.reduce((total, user) => {
         total[user.userId] = user.name;
@@ -58,108 +53,93 @@ export function getUserMapping(users?: User[]) : Dictionary<string> {
     return userMap;
 }
 
-export function useField(initial: any, initialVal: any) : any {
-    const initialField = { ...initial, value: initialVal };
-    const [field, _setField] = useState(initialField);
-
-    const setField = (value: any, props: any) => {
-        const temp = field;
-        temp.value = value;
-        if (temp.onChange && typeof temp.onChange === "function") {
-            temp.onChange(value, props);
-        }
-        _setField(temp);
-    };
-    return { ...field, setField };
+function getInitialErrors(objectKeys: string[]) {
+    return objectKeys.reduce(
+        (total: Record<string, Error[]>, val: string) => {
+            total[val] = [];
+            return total;
+        },
+    {});
 }
 
-export function useObject(initialFields: any, initialValues: any): any {
-    // if error fields are missing add them
-    function getInitialValues() {
-        return Object.keys(initialFields).reduce((total: any, field) => {
-            const currentField = {
-                ...initialFields[field],
-                value: initialValues[field],
-            };
-            if (currentField.validation) {
-                currentField.validation.errors = [];
-            } else currentField.validation = { errors: [] };
-            total[field] = currentField;
-            return total;
-        }, {});
+function getInitialModified(
+  objectKeys: string[],
+  fields: Record<string, InitialFormField<unknown>>
+): string[] {
+    const temp: string[] = [];
+    objectKeys.forEach((name) => {
+        if (fields[name] !== undefined) {
+            if (fields[name].required !== undefined) temp.push(name);
+        }
+    });
+    return temp;
+}
+
+export function useForm(initialFields: unknown, initialValues: unknown): Form {
+    const fields = initialFields as Record<string, InitialFormField<unknown>>;
+    const objectKeys = Object.keys(initialValues as Record<string, unknown>);
+    const [values, setValues] = useState(initialValues as Record<string, unknown>);
+    const [modified, setModified] = useState(getInitialModified(objectKeys, fields));
+    const [errors, setErrors] = useState<Record<string, Error[]>>(getInitialErrors(objectKeys));
+
+    function onChange(value: unknown, name: string) {
+        setValues({ ...values, [name]: value });
+        if (!modified.includes(name)) setModified([ ...modified, name ]);
     }
-    function getInitialFields() {
-        return Object.keys(initialFields).reduce((total: any, field) => {
-            const currentField = { ...initialFields[field] };
-            if (currentField.validation) {
-                currentField.validation.errors = [];
-            } else currentField.validation = { errors: [] };
-            total[field] = currentField;
-            return total;
-        }, {});
+
+    function checkRules(rules: ValidationRule<unknown>[], name: string): Error[] {
+        const temp: Error[] = [];
+        if (fields[name].required !== undefined) {
+            if (values[name] === undefined || values[name] === null || values[name] === "") {
+                const reqMessage: string = fields[name].required ?? "";
+                temp.push({ id: "R", message: reqMessage });
+            }
+        }
+        let count = 0;
+        rules.forEach(rule => {
+            if (!rule.validate(values[name])) {
+                temp.push({ id: `V${count}`, message: rule.message });
+            }
+            count ++;
+        });
+        return temp;
     }
 
-    const allInitialValuesRef = useRef(getInitialValues());
-
-    useEffect(() => {
-        allInitialValuesRef.current = getInitialValues();
-    }, [initialValues]);
-
-    const allInitialValues = allInitialValuesRef.current;
-
-    const [values, setValues] = useState(allInitialValues);
-
-    const [fields, setFields] = useState(getInitialFields());
-
-    const object = {
-        data: Object.keys(fields).reduce((total: any, field) => {
-            const currentField = fields[field];
-            currentField.value = values[field].value;
-            total[field] = {
-                ...currentField,
-                onChange: (value: any) => {
-                    if (currentField.onChange) {
-                        currentField.onChange(value, object.data);
-                    }
-                    currentField.validation.errors = [];
-                    return setValues((oldValues: any) => {
-                        return {
-                            ...oldValues,
-                            [field]: {
-                                ...oldValues[field],
-                                value: value,
-                            },
-                        };
-                    });
-                },
-            };
-            return total;
-        }, {}),
-        validate() {
-            let isValid = true;
-            Object.keys(fields).forEach((fieldKey) => {
-                const currentField = fields[fieldKey];
-                if (currentField.validation && currentField.validation.rules) {
-                    currentField.validation.errors = currentField.validation.rules.reduce(
-                    (errors: any, rule: any, index: any) => {
-                    if (!rule.validate(currentField.value, fields)) {
-                        isValid = false;
-                        errors.push({
-                            id: `${fieldKey}-validation-fail-${index}`,
-                            message: rule.message,
-                        });
-                    }
-                        return errors;
-                    }, []);
+    function validate(): boolean {
+        let valid = true;
+        const temp: Record<string, Error[]> = {};
+        modified.forEach((name) => {
+            const rules = fields[name].rules;
+            if (rules) {
+                const result = checkRules(rules, name);
+                if (result.length !== 0) {
+                    temp[name] = result;
+                    valid = false;
                 }
-            });
-            if (!isValid) setValues(fields);
-                return isValid;
-        },
-        reset() {
-            setValues(() => getInitialValues());
-            setFields(initialFields);
-        },
+            }
+        });
+        if (!valid) setErrors({ ...errors, ...temp });
+        return valid;
+    }
+
+    function reset() {
+        setValues(initialValues as Record<string, unknown>);
+        setModified(getInitialModified(objectKeys, fields));
+        setErrors(getInitialErrors(objectKeys));
+    }
+
+    return {
+        form: objectKeys.reduce((total: Record<string, FormField<unknown>>, name: string) => {
+            total[name] = {
+                ...fields[name],
+                errors: errors[name],
+                value: values[name],
+                onChange: (val: unknown) => onChange(val, name),
+            }
+            return total;
+        }, {} as Record<string, FormField<unknown>>),
+        modified: modified,
+        validate: validate,
+        reset: reset,
     };
-    return object;
 }
