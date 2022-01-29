@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Route, Switch } from "react-router";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import Login from "./pages/login/login";
@@ -7,9 +7,11 @@ import Board from "./pages/board/board";
 import { Theme, theme } from "./constants/theme";
 import NavMenu from "./components/layout/NavMenu";
 import { GenericContainer } from "./components";
-import { UserDetailProvider, UserDetailContext } from "./context/userDetails";
 import { NotificationProvider } from "./context/notification";
+import { Provider } from 'react-redux'
+import store from "./redux/store";
 import './App.scss';
+import { useAppSelector } from "./redux/hooks";
 
 const GlobalStyle = createGlobalStyle<{theme: Theme}>`
     body
@@ -29,7 +31,7 @@ const AppContainer = GenericContainer("app-container");
 const ContentContainer = GenericContainer("app-content-container");
 
 function Content({ children } : { children: React.ReactNode }) {
-  const { isLoggedIn } = useContext(UserDetailContext);
+  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
   if (isLoggedIn) {
     return <ContentContainer>{children}</ContentContainer>;
   }
@@ -38,8 +40,8 @@ function Content({ children } : { children: React.ReactNode }) {
 
 export default function App(): JSX.Element {
   return (
-    <ThemeProvider theme={theme}>
-      <UserDetailProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
         <NotificationProvider>
           <GlobalStyle />
           <AppContainer>
@@ -53,7 +55,7 @@ export default function App(): JSX.Element {
             <Login />
           </AppContainer>
         </NotificationProvider>
-      </UserDetailProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Provider>
   );
 }

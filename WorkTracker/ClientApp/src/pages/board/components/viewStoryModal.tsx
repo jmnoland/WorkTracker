@@ -7,11 +7,12 @@ import {
   GenericContainer,
   ScrollableContainer,
 } from "../../../components";
-import { GetStoryTasks } from "../../../services/story";
 import { State, Task, Story } from "../../../types";
 import fields from "../fields";
-import { createNewTask, handleTaskChange, removeTaskById, parseTasks } from "../functions";
+import { createNewTask, handleTaskChange, parseTasks } from "../functions";
 import "./components.scss";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { getStoryTasks, deleteTask } from "../../../redux/actions";
 
 const Content = GenericContainer();
 const Description = GenericContainer("flex-1");
@@ -48,22 +49,23 @@ export function ViewStoryModal({
   onCancel,
   onSave,
 }: ViewStoryModalProps): JSX.Element {
+  const allTasks = useAppSelector((state) => state.story.tasks);
   const [tasks, setTasks] = useState(
     (initialValues && initialValues.tasks) || []
   );
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [taskCount, setTaskCount] = useState(0);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    async function fetchData() {
-      if (initialValues.storyId !== undefined) {
-        const data = await GetStoryTasks(initialValues.storyId);
-        setTasks(data);
+    if (initialValues.storyId !== undefined) {
+      if (allTasks[initialValues.storyId]) setTasks(allTasks[initialValues.storyId]);
+      else if (!initialValues.tasks) {
+        dispatch(getStoryTasks({ storyId: initialValues.storyId }) as any);
       }
     }
-    fetchData();
-  }, []);
+  }, [allTasks]);
 
   const obj = useForm(
     fields,
@@ -91,8 +93,11 @@ export function ViewStoryModal({
   };
 
   const removeTask = async (taskId: number) => {
-    const temp = await removeTaskById(tasks, taskId);
-    setTasks(temp);
+    const { storyId } = initialValues;
+    const taskToRemove = tasks.filter((task) => task.taskId === taskId)[0];
+    if (taskToRemove && !taskToRemove.new && storyId)
+      dispatch(deleteTask({ storyId, taskId }) as any);
+    setTasks([...tasks.filter((task) => task.taskId !== taskId)]);
   };
 
   const handleChange = (taskId: number, value: string) => {
@@ -124,7 +129,7 @@ export function ViewStoryModal({
       <Button onClick={onCancel}>
         Cancel
       </Button>
-      <div style={{ marginRight: "10px" }}></div>
+      <div style={{ marginRight: "10px" }}> </div>
       <Button primary onClick={handleSubmit} loading={loading}>
         Save
       </Button>

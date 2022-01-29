@@ -27,8 +27,10 @@ describe("Story tests", () => {
     cy.contains("Test story title");
   });
   it("Edit story with task", function() {
+    cy.intercept("/story/task/*").as("tasks");
     cy.demo_login();
     cy.contains("Test story title").click();
+    cy.wait("@tasks");
     cy.get(".text-container").contains("Test story task 1")
       .click();
     cy.get("input").first()
@@ -36,7 +38,7 @@ describe("Story tests", () => {
     cy.contains("Save").click({ force: true });
   });
   it("Change story state", function() {
-    cy.intercept("/story/4").as("stories");
+    cy.intercept("/story/*").as("stories");
     cy.demo_login();
     cy.wait("@stories");
     cy.get(".story-container").first().parent()

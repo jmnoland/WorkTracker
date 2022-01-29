@@ -1,8 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useForm } from "../../helper";
-import { LoginInput, Button, LoginTitle, InLineLink, GenericContainer } from "../../components";
-import { UserLogin, DemoLogin } from "../../services/auth";
-import { UserDetailContext } from "../../context/userDetails";
+import {
+  LoginInput,
+  Button,
+  LoginTitle,
+  InLineLink,
+  GenericContainer,
+} from "../../components";
+import { loginWithEmail, loginWithDemo } from "../../redux/actions";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import Register from "./register";
 import { loginFields } from './fields';
 import "./login.scss";
@@ -16,9 +22,9 @@ export default function Login(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
   const [register, setRegister] = useState(false);
-  const { isLoggedIn, setIsLoggedIn, setTokenDetails } = useContext(
-    UserDetailContext
-  );
+  const isLoggedIn = useAppSelector(
+    (state) => state.user.isLoggedIn);
+  const dispatch = useAppDispatch();
 
   const initialValues = { email: "", password: "" };
   const obj = useForm(
@@ -33,9 +39,11 @@ export default function Login(): JSX.Element {
     if (isValid) {
       setLoading(true);
       try {
-        setTokenDetails(await UserLogin(email.value, password.value));
+        dispatch(loginWithEmail({
+          email: email.value,
+          password: password.value,
+        }) as any);
         obj.reset();
-        setIsLoggedIn(true);
         setLoading(false);
       } catch {
         setLoading(false);
@@ -46,9 +54,8 @@ export default function Login(): JSX.Element {
   const handleDemoLogin = async () => {
     setDemoLoading(true);
     try {
-      setTokenDetails(await DemoLogin());
+      dispatch(loginWithDemo() as any);
       obj.reset();
-      setIsLoggedIn(true);
       setDemoLoading(false);
     } catch {
       setDemoLoading(false);
