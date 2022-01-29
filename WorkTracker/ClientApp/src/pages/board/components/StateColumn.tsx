@@ -36,9 +36,10 @@ export function StateColumn({
   const containerRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState("");
+  const [attachedEvent, setAttachedEvent] = useState(false);
   const droppableStyling = height !== "" ? { minHeight: height } : {};
 
-  useEffect(() => {
+  function makeSize() {
     if (headerRef.current && containerRef.current && footerRef.current) {
       if (contentRef.current) {
         const heightVal = getMaxHeight(
@@ -49,6 +50,22 @@ export function StateColumn({
         );
         contentRef.current.style.maxHeight = heightVal;
         setHeight(heightVal);
+      }
+    }
+  }
+
+  useEffect(() => {
+    makeSize();
+    if (!attachedEvent) {
+      window.addEventListener('resize', makeSize);
+      setAttachedEvent(true);
+    }
+
+    return () => {
+      if (attachedEvent) {
+        window.removeEventListener('resize', () => {
+          setAttachedEvent(false);
+        });
       }
     }
   }, [stories]);
