@@ -111,6 +111,31 @@ namespace WorkTracker.Test.Mappers
             });
             Assert.IsInstanceOf<Models.ServiceModels.State>(response);
         }
+
+        [Test]
+        public void Project_DataModelMapping()
+        {
+            var testProject = new Models.DataModels.Project
+            {
+                ProjectId = 1,
+                Name = "Test name",
+                Description = "Test description",
+                CompletedAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
+                DeletedAt = DateTime.Now
+            };
+            var response = Mapper.Map(testProject);
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(testProject.ProjectId, response.ProjectId);
+                Assert.AreEqual(testProject.Name, response.Name);
+                Assert.AreEqual(testProject.Description, response.Description);
+                Assert.AreEqual(testProject.CompletedAt, response.CompletedAt);
+                Assert.AreEqual(testProject.DeletedAt, response.DeletedAt);
+                Assert.AreEqual(testProject.CreatedAt, response.CreatedAt);
+            });
+            Assert.IsInstanceOf<Models.ServiceModels.Project>(response);
+        }
         
         [Test]
         public void Story_DataModelMapping()

@@ -143,6 +143,30 @@ namespace WorkTracker.Test.Mappers
         }
         
         [Test]
+        public void Project_DataModelMapping()
+        {
+            var testProject = new Models.ServiceModels.Project
+            {
+                ProjectId = 1,
+                Name = "Test name",
+                Description = "Test description",
+                CompletedAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
+                DeletedAt = DateTime.Now
+            };
+            var response = Mapper.Map(testProject);
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(testProject.ProjectId, response.ProjectId);
+                Assert.AreEqual(testProject.Name, response.Name);
+                Assert.AreEqual(testProject.Description, response.Description);
+                Assert.AreEqual(testProject.CompletedAt, response.CompletedAt);
+                Assert.AreEqual(testProject.CreatedAt, response.CreatedAt);
+            });
+            Assert.IsInstanceOf<Models.DTOs.Project>(response);
+        }
+        
+        [Test]
         public void User_CreateRequestMapping()
         {
             var testUser = new CreateUserRequest

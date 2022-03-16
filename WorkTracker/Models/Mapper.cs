@@ -6,7 +6,7 @@ using WorkTracker.Models.Requests;
 
 namespace WorkTracker.Models
 {
-    public class Mapper
+    public static class Mapper
     {
         #region UserMapping
         public static DTOs.User Map(ServiceModels.User user)
@@ -116,6 +116,7 @@ namespace WorkTracker.Models
             return temp;
         }
         #endregion
+        
         #region StoryMapper
         public static DTOs.Story Map(ServiceModels.Story story)
         {
@@ -142,6 +143,30 @@ namespace WorkTracker.Models
                 tempList.Add(Map(story));
             }
             return tempList;
+        }
+        #endregion
+        
+        #region ProjectMapping
+        public static List<DTOs.Project> Map(List<ServiceModels.Project> itemList)
+        {
+            var list = new List<DTOs.Project>();
+            foreach (var item in itemList)
+            {
+                list.Add(Map(item));
+            }
+            return list;
+        }
+        public static DTOs.Project Map(ServiceModels.Project item)
+        {
+            return new DTOs.Project
+            {
+                ProjectId = item.ProjectId,
+                TeamId = item.TeamId,
+                Name = item.Name,
+                Description = item.Description,
+                CompletedAt = item.CompletedAt,
+                CreatedAt = item.CreatedAt
+            };
         }
         #endregion
 
