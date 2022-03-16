@@ -72,6 +72,7 @@ namespace WorkTracker.Repositories
             };
         }
         #endregion
+        
         #region TeamMapping
         public static Models.ServiceModels.Team Map(Models.DataModels.Team team)
         {
@@ -92,6 +93,7 @@ namespace WorkTracker.Repositories
             return tempList;
         }
         #endregion
+        
         #region StateMapping
         public static Models.ServiceModels.State Map(Models.DataModels.State state)
         {
@@ -162,6 +164,31 @@ namespace WorkTracker.Repositories
                 tempList.Add(Map(story));
             }
             return tempList;
+        }
+        #endregion
+
+        #region ProjectMapping
+        public static List<Models.ServiceModels.Project> Map(List<Models.DataModels.Project> itemList)
+        {
+            var list = new List<Models.ServiceModels.Project>();
+            foreach (var item in itemList)
+            {
+                list.Add(Map(item));
+            }
+            return list;
+        }
+        public static Models.ServiceModels.Project Map(Models.DataModels.Project item)
+        {
+            return new Models.ServiceModels.Project
+            {
+                ProjectId = item.ProjectId,
+                TeamId = item.TeamId,
+                Name = item.Name,
+                Description = item.Description,
+                CompletedAt = item.CompletedAt,
+                CreatedAt = item.CreatedAt,
+                DeletedAt = item.DeletedAt
+            };
         }
         #endregion
 
