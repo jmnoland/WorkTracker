@@ -6,6 +6,6 @@ namespace WorkTracker.Services.Interfaces
 {
     public interface IProjectService
     {
-        Task<List<Project>> GetByTeamId(int teamId);
+        Task<Dictionary<int, List<Project>>> GetByUserId(int userId);
     }
 }

@@ -60,7 +60,7 @@ namespace WorkTracker.Services
             }
             return details;
         }
-
+        
         public async System.Threading.Tasks.Task CreateUser(CreateUserRequest request)
         {
             var user = Mapper.Map(request);
