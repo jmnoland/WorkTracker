@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkTracker.Models;
 using WorkTracker.Models.DTOs;
+using WorkTracker.Models.Requests;
 using WorkTracker.Repositories.Interfaces;
 using WorkTracker.Services.Interfaces;
 
@@ -21,6 +22,31 @@ namespace WorkTracker.Services
             _projectRepository = projectRepository;
             _teamRepository = teamRepository;
             _serviceLogRepository = serviceLogRepository;
+        }
+
+        public async Task<Project> CreateProject(CreateProjectRequest request)
+        {
+            var project = Mapper.Map(request);
+            project.CreatedAt = DateTime.Now;
+            var entity = await _projectRepository.CreateProject(project);
+            return Mapper.Map(entity);
+        }
+        
+        public async Task<Project> UpdateProject(UpdateProjectRequest request)
+        {
+            var project = Mapper.Map(request);
+            var entity = await _projectRepository.UpdateProject(project);
+            return Mapper.Map(entity);
+        }
+        
+        public async System.Threading.Tasks.Task DeleteProject(int projectId, int teamId)
+        {
+            await _projectRepository.DeleteProject(projectId, teamId);
+        }
+
+        public async System.Threading.Tasks.Task CompleteProject(int projectId, int teamId)
+        {
+            await _projectRepository.CompleteProject(projectId, teamId);
         }
 
         public async Task<Dictionary<int, List<Project>>> GetByUserId(int userId)

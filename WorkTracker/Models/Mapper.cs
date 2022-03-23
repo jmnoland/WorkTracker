@@ -248,6 +248,27 @@ namespace WorkTracker.Models
             }
             return (story, taskList);
         }
+
+        public static ServiceModels.Project Map(CreateProjectRequest request)
+        {
+            return new ServiceModels.Project()
+            {
+                Description = request.Description,
+                Name = request.Name,
+                TeamId = request.TeamId
+            };
+        }
+        
+        public static ServiceModels.Project Map(UpdateProjectRequest request)
+        {
+            return new ServiceModels.Project()
+            {
+                ProjectId = request.ProjectId,
+                Description = request.Description,
+                Name = request.Name,
+                TeamId = request.TeamId
+            };
+        }
         #endregion
     }
 }
