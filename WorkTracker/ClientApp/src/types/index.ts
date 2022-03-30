@@ -4,6 +4,7 @@ import { Team } from "./team";
 import { Task } from "./task";
 import { State } from "./state";
 import { Story } from "./story";
+import { Project } from "./project";
 import { Error } from "./error";
 import { UserDetail } from "./userDetail";
 import { DroppableType } from "./droppableType";
@@ -19,6 +20,7 @@ export type {
   Task,
   State,
   Story,
+  Project,
   UserDetail,
   Error,
   Form,

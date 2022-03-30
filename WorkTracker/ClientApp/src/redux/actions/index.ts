@@ -16,6 +16,13 @@ import {
   deleteTask,
   changeState,
 } from "../slices/storySlice";
+import {
+  getProjects,
+  createProject,
+  updateProject,
+  completeProject,
+  deleteProject,
+} from "../slices/projectSlice";
 
 export {
   logout,
@@ -32,4 +39,9 @@ export {
   getStoryTasks,
   deleteTask,
   changeState,
+  getProjects,
+  createProject,
+  updateProject,
+  completeProject,
+  deleteProject,
 };
