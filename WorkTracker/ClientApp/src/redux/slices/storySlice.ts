@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { Story, Task } from "../../types";
 import {
   CreateStory,
@@ -177,7 +177,7 @@ const changeState = createAsyncThunk(
 
 function getUpdatedList(
   payload: { stateId: number, stories: Record<string, number> },
-  state: any,
+  state: Draft<{stories: Record<number, Story[]>, tasks: Record<number, Task[]>}>,
 ) {
   const { stateId, stories } = payload;
   const updatedStories: Story[] = [];
