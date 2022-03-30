@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WorkTracker.Models.Requests;
 using WorkTracker.Services.Interfaces;
 
 namespace WorkTracker.Controllers
@@ -17,23 +18,23 @@ namespace WorkTracker.Controllers
         }
 
         [Authorize(Roles = "create_project")]
-        [HttpGet]
-        public async Task<IActionResult> CreateProject()
+        [HttpPost]
+        public async Task<IActionResult> CreateProject([FromBody] CreateProjectRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
             if (userId == null) return BadRequest("User id missing");
 
-            return Ok(await _projectService.GetByUserId(userId.Value));
+            return Ok(await _projectService.CreateProject(request));
         }
         
         [Authorize(Roles = "update_project")]
-        [HttpGet]
-        public async Task<IActionResult> UpdateProject()
+        [HttpPatch]
+        public async Task<IActionResult> UpdateProject([FromBody] UpdateProjectRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
             if (userId == null) return BadRequest("User id missing");
 
-            return Ok(await _projectService.GetByUserId(userId.Value));
+            return Ok(await _projectService.UpdateProject(request));
         }
         
         [Authorize(Roles = "view_project")]
@@ -44,6 +45,32 @@ namespace WorkTracker.Controllers
             if (userId == null) return BadRequest("User id missing");
 
             return Ok(await _projectService.GetByUserId(userId.Value));
+        }
+        
+        [Authorize(Roles = "update_project")]
+        [HttpPost("delete/{projectId}")]
+        public async Task<IActionResult> DeleteProject([FromRoute] int projectId)
+        {
+            var userId = Helper.GetRequestUserId(HttpContext);
+            var teamId = Helper.GetRequestTeamIds(HttpContext);
+            if (userId == null) return BadRequest("User id missing");
+            if (teamId == null) return BadRequest("Team id missing");
+
+            await _projectService.DeleteProject(projectId, teamId.Value);
+            return Ok();
+        }
+        
+        [Authorize(Roles = "update_project")]
+        [HttpPost("complete/{projectId}")]
+        public async Task<IActionResult> CompleteProject([FromRoute] int projectId)
+        {
+            var userId = Helper.GetRequestUserId(HttpContext);
+            var teamId = Helper.GetRequestTeamIds(HttpContext);
+            if (userId == null) return BadRequest("User id missing");
+            if (teamId == null) return BadRequest("Team id missing");
+
+            await _projectService.CompleteProject(projectId, teamId.Value);
+            return Ok();
         }
     }
 }
