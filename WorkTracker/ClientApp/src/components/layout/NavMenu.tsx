@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { MainTitle } from "..";
+import { MainTitle, NavLink } from "..";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { logout } from "../../redux/actions";
 
@@ -16,21 +16,21 @@ const Container = styled.div`
 
 const NavbarBrand = styled.div``;
 
-// const LinkContainer = styled.div`
-//   display: flex;
-// `;
+const LinkContainer = styled.div`
+  display: flex;
+`;
 
-// const NavItem = styled.div`
-//   margin-top: auto;
-//   margin-bottom: auto;
-// `;
+const NavItem = styled.div`
+  margin-top: auto;
+  margin-bottom: auto;
+`;
 
-// const NavLinkContainer = styled.div`
-//   cursor: pointer;
-//   color: white;
-//   font-size: 20px;
-//   margin-right: 20px;
-// `;
+const NavLinkContainer = styled.div`
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  margin-right: 20px;
+`;
 
 const ProfileContainer = styled.div`
   margin-top: auto;
@@ -59,18 +59,23 @@ export default function NavMenu(): JSX.Element {
           <NavbarBrand>
             <MainTitle />
           </NavbarBrand>
-          {/* <LinkContainer>
+          <LinkContainer>
             <NavItem>
               <NavLinkContainer>
                 <NavLink to="/">Board</NavLink>
               </NavLinkContainer>
             </NavItem>
-            <NavItem>
+            {/* <NavItem>
               <NavLinkContainer>
                 <NavLink to="/report">Reports</NavLink>
               </NavLinkContainer>
+            </NavItem> */}
+            <NavItem>
+              <NavLinkContainer>
+                <NavLink to="/project">Projects</NavLink>
+              </NavLinkContainer>
             </NavItem>
-          </LinkContainer> */}
+          </LinkContainer>
           <ProfileContainer onClick={() => dispatch(logout())}>Logout</ProfileContainer>
         </Container>
       </Navbar>

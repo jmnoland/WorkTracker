@@ -1,8 +1,8 @@
 export interface Project {
-  ProjectId: number;
-  TeamId: number;
-  Name: string,
-  Description: string;
-  CompletedAt: Date;
-  CreatedAt: Date;
+  projectId: number;
+  teamId: number;
+  name: string,
+  description: string;
+  completedAt: Date;
+  createdAt: Date;
 }

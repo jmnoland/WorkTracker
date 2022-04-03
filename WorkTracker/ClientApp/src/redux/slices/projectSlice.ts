@@ -56,7 +56,9 @@ export const projectSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getProjects.fulfilled, (state, action) => {
       const { projectList } = action.payload;
-      state = projectList;
+      projectList.forEach(project => {
+        state.push(project);
+      });
     });
     builder.addCase(createProject.fulfilled, (state, action) => {
       const { newProject } = action.payload;
@@ -64,19 +66,19 @@ export const projectSlice = createSlice({
     });
     builder.addCase(updateProject.fulfilled, (state, action) => {
       const { updatedProject } = action.payload;
-      const temp = state.filter(w => w.ProjectId !== updatedProject.ProjectId);
+      const temp = state.filter(w => w.projectId !== updatedProject.projectId);
       temp.push(updatedProject);
       state = temp;
     });
     builder.addCase(completeProject.fulfilled, (state, action) => {
       const projectId = action.payload;
       state.forEach(project => {
-        if (project.ProjectId === projectId) project.CompletedAt = new Date();
+        if (project.projectId === projectId) project.completedAt = new Date();
       });
     });
     builder.addCase(deleteProject.fulfilled, (state, action) => {
       const projectId = action.payload;
-      state = state.filter(project => project.ProjectId !== projectId);
+      state = state.filter(project => project.projectId !== projectId);
     });
   },
 });

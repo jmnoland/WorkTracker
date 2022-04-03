@@ -5,7 +5,7 @@ import './link.scss';
 interface NavLinkProps {
     to: string;
     children: React.ReactNode;
-    onClick: () => void;
+    onClick?: () => void;
 }
 
 interface LinkProps {
