@@ -29,14 +29,14 @@ namespace WorkTracker.Services
             var project = Mapper.Map(request);
             project.CreatedAt = DateTime.Now;
             var entity = await _projectRepository.CreateProject(project);
-            return Mapper.Map(entity);
+            return Mapper.Map(entity, request.TeamId);
         }
         
         public async Task<Project> UpdateProject(UpdateProjectRequest request)
         {
             var project = Mapper.Map(request);
             var entity = await _projectRepository.UpdateProject(project);
-            return Mapper.Map(entity);
+            return Mapper.Map(entity, request.TeamId);
         }
         
         public async System.Threading.Tasks.Task DeleteProject(int projectId, int teamId)
@@ -49,16 +49,16 @@ namespace WorkTracker.Services
             await _projectRepository.CompleteProject(projectId, teamId);
         }
 
-        public async Task<Dictionary<int, List<Project>>> GetByUserId(int userId)
+        public async Task<List<Project>> GetByUserId(int userId)
         {
-            var teamDict = new Dictionary<int, List<Project>>();
+            var projectList = new List<Project>();
             var teams = await _teamRepository.GetByUserId(userId);
             foreach(var team in teams)
             {
                 var projects = await _projectRepository.GetByTeamId(team.TeamId);
-                teamDict.Add(team.TeamId, Mapper.Map(projects));
+                projectList.AddRange(Mapper.Map(projects, team.TeamId));
             }
-            return teamDict;
+            return projectList;
         }
     }
 }

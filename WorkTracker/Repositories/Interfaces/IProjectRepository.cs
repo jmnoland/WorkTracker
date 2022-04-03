@@ -11,6 +11,6 @@ namespace WorkTracker.Repositories.Interfaces
         Task<Models.ServiceModels.Project> UpdateProject(Models.ServiceModels.Project project);
         Task<Models.ServiceModels.Project> CompleteProject(int projectId, int teamId);
         Task<Models.ServiceModels.Project> DeleteProject(int projectId, int teamId);
-        Task<Project> Find(int projectId, int teamId);
+        Task<Models.ServiceModels.Project> Find(int projectId, int teamId);
     }
 }

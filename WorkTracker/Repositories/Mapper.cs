@@ -182,7 +182,6 @@ namespace WorkTracker.Repositories
             return new Models.ServiceModels.Project
             {
                 ProjectId = item.ProjectId,
-                TeamId = item.TeamId,
                 Name = item.Name,
                 Description = item.Description,
                 CompletedAt = item.CompletedAt,

@@ -148,15 +148,17 @@ namespace WorkTracker.Test.Mappers
             var testProject = new Models.ServiceModels.Project
             {
                 ProjectId = 1,
+                TeamId = 10,
                 Name = "Test name",
                 Description = "Test description",
                 CompletedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
                 DeletedAt = DateTime.Now
             };
-            var response = Mapper.Map(testProject);
+            var response = Mapper.Map(testProject, 10);
             Assert.Multiple(() =>
             {
+                Assert.AreEqual(testProject.TeamId, response.TeamId);
                 Assert.AreEqual(testProject.ProjectId, response.ProjectId);
                 Assert.AreEqual(testProject.Name, response.Name);
                 Assert.AreEqual(testProject.Description, response.Description);

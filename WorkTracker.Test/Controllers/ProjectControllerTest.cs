@@ -52,7 +52,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async System.Threading.Tasks.Task GetProjectByTeamId_Missing_Token()
         {
-            var response = new Dictionary<int, List<Project>>();
+            var response = new List<Project>();
             _projectInterface.Setup(x => x.GetByUserId(_demoUserId))
                 .ReturnsAsync(response);
             
@@ -67,14 +67,14 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async System.Threading.Tasks.Task GetProjectByTeamId_Successful()
         {
-            var response = new Dictionary<int, List<Project>>();
+            var response = new List<Project>();
             _projectInterface.Setup(x => x.GetByUserId(_demoUserId))
                 .ReturnsAsync(response);
 
             var result = await _projectController.GetProjectByTeamId();
             Assert.IsInstanceOf<ActionResult>(result);
             var value = (OkObjectResult)result;
-            Assert.IsInstanceOf<Dictionary<int, List<Project>>>(value.Value);
+            Assert.IsInstanceOf<List<Project>>(value.Value);
         }
     }
 }

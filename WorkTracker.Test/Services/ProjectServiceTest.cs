@@ -59,11 +59,10 @@ namespace WorkTracker.Test.Services
 
             var result = await _projectService.GetByUserId(_demoUserId);
 
-            Assert.IsInstanceOf<Dictionary<int, List<Models.DTOs.Project>>>(result);
-            Assert.IsTrue(result.ContainsKey(1));
+            Assert.IsInstanceOf<List<Models.DTOs.Project>>(result);
             Assert.Multiple(() =>
             {
-                var project = result.GetValueOrDefault(1)?.FirstOrDefault();
+                var project = result.FirstOrDefault();
                 Assert.IsTrue(project != null);
                 Assert.AreEqual(expectedProjectResult.Name, project.Name);
                 Assert.AreEqual(expectedProjectResult.Description, project.Description);

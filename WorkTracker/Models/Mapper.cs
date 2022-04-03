@@ -147,21 +147,21 @@ namespace WorkTracker.Models
         #endregion
         
         #region ProjectMapping
-        public static List<DTOs.Project> Map(List<ServiceModels.Project> itemList)
+        public static List<DTOs.Project> Map(List<ServiceModels.Project> itemList, int teamId)
         {
             var list = new List<DTOs.Project>();
             foreach (var item in itemList)
             {
-                list.Add(Map(item));
+                list.Add(Map(item, teamId));
             }
             return list;
         }
-        public static DTOs.Project Map(ServiceModels.Project item)
+        public static DTOs.Project Map(ServiceModels.Project item, int teamId)
         {
             return new DTOs.Project
             {
                 ProjectId = item.ProjectId,
-                TeamId = item.TeamId,
+                TeamId = teamId,
                 Name = item.Name,
                 Description = item.Description,
                 CompletedAt = item.CompletedAt,

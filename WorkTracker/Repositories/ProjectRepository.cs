@@ -21,7 +21,6 @@ namespace WorkTracker.Repositories
         {
             var entity = new Project
             {
-                TeamId = project.TeamId,
                 ProjectId = project.ProjectId,
                 Description = project.Description,
                 Name = project.Name,
@@ -31,15 +30,25 @@ namespace WorkTracker.Repositories
             };
             _dbContext.Projects.Add(entity);
             await _dbContext.SaveChangesAsync();
+            _dbContext.TeamProjects.Add(new TeamProject
+            {
+                ProjectId = entity.ProjectId,
+                TeamId = project.TeamId,
+            });
+            await _dbContext.SaveChangesAsync();
             return Mapper.Map(entity);
         }
         
         public async Task<Models.ServiceModels.Project> UpdateProject(Models.ServiceModels.Project project)
         {
-            var entity = await _dbContext.Projects
-                .FirstOrDefaultAsync(w => w.ProjectId == project.ProjectId
-                                          && w.TeamId == project.TeamId
-                                          && w.DeletedAt == null);
+            var entity = await (from proj in _dbContext.Projects
+                join teamProj in _dbContext.TeamProjects
+                    on proj.ProjectId equals teamProj.ProjectId
+                where proj.ProjectId == project.ProjectId
+                      && teamProj.TeamId == project.TeamId
+                      && proj.DeletedAt == null
+                select proj)
+                .FirstOrDefaultAsync();
             if (entity == null) throw new Exception("Update failed project not found");
             entity.Description = project.Description;
             entity.Name = project.Name;
@@ -49,10 +58,14 @@ namespace WorkTracker.Repositories
         
         public async Task<Models.ServiceModels.Project> CompleteProject(int projectId, int teamId)
         {
-            var entity = await _dbContext.Projects
-                .FirstOrDefaultAsync(w => w.ProjectId == projectId
-                                          && w.TeamId == teamId
-                                          && w.DeletedAt == null);
+            var entity = await (from proj in _dbContext.Projects
+                    join teamProj in _dbContext.TeamProjects
+                        on proj.ProjectId equals teamProj.ProjectId
+                    where proj.ProjectId == projectId
+                          && teamProj.TeamId == teamId
+                          && proj.DeletedAt == null
+                    select proj)
+                .FirstOrDefaultAsync();
             if (entity == null) throw new Exception("Completion failed project not found");
             entity.CompletedAt = DateTime.Now;
             await _dbContext.SaveChangesAsync();
@@ -61,30 +74,40 @@ namespace WorkTracker.Repositories
         
         public async Task<Models.ServiceModels.Project> DeleteProject(int projectId, int teamId)
         {
-            var entity = await _dbContext.Projects
-                .FirstOrDefaultAsync(w => w.ProjectId == projectId
-                                          && w.TeamId == teamId
-                                          && w.DeletedAt == null);
+            var entity = await (from proj in _dbContext.Projects
+                    join teamProj in _dbContext.TeamProjects
+                        on proj.ProjectId equals teamProj.ProjectId
+                    where proj.ProjectId == projectId
+                          && teamProj.TeamId == teamId
+                          && proj.DeletedAt == null
+                    select proj)
+                .FirstOrDefaultAsync();
             if (entity == null) throw new Exception("Deletion failed project not found");
             entity.DeletedAt = DateTime.Now;
             await _dbContext.SaveChangesAsync();
             return Mapper.Map(entity);
         }
 
-        public async Task<Project> Find(int projectId, int teamId)
+        public async Task<Models.ServiceModels.Project> Find(int projectId, int teamId)
         {
-            return await _dbContext.Projects
-                .FirstOrDefaultAsync(w => w.ProjectId == projectId
-                                          && w.TeamId == teamId
-                                          && w.DeletedAt == null);
+            return await (from project in _dbContext.Projects
+                join teamProj in _dbContext.TeamProjects
+                    on project.ProjectId equals teamProj.ProjectId
+                where teamProj.ProjectId == projectId
+                      && teamProj.TeamId == teamId
+                      && project.DeletedAt == null
+                select Mapper.Map(project))
+                .FirstOrDefaultAsync();
         }
         
         public async Task<List<Models.ServiceModels.Project>> GetByTeamId(int teamId)
         {
-            var data = await _dbContext.Projects
-                .Where(w => w.TeamId == teamId && w.DeletedAt == null)
-                .ToListAsync();
-            return Mapper.Map(data);
+            var data = await (from project in _dbContext.Projects
+                join teamProj in _dbContext.TeamProjects
+                    on project.ProjectId equals teamProj.ProjectId
+                where teamProj.TeamId == teamId && project.DeletedAt == null
+                select Mapper.Map(project)).ToListAsync();
+            return data;
         }
     }
 }
