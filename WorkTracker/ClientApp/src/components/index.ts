@@ -10,6 +10,7 @@ import Icon from "./icon/icon";
 import SubText from "./subtext/subtext";
 import Notification from "./notification/notification";
 import ScrollableContainer from "./scrollableContainer/scrollableContainer";
+import Loading from "./loading/loading";
 
 export {
   GenericContainer,
@@ -30,4 +31,5 @@ export {
   SubText,
   Notification,
   ScrollableContainer,
+  Loading,
 };

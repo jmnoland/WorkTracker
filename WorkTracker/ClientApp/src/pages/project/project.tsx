@@ -3,19 +3,25 @@ import {
   ScrollableContainer,
   GenericContainer,
   Button,
+  Loading,
 } from "../../components";
+import { getProjects } from "../../redux/actions";
+import { Project } from "../../types";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import "./project.scss";
-import { getProjects } from "../../redux/actions";
+import { ProjectForm } from "./components/projectForm";
 
-const ProjectContainer = GenericContainer("project-container");
+const ProjectPageContainer = GenericContainer("project-page");
 const ProjectList = GenericContainer("project-list");
 const ProjectDetail = GenericContainer("project-detail");
 const HeaderButton = GenericContainer("float-right");
+const ProjectContainer = GenericContainer("project-container");
 
-export default function Project(): JSX.Element {
+export default function ProjectPage(): JSX.Element {
   const [loading, setLoading] = useState(false);
-  const [create, setCreate] = useState(false);
+  const [
+    selectedProject, setSelectedProject,
+  ] = useState<Project | null>(null);
   const projects = useAppSelector((state) => state.project);
   const dispatch = useAppDispatch();
 
@@ -26,16 +32,25 @@ export default function Project(): JSX.Element {
     } else {
       setLoading(false);
     }
-    console.group("The project list");
-    console.log(projects);
-    console.groupEnd();
   }, [projects]);
 
+  function cancel() {
+    setSelectedProject(null);
+  }
+
+  if (loading) {
+    return (
+      <ProjectPageContainer>
+        <Loading small={false} primary />
+      </ProjectPageContainer>);
+  }
+
   return (
-    <ProjectContainer>
+    <ProjectPageContainer>
       <ProjectList>
         <ScrollableContainer
           height={100}
+          usePercent
           contentTopMargin={10}
           header={
             <div>
@@ -43,7 +58,7 @@ export default function Project(): JSX.Element {
               <HeaderButton>
                 <Button
                   primary
-                  onClick={() => setCreate(true)}
+                  onClick={() => setSelectedProject({})}
                 >
                   Create
                 </Button>
@@ -52,16 +67,26 @@ export default function Project(): JSX.Element {
           }
         >
           {projects.map(project => {
-            console.log(project);
-            return (<div key={project.projectId}>
-              <div>{project.name}</div>
-            </div>);
+            return (
+              <ProjectContainer
+                key={project.projectId}
+                onClick={() => setSelectedProject(project)}
+              >
+                <div>{project.name}</div>
+              </ProjectContainer>
+            );
           })}
         </ScrollableContainer>
       </ProjectList>
       <ProjectDetail>
-
+        {selectedProject !== null
+          ? <ProjectForm
+              initialValues={selectedProject}
+              onCancel={cancel}
+            />
+          : "Select or create a project"
+        }
       </ProjectDetail>
-    </ProjectContainer>
+    </ProjectPageContainer>
   );
 }

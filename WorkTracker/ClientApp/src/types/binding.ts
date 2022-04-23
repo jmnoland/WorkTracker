@@ -1,4 +1,4 @@
 export interface Binding<T> {
-  value?: T,
+  value: T,
   onChange: (val: T) => void,
 }

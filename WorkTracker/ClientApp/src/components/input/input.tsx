@@ -91,7 +91,7 @@ export function LoginInput({
 
 interface TextFieldInputProps {
   id?: string,
-  value: string;
+  value?: string;
   height?: string;
   useRef?: React.RefObject<HTMLInputElement> | null | undefined;
   errors?: Error[];

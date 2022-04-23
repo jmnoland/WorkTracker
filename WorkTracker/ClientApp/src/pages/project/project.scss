@@ -1,7 +1,7 @@
 @import "../../constants/variables.scss";
 @import "../../constants/mixin";
 
-.project-container {
+.project-page {
   height: 88vh;
   margin-top: 40px;
   display: flex;
@@ -26,4 +26,18 @@
   border-top: 2px solid $dark-color;
   padding: $padding-medium;
   width: 100%;
+}
+
+.project-container {
+  cursor: pointer;
+  width: 100%;
+  height: 50px;
+  padding: 10px 10px 10px 10px;
+  box-shadow: 0 0 5px 1px $dark-color;
+  border-top: 2px solid $dark-color;
+  background: $background-color;
+
+  &:hover {
+    background: $dark-color;
+  }
 }

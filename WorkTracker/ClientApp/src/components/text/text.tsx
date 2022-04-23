@@ -20,7 +20,7 @@ export function Text({
     height?: string,
     margin?: string,
     useBackground?: boolean,
-    onClick: () => void,
+    onClick?: () => void,
 }): JSX.Element {
   return (
     <Container>

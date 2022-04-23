@@ -2,8 +2,13 @@ import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
 import "./scrollableContainer.scss";
 
-const Container = styled.div<{ height: number }>`
-  min-height: ${(props) => props.height}px;
+const Container = styled.div<{
+  height: number,
+  usePercent: boolean,
+}>`
+  ${(props) => props.usePercent
+          ? `min-height: ${props.height}%`
+          : `min-height: ${props.height}px`}
 `;
 
 const Header = styled.div``;
@@ -31,6 +36,7 @@ interface ScrollableContainerProps {
   header: React.ReactNode;
   footer?: React.ReactNode;
   height: number;
+  usePercent?: boolean;
   contentTopMargin: number;
   children: React.ReactNode;
 }
@@ -39,6 +45,7 @@ export default function ScrollableContainer({
   header,
   footer,
   height,
+  usePercent,
   contentTopMargin,
   children,
 }: ScrollableContainerProps): JSX.Element {
@@ -62,7 +69,12 @@ export default function ScrollableContainer({
   }, [headerRef.current && containerRef.current && footerRef.current]);
 
   return (
-    <Container className="scrollable-container" height={height} ref={containerRef}>
+    <Container
+      className="scrollable-container"
+      usePercent={usePercent ?? false}
+      height={height}
+      ref={containerRef}
+    >
       <Header ref={headerRef}>{header}</Header>
       <Content className="scrollable-content" ref={contentRef} topMargin={contentTopMargin}>
         {children}
