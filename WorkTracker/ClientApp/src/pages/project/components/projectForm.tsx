@@ -44,11 +44,11 @@ export function ProjectForm({ initialValues, onCancel }
 
   function onSubmit() {
     submit();
-    cancel();
+    cancel(true);
   }
-  function cancel() {
+  function cancel(skipDefault = false) {
     if (exists && editable) {
-      setInitialValues();
+      if (!skipDefault) setInitialValues();
       setEditable(false);
     } else {
       onCancel();

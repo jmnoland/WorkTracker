@@ -1,12 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Project } from "../../types";
-import {
-  GetProjects,
-  DeleteProject,
-  CreateProject,
-  UpdateProject,
-  CompleteProject,
-} from "../../services/project";
+import { CompleteProject, CreateProject, DeleteProject, GetProjects, UpdateProject } from "../../services/project";
 
 function getInitialState() {
   const initialState: Project[] = [];
@@ -66,9 +60,13 @@ export const projectSlice = createSlice({
     });
     builder.addCase(updateProject.fulfilled, (state, action) => {
       const { updatedProject } = action.payload;
-      const temp = state.filter(w => w.projectId !== updatedProject.projectId);
-      temp.push(updatedProject);
-      state = temp;
+      state.forEach(project => {
+        if (project.projectId === updatedProject.projectId) {
+          project.teamId = updatedProject.teamId;
+          project.name = updatedProject.name;
+          project.description = updatedProject.description;
+        }
+      });
     });
     builder.addCase(completeProject.fulfilled, (state, action) => {
       const projectId = action.payload;
@@ -79,7 +77,11 @@ export const projectSlice = createSlice({
     });
     builder.addCase(deleteProject.fulfilled, (state, action) => {
       const projectId = action.payload;
-      state = state.filter(project => project.projectId !== projectId);
+      let delIndex = 0;
+      state.forEach((project, index) => {
+        if (project.projectId === projectId) delIndex = index;
+      });
+      state.splice(delIndex, 1);
     });
   },
 });
