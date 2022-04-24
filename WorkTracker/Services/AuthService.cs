@@ -42,10 +42,11 @@ namespace WorkTracker.Services
         public async Task<string> CreateToken(int userId)
         {
             var role = await _roleRepository.GetUserRole(userId);
+            var teams = await _teamRepository.GetByUserId(userId);
             if (role == null) throw new Exception("User role is null");
             if (role.Permissions == null) role.Permissions = "";
             var permissions = role.Permissions.Split(',');
-            return Helper.GenerateToken(userId, permissions, _appSettings.Value.JwtSecret);
+            return Helper.GenerateToken(userId, teams.FirstOrDefault()?.TeamId, permissions, _appSettings.Value.JwtSecret);
         }
 
 		public async Task<string> RefreshToken(string token)

@@ -9,13 +9,14 @@ namespace WorkTracker.Services
 {
     public static class Helper
     {
-		public static string GenerateToken(int userId, string[] permissions, string secret)
+		public static string GenerateToken(int userId, int? teamId, string[] permissions, string secret)
 		{
 			var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
 
 			var claims = new List<Claim>()
 			{
-				new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+				new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+				new Claim("teamId", teamId.ToString())
 			};
 			foreach (var permission in permissions)
 			{
