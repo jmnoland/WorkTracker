@@ -33,7 +33,7 @@ namespace WorkTracker.Test.Controllers
                 "edit_story",
                 "view_project"
             };
-            _token = WorkTracker.Services.Helper.GenerateToken(_demoUserId, permissions, _appSettings.JwtSecret);
+            _token = WorkTracker.Services.Helper.GenerateToken(_demoUserId, null, permissions, _appSettings.JwtSecret);
         }
 
         [SetUp]

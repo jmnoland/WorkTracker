@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using WorkTracker.Models;
 using WorkTracker.Models.Requests;
 using WorkTracker.Models.ServiceModels;
@@ -48,6 +49,7 @@ namespace WorkTracker.Test.Services
                 RoleId = 1
             };
             _roleRepository.Setup(x => x.GetUserRole(0)).ReturnsAsync(repoResponse);
+            _teamRepository.Setup(x => x.GetByUserId(0)).ReturnsAsync(new List<Team>());
 
             var permissions = new string[]
             {
@@ -56,7 +58,7 @@ namespace WorkTracker.Test.Services
                 "edit_story",
                 "create_user"
             };
-            var expectedResult = WorkTracker.Services.Helper.GenerateToken(0, permissions, _appSettings.JwtSecret);
+            var expectedResult = WorkTracker.Services.Helper.GenerateToken(0, null, permissions, _appSettings.JwtSecret);
 
             var result = await _authService.CreateToken(0);
             Assert.IsInstanceOf<string>(result);
@@ -73,9 +75,10 @@ namespace WorkTracker.Test.Services
                 RoleId = 1
             };
             _roleRepository.Setup(x => x.GetUserRole(0)).ReturnsAsync(repoResponse);
+            _teamRepository.Setup(x => x.GetByUserId(0)).ReturnsAsync(new List<Team>());
 
             var permissions = "".Split(',');
-            var expectedResult = WorkTracker.Services.Helper.GenerateToken(0, permissions, _appSettings.JwtSecret);
+            var expectedResult = WorkTracker.Services.Helper.GenerateToken(0, null, permissions, _appSettings.JwtSecret);
 
             var result = await _authService.CreateToken(0);
             Assert.IsInstanceOf<string>(result);
@@ -111,6 +114,7 @@ namespace WorkTracker.Test.Services
                 RoleId = 1
             };
             _roleRepository.Setup(x => x.GetUserRole(0)).ReturnsAsync(repoResponse);
+            _teamRepository.Setup(x => x.GetByUserId(0)).ReturnsAsync(new List<Team>());
 
             var permissions = new string[]
             {
@@ -119,7 +123,7 @@ namespace WorkTracker.Test.Services
                 "edit_story",
                 "create_user"
             };
-            var expectedResult = WorkTracker.Services.Helper.GenerateToken(0, permissions, _appSettings.JwtSecret);
+            var expectedResult = WorkTracker.Services.Helper.GenerateToken(0, null, permissions, _appSettings.JwtSecret);
 
             var result = await _authService.RefreshToken(expectedResult);
             Assert.IsInstanceOf<string>(result);
