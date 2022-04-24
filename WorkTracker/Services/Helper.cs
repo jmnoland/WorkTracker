@@ -16,8 +16,8 @@ namespace WorkTracker.Services
 			var claims = new List<Claim>()
 			{
 				new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-				new Claim("teamId", teamId.ToString())
 			};
+			if (teamId != null) claims.Add(new Claim("teamId", teamId.Value.ToString()));
 			foreach (var permission in permissions)
 			{
 				claims.Add(new Claim(ClaimTypes.Role, permission));

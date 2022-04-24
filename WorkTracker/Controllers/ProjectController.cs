@@ -22,8 +22,11 @@ namespace WorkTracker.Controllers
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectRequest request)
         {
             var userId = Helper.GetRequestUserId(HttpContext);
+            var teamId = Helper.GetRequestTeamIds(HttpContext);
             if (userId == null) return BadRequest("User id missing");
-
+            if (teamId == null) return BadRequest("Team id missing");
+            request.TeamId = teamId.Value;
+            
             return Ok(await _projectService.CreateProject(request));
         }
         

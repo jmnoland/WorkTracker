@@ -14,7 +14,6 @@ namespace WorkTracker.Models.Requests
         public List<string> Validate()
         {
             var errors = new List<string>();
-            if (this.TeamId == null) errors.Add("TeamId is required");
             if (this.Name?.Length > 100) errors.Add("Name must be under 100 characters");
             if (this.Description?.Length > 750) errors.Add("Description must be under 750 characters");
             return errors;
