@@ -29,7 +29,8 @@ export function decodeJwtToken(token : string) : DecodedToken | null {
     return null;
 }
 
-export function parseDateTime(value : string) : string | null {
+export function parseDateTime(value?: string) : string {
+    if (value === undefined) return "";
     const date : Date = new Date(value);
     const day = date.getDate();
     const month = date.getMonth() + 1;

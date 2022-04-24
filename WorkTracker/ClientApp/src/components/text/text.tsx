@@ -4,21 +4,29 @@ import { TextFieldInput, TextArea } from "../index";
 
 const Container = styled.div``;
 
-const TextContainer = styled.div<{ height?: string, margin?: string, useBackground?: boolean }>`
+const TextContainer = styled.div<{
+  height?: string,
+  margin?: string,
+  useBackground?: boolean,
+  bold?: boolean,
+}>`
   height: ${(props) => (props.height ? props.height : "auto")};
   margin: ${(props) => (props.margin ? props.margin : null)};
+  font-weight: ${(props) => (props.bold ? "bold" : null)};
 `;
 
 export function Text({
     value,
     height,
     margin,
+    bold,
     useBackground,
     onClick
 }: {
     value: string,
     height?: string,
     margin?: string,
+    bold?: boolean,
     useBackground?: boolean,
     onClick?: () => void,
 }): JSX.Element {
@@ -30,6 +38,7 @@ export function Text({
         margin={margin}
         useBackground={useBackground}
         onClick={onClick}
+        bold={bold}
       >
         {value}
       </TextContainer>
@@ -99,7 +108,7 @@ export function EditableText({
           value={value}
           useBackground={useBackground}
           onClick={onClickHandler}
-        ></Text>
+        />
       )}
     </Container>
   );

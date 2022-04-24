@@ -3,6 +3,6 @@ export interface Project {
   teamId?: number;
   name?: string,
   description?: string;
-  completedAt?: Date;
-  createdAt?: Date;
+  completedAt?: string;
+  createdAt?: string;
 }

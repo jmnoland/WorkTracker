@@ -73,7 +73,8 @@ export const projectSlice = createSlice({
     builder.addCase(completeProject.fulfilled, (state, action) => {
       const projectId = action.payload;
       state.forEach(project => {
-        if (project.projectId === projectId) project.completedAt = new Date();
+        if (project.projectId === projectId)
+          project.completedAt = new Date().toString();
       });
     });
     builder.addCase(deleteProject.fulfilled, (state, action) => {

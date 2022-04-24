@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { Project, Binding } from "../../types";
 import { useAppDispatch } from "../../redux/hooks";
-import { updateProject, createProject } from "../../redux/actions";
+import {
+  updateProject,
+  createProject,
+  deleteProject,
+  completeProject,
+} from "../../redux/actions";
+import { parseDateTime } from "../../helper";
 
 interface ProjectHookDetail {
   bindings: {
@@ -9,9 +15,12 @@ interface ProjectHookDetail {
     name: Binding<string>,
     description: Binding<string>,
   },
+  createdAt: string,
   exists: boolean,
   editable: boolean,
   submit: () => void,
+  delProject: () => void,
+  comProject: () => void,
   setEditable: (val: boolean) => void;
   setProject: (project: Project) => void,
 }
@@ -52,6 +61,14 @@ export function useProject(initialValues: Project): ProjectHookDetail {
       dispatch(createProject(project) as any);
     }
   }
+  function delProject() {
+    if (project.projectId !== undefined)
+      dispatch(deleteProject(project.projectId) as any);
+  }
+  function comProject() {
+    if (project.projectId !== undefined)
+      dispatch(completeProject(project.projectId) as any);
+  }
 
   return {
     bindings: {
@@ -68,9 +85,12 @@ export function useProject(initialValues: Project): ProjectHookDetail {
         onChange: (val: string) => setProject({ ...project, description: val }),
       },
     },
+    createdAt: parseDateTime(project.createdAt),
     exists,
     editable,
     submit,
+    delProject,
+    comProject,
     setEditable,
     setProject,
   }
