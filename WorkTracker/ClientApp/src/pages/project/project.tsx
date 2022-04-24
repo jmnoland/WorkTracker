@@ -26,12 +26,11 @@ export default function ProjectPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (projects.length === 0) {
-      dispatch(getProjects() as any)
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
+    dispatch(getProjects() as any)
+    setLoading(true);
+  },[]);
+  useEffect(() => {
+    setLoading(false);
   }, [projects]);
 
   function cancel() {
