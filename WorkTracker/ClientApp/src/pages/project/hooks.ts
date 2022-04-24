@@ -16,13 +16,16 @@ interface ProjectHookDetail {
     description: Binding<string>,
   },
   createdAt: string,
+  completedAt: string,
   exists: boolean,
   editable: boolean,
+  isComplete: boolean,
   submit: () => void,
   delProject: () => void,
   comProject: () => void,
   setEditable: (val: boolean) => void;
   setProject: (project: Project) => void,
+  setInitialValues: () => void,
 }
 
 function getProjectWithDefaults(project: Project) {
@@ -40,6 +43,9 @@ export function useProject(initialValues: Project): ProjectHookDetail {
   const [project, _setProject] = useState(getProjectWithDefaults(initialValues));
   const [exists, setExists] = useState(project.projectId !== undefined);
   const [editable, setEditable] = useState(!exists);
+  const isComplete = project.completedAt !== undefined
+    && project.completedAt !== null
+    && project.completedAt !== "";
   const dispatch = useAppDispatch();
 
   function setProject(project: Project) {
@@ -54,6 +60,9 @@ export function useProject(initialValues: Project): ProjectHookDetail {
     setEditable(!exists);
   }, [exists]);
 
+  function setInitialValues() {
+    _setProject(getProjectWithDefaults(initialValues));
+  }
   function submit() {
     if (exists) {
       dispatch(updateProject(project) as any);
@@ -74,24 +83,27 @@ export function useProject(initialValues: Project): ProjectHookDetail {
     bindings: {
       teamId: {
         value: project.teamId,
-        onChange: (val: number) => setProject({ ...project, teamId: val }),
+        onChange: (val: number) => _setProject({ ...project, teamId: val }),
       },
       name: {
         value: project.name,
-        onChange: (val: string) => setProject({ ...project, name: val }),
+        onChange: (val: string) => _setProject({ ...project, name: val }),
       },
       description: {
         value: project.description,
-        onChange: (val: string) => setProject({ ...project, description: val }),
+        onChange: (val: string) => _setProject({ ...project, description: val }),
       },
     },
     createdAt: parseDateTime(project.createdAt),
+    completedAt: parseDateTime(project.completedAt),
     exists,
     editable,
+    isComplete,
     submit,
     delProject,
     comProject,
     setEditable,
     setProject,
+    setInitialValues,
   }
 }

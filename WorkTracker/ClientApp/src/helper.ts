@@ -30,7 +30,7 @@ export function decodeJwtToken(token : string) : DecodedToken | null {
 }
 
 export function parseDateTime(value?: string) : string {
-    if (value === undefined) return "";
+    if (value === undefined || value === null) return "";
     const date : Date = new Date(value);
     const day = date.getDate();
     const month = date.getMonth() + 1;

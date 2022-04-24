@@ -13,6 +13,9 @@ const FormContainer = GenericContainer("display-flex flex-column");
 const Content = GenericContainer();
 const ViewContent = GenericContainer("margin-left-right");
 const Footer = GenericContainer("margin-left-right display-flex flex-row");
+const ContentDate = GenericContainer("display-flex");
+const EditContentDate = GenericContainer("display-flex margin-left-right");
+const FlexDiv = GenericContainer("flex-1");
 
 interface ProjectFormProps {
   initialValues: Project;
@@ -23,6 +26,8 @@ export function ProjectForm({ initialValues, onCancel }
   const {
     bindings: { name, description },
     createdAt,
+    completedAt,
+    isComplete,
     exists,
     editable,
     submit,
@@ -30,6 +35,7 @@ export function ProjectForm({ initialValues, onCancel }
     comProject,
     setEditable,
     setProject,
+    setInitialValues,
   } = useProject(initialValues);
 
   useEffect(() => {
@@ -42,6 +48,7 @@ export function ProjectForm({ initialValues, onCancel }
   }
   function cancel() {
     if (exists && editable) {
+      setInitialValues();
       setEditable(false);
     } else {
       onCancel();
@@ -56,6 +63,13 @@ export function ProjectForm({ initialValues, onCancel }
     onCancel();
   }
 
+  const completeContent = isComplete
+    ? (<div>
+      <Text bold margin={"10px 0 0 0"} value={"Completed at"} />
+      <Text margin={"0 0 12px 0"} value={completedAt} />
+    </div>)
+    : null;
+
   if (exists) {
     if (editable) {
       return (
@@ -64,13 +78,18 @@ export function ProjectForm({ initialValues, onCancel }
           <Content>
             <TextFieldInput {...name} />
             <TextFieldInput {...description} />
-            <Text bold margin={"10px 0 0 5px"} value={"Creation date"} />
-            <Text margin={"0 0 12px 5px"} value={createdAt} />
+            <EditContentDate>
+              <FlexDiv>
+                <Text bold margin={"10px 0 0 0"} value={"Creation date"} />
+                <Text margin={"0 0 12px 0"} value={createdAt} />
+              </FlexDiv>
+              {completeContent}
+            </EditContentDate>
           </Content>
           <Footer>
-            <div className={"flex-1"}>
+            <FlexDiv>
               <Button isDeleteButton onClick={onDelete}>Delete</Button>
-            </div>
+            </FlexDiv>
             <Button primary onClick={onSubmit}>Save</Button>
             <div style={{ marginRight: "10px" }}> </div>
             <Button onClick={cancel}>Cancel</Button>
@@ -85,15 +104,25 @@ export function ProjectForm({ initialValues, onCancel }
           <Text value={name.value} />
           <Text bold margin={"10px 0 0 0"} value={"Description"} />
           <Text value={description.value} />
-          <Text bold margin={"10px 0 0 0"} value={"Creation date"} />
-          <Text value={createdAt} />
+          <ContentDate>
+            <FlexDiv>
+              <Text bold margin={"10px 0 0 0"} value={"Creation date"} />
+              <Text margin={"0 0 12px 0"} value={createdAt} />
+            </FlexDiv>
+            {completeContent}
+          </ContentDate>
         </ViewContent>
         <Footer style={{ marginTop: "10px" }}>
-          <div className={"flex-1"}>
+          <FlexDiv>
             <Button isDeleteButton onClick={onDelete}>Delete</Button>
-          </div>
-          <Button primary onClick={onComplete}>Complete</Button>
-          <div style={{ marginRight: "10px" }}> </div>
+          </FlexDiv>
+          {!isComplete
+            ? <>
+                <Button primary onClick={onComplete}>Complete</Button>
+                <div style={{ marginRight: "10px" }}> </div>
+              </>
+            : null
+          }
           <Button primary onClick={() => setEditable(true)}>Edit</Button>
           <div style={{ marginRight: "10px" }}> </div>
           <Button onClick={cancel}>Cancel</Button>
@@ -115,7 +144,7 @@ export function ProjectForm({ initialValues, onCancel }
           />
         </Content>
         <Footer>
-          <div className={"flex-1"}> </div>
+          <FlexDiv />
           <Button primary onClick={onSubmit}>Create</Button>
           <div style={{ marginRight: "10px" }}> </div>
           <Button onClick={cancel}>Cancel</Button>
