@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WorkTracker.Models.DataModels;
+﻿using WorkTracker.Models.DataModels;
 using WorkTracker.Repositories.Interfaces;
 
 namespace WorkTracker.Repositories

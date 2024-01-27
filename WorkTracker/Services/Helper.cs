@@ -13,9 +13,9 @@ namespace WorkTracker.Services
 		{
 			var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
 
-			var claims = new List<Claim>()
+			var claims = new List<Claim>
 			{
-				new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+				new(ClaimTypes.NameIdentifier, userId.ToString())
 			};
 			foreach (var permission in permissions)
 			{

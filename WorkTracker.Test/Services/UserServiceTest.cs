@@ -38,7 +38,7 @@ namespace WorkTracker.Test.Services
         {
             var response = new List<Models.ServiceModels.User>
             {
-                new Models.ServiceModels.User
+                new()
                 {
                     Email = "test@email.com",
                     Name = "test",
@@ -80,7 +80,7 @@ namespace WorkTracker.Test.Services
         {
             var teamResponse = new List<Models.ServiceModels.Team>
             {
-                new Models.ServiceModels.Team
+                new()
                 {
                     Name = "test Team",
                     OrganisationId = 1,
@@ -127,7 +127,7 @@ namespace WorkTracker.Test.Services
         {
             var teamResponse = new List<Models.ServiceModels.Team>
             {
-                new Models.ServiceModels.Team
+                new()
                 {
                     Name = "team",
                     OrganisationId = 1,
@@ -136,7 +136,7 @@ namespace WorkTracker.Test.Services
             };
             var userListResponse = new List<Models.ServiceModels.User>
             {
-                new Models.ServiceModels.User
+                new()
                 {
                     Email = "test@email.com",
                     Name = "test",
@@ -147,7 +147,7 @@ namespace WorkTracker.Test.Services
             };
             var stateList = new List<Models.ServiceModels.State>
             {
-                new Models.ServiceModels.State
+                new()
                 {
                     Name = "state",
                     Type = "type",
@@ -177,7 +177,7 @@ namespace WorkTracker.Test.Services
             var userListResponse = new List<Models.ServiceModels.User>();
             _teamRepository.Setup(x => x.GetByUserId(0)).ReturnsAsync(teamResponse);
 
-            var expected = new Models.DTOs.UserDetail()
+            var expected = new Models.DTOs.UserDetail
             {
                 States = new List<Models.DTOs.State>(),
                 Teams = new List<Models.DTOs.Team>(),

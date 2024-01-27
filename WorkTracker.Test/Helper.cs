@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using WorkTracker.Models;
 
 namespace WorkTracker.Test
@@ -11,13 +8,13 @@ namespace WorkTracker.Test
     {
         public static AppSettings GetAppSettings()
         {
-            AppSettings appSettings = new AppSettings();
+            var appSettings = new AppSettings();
             
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             var configuration = builder.Build();
-            ConfigurationBinder.Bind(configuration.GetSection("AppSettings"), appSettings);
+            configuration.GetSection("AppSettings").Bind(appSettings);
 
             return appSettings;
         }

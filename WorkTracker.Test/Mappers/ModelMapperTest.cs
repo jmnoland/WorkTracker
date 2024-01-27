@@ -195,9 +195,9 @@ namespace WorkTracker.Test.Mappers
         [Test]
         public void Story_CreateRequestMapping()
         {
-            var testTasks = new List<Models.DTOs.Task>()
+            var testTasks = new List<Models.DTOs.Task>
             {
-                new Models.DTOs.Task
+                new()
                 {
                     Complete = false,
                     Description = "task description",
@@ -239,7 +239,7 @@ namespace WorkTracker.Test.Mappers
                 StoryId = 0,
                 TaskId = 0
             };
-            var testTasks = new List<Models.DTOs.Task>()
+            var testTasks = new List<Models.DTOs.Task>
             {
                 testTask
             };
@@ -278,7 +278,7 @@ namespace WorkTracker.Test.Mappers
                 StoryId = 1,
                 TaskId = 7
             };
-            var testTasks = new List<Models.DTOs.Task>()
+            var testTasks = new List<Models.DTOs.Task>
             {
                 testTask
             };

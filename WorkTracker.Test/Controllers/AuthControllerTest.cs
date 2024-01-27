@@ -48,7 +48,7 @@ namespace WorkTracker.Test.Controllers
         public async Task Login_Unsuccessful()
         {
             string response = null;
-            var request = new UserLoginRequest()
+            var request = new UserLoginRequest
             {
                 Email = "qwerty",
                 Password = "qwerty"
@@ -64,7 +64,7 @@ namespace WorkTracker.Test.Controllers
         public async Task Login_Successful()
         {
             string response = "token";
-            var request = new UserLoginRequest()
+            var request = new UserLoginRequest
             {
                 Email = "test@email.com",
                 Password = "password"
@@ -81,7 +81,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task Register_Successful()
         {
-            var request = new UserRegisterRequest()
+            var request = new UserRegisterRequest
             {
                 Email = "test@email.com",
                 Name = "test",
@@ -96,7 +96,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task Register_Unsuccessful()
         {
-            var request = new UserRegisterRequest()
+            var request = new UserRegisterRequest
             { 
                 Name = null
             };

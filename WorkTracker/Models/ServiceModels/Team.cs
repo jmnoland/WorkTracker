@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WorkTracker.Models.ServiceModels
+﻿namespace WorkTracker.Models.ServiceModels
 {
     public class Team
     {

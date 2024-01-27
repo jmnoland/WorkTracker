@@ -26,7 +26,7 @@ namespace WorkTracker.Test.Controllers
             _storyController = new StoryController(_storyInterface.Object);
 
             _appSettings = Helper.GetAppSettings();
-            var permissions = new string[]
+            var permissions = new[]
             {
                 "create_story",
                 "create_user",
@@ -78,7 +78,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task CreateStory_Valid_Request()
         {
-            var request = new CreateStoryRequest()
+            var request = new CreateStoryRequest
             {
                 Title = "Title",
                 Description = "Description",
@@ -94,7 +94,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task CreateStory_Invalid_Request()
         {
-            var request = new CreateStoryRequest()
+            var request = new CreateStoryRequest
             {
                 Title = null,
                 Description = "Description",
@@ -112,7 +112,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task UpdateStory_Valid_Request()
         {
-            var request = new UpdateStoryRequest()
+            var request = new UpdateStoryRequest
             {
                 Title = "Title",
                 Description = "Description",
@@ -128,7 +128,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task UpdateStory_Invalid_Request()
         {
-            var request = new UpdateStoryRequest()
+            var request = new UpdateStoryRequest
             {
                 Title = "",
                 Description = "Description",
@@ -146,7 +146,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task ChangeState_Valid_Request()
         {
-            var request = new OrderUpdateRequest()
+            var request = new OrderUpdateRequest
             {
                 StateId = 0,
                 Stories = new Dictionary<string, int>
@@ -161,7 +161,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task ChangeState_Invalid_Request()
         {
-            var request = new OrderUpdateRequest()
+            var request = new OrderUpdateRequest
             {
                 StateId = 0,
                 Stories = new Dictionary<string, int>()

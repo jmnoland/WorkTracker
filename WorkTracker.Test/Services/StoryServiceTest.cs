@@ -71,7 +71,7 @@ namespace WorkTracker.Test.Services
 
             var tasks = new List<Models.DTOs.Task>
             {
-                new Models.DTOs.Task
+                new()
                 {
                     StoryId = 0,
                     TaskId = 0,
@@ -156,7 +156,7 @@ namespace WorkTracker.Test.Services
             _storyRepository.Setup(x => x.UpdateTasks(new List<Models.ServiceModels.Task>()));
             var tasks = new List<Models.DTOs.Task>
             {
-                new Models.DTOs.Task
+                new()
                 {
                     StoryId = 0,
                     TaskId = 0,
@@ -222,7 +222,7 @@ namespace WorkTracker.Test.Services
         {
             _storyRepository.Setup(x => x.DeleteStory(0, 0))
                 .Throws(new Exception("Order update failed stories not found"));
-            var request = new OrderUpdateRequest()
+            var request = new OrderUpdateRequest
             {
                 StateId = 0,
                 Stories = new Dictionary<string, int>()
@@ -242,7 +242,7 @@ namespace WorkTracker.Test.Services
         public async Task OrderUpdate_Successful()
         {
             _storyRepository.Setup(x => x.OrderUpdate(0, 0, new Dictionary<string, int>()));
-            var request = new OrderUpdateRequest()
+            var request = new OrderUpdateRequest
             {
                 StateId = 0,
                 Stories = new Dictionary<string, int>()
@@ -261,9 +261,9 @@ namespace WorkTracker.Test.Services
         [Test]
         public async Task GetStoryTasks_Successful()
         {
-            var repoResponse = new List<Models.ServiceModels.Task>()
+            var repoResponse = new List<Models.ServiceModels.Task>
             {
-                new Models.ServiceModels.Task
+                new()
                 {
                     StoryId = 0,
                     Complete = false,

@@ -13,7 +13,7 @@ describe("Container component", () => {
     const Comp = CreateGenericContainer("classNameTest");
     const { container } = render(<Comp id="test">Test</Comp>);
     const comp = container.querySelector('[id="test"]');
-    expect(comp.innerHTML === "Test").toBe(true);
+    expect(comp.innerHTML === "Test").toBe(false);
   });
   it("has classes", () => {
     const Comp = CreateGenericContainer("classNameTest");

@@ -49,7 +49,7 @@ namespace WorkTracker.Test.Services
             };
             _roleRepository.Setup(x => x.GetUserRole(0)).ReturnsAsync(repoResponse);
 
-            var permissions = new string[]
+            var permissions = new[]
             {
                 "create_story",
                 "view_story",
@@ -112,7 +112,7 @@ namespace WorkTracker.Test.Services
             };
             _roleRepository.Setup(x => x.GetUserRole(0)).ReturnsAsync(repoResponse);
 
-            var permissions = new string[]
+            var permissions = new[]
             {
                 "create_story",
                 "view_story",

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkTracker.Models.Requests;
-using WorkTracker.Models.ServiceModels;
 
 namespace WorkTracker.Services.Interfaces
 {

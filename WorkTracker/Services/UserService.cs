@@ -45,7 +45,7 @@ namespace WorkTracker.Services
         public async Task<Models.DTOs.UserDetail> GetUserDetail(int userId)
         {
             var teams = await _teamRepository.GetByUserId(userId);
-            var details = new Models.DTOs.UserDetail()
+            var details = new Models.DTOs.UserDetail
             {
                 States = new List<Models.DTOs.State>(),
                 Teams = new List<Models.DTOs.Team>(),
@@ -80,7 +80,7 @@ namespace WorkTracker.Services
             var user = Mapper.Map(request);
             if (user.RoleId == 0) user.RoleId = 1;
             var userId = await _userRepository.CreateUser(user);
-            var newTeam = new Models.DataModels.Team()
+            var newTeam = new Models.DataModels.Team
             {
                 OrganisationId = null,
                 TeamId = 0,

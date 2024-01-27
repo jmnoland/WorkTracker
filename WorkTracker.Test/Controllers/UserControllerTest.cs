@@ -22,7 +22,7 @@ namespace WorkTracker.Test.Controllers
         public UserControllerTest()
         {
             _appSettings = Helper.GetAppSettings();
-            var permissions = new string[]
+            var permissions = new[]
             {
                 "create_story",
                 "create_user",
@@ -53,7 +53,7 @@ namespace WorkTracker.Test.Controllers
         {
             var result = new List<Models.DTOs.User>
             {
-                new Models.DTOs.User
+                new()
                 {
                     Email = "test@email.com",
                     Name = "test",
@@ -81,13 +81,13 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task GetUserDetails_Successful()
         {
-            var result = new Models.DTOs.UserDetail()
+            var result = new Models.DTOs.UserDetail
             {
                 States = new List<Models.DTOs.State>(),
                 Teams = new List<Models.DTOs.Team>(),
                 Users = new List<Models.DTOs.User>
                 {
-                    new Models.DTOs.User
+                    new()
                     {
                         Email = "test@email.com",
                         Name = "test",
@@ -107,7 +107,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task GetUserDetails_NoResponse()
         {
-            var result = new Models.DTOs.UserDetail()
+            var result = new Models.DTOs.UserDetail
             {
                 States = new List<Models.DTOs.State>(),
                 Teams = new List<Models.DTOs.Team>(),
@@ -122,7 +122,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task CreateUser_Successful()
         {
-            var request = new CreateUserRequest()
+            var request = new CreateUserRequest
             {
                 Email = "test@email.com",
                 Name = "test",
@@ -154,7 +154,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task CreateUser_RoleDoesNotExist()
         {
-            var request = new CreateUserRequest()
+            var request = new CreateUserRequest
             {
                 Email = "test@email.com",
                 Name = "test",
@@ -174,7 +174,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task RegisterUser_Successful()
         {
-            var request = new CreateUserRequest()
+            var request = new CreateUserRequest
             {
                 Email = "test@email.com",
                 Name = "test",
@@ -206,7 +206,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task UpdateUser_Successful()
         {
-            var request = new UpdateUserRequest()
+            var request = new UpdateUserRequest
             {
                 UserId = 0,
                 Email = "test@email.com",
@@ -239,7 +239,7 @@ namespace WorkTracker.Test.Controllers
         [Test]
         public async Task UpdateUser_ServiceUpdateFail()
         {
-            var request = new UpdateUserRequest()
+            var request = new UpdateUserRequest
             {
                 UserId = 0,
                 Email = "test@email.com",

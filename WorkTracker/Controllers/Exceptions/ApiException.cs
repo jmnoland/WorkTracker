@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Web.Mvc;
-
-namespace WorkTracker.Controllers.Exceptions
+﻿namespace WorkTracker.Controllers.Exceptions
 {
     public class ApiException
     {
